@@ -7,6 +7,7 @@
 export type TableProps<T, K extends keyof T> = {
   data: T[];
   columns: ColumnDefinitionType<T, K>[];
+  sortConfig?: SortConfig<T, K>;
 };
 
 export type TableHeaderProps<T, K extends keyof T> = Pick<

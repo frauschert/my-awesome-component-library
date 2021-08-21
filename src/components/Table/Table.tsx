@@ -4,17 +4,18 @@ import TableRows from './TableRows';
 import { SortConfig, TableProps } from './types';
 import { search } from '../../utility/search';
 import { sort } from '../../utility/sort';
+import "./table.css";
 
-function Table<T, K extends keyof T>({ data, columns }: TableProps<T, K>) {
-  const [sortConfig, setSortConfig] = useState<SortConfig<T, K>>({
+function Table<T, K extends keyof T>({ data, columns, sortConfig }: TableProps<T, K>) {
+  const [sortLocalConfig, setSortLocalConfig] = useState<SortConfig<T, K>>(sortConfig ? sortConfig : {
     sortKey: undefined,
     sortDirection: 'ascending',
   });
   const [searchString, setSearchString] = useState('');
-  const { sortKey, sortDirection } = sortConfig;
+  const { sortKey, sortDirection } = sortLocalConfig;
 
   const onTableHeaderClick = (value: K) =>
-    setSortConfig(
+    setSortLocalConfig(
       sortDirection === 'ascending'
         ? { sortKey: value, sortDirection: 'descending' }
         : { sortKey: value, sortDirection: 'ascending' },
@@ -41,7 +42,7 @@ function Table<T, K extends keyof T>({ data, columns }: TableProps<T, K>) {
         Search:
         <input id="search" type="text" onChange={handleSearch} />
       </label>
-      <table className="table table-striped" aria-labelledby="tabelLabel">
+      <table className="table" aria-labelledby="tableLabel">
         <TableHeader columns={columns} onClick={onTableHeaderClick} />
         <TableRows data={sortedData} columns={columns} />
       </table>
