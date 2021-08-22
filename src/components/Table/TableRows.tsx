@@ -1,10 +1,10 @@
 ﻿import React from 'react'
-import { TableProps } from './types'
+import { TableRowProps } from './types'
 
 const TableRows = <T, K extends keyof T>({
     data,
     columns,
-}: TableProps<T, K>) => {
+}: TableRowProps<T, K>) => {
     const rows = data.map((row, index) => {
         return (
             <tr key={`row-${index}`}>

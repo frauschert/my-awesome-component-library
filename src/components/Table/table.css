@@ -1,16 +1,28 @@
 .table {
-    color: white;
-    background-color: #1ea7fd;
-    font-size: 16px;
+    color: whitesmoke;
+    background-color: rgb(192, 206, 212);
+    background-image: linear-gradient(
+        to right,
+        rgb(192, 206, 212),
+        rgb(158, 168, 172)
+    );
+    font-size: 24px;
 
-    font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-weight: 700;
-    display: inline-block;
+
+    text-align: right;
+
     line-height: 1;
+
+    padding: 10px;
+    border-radius: 20px;
 }
 
 .table-header {
     width: 100%;
-    border-bottom: 2px solid black;
+    border-bottom: 3px solid rgb(82, 82, 82);
+    padding: 10px;
     cursor: pointer;
+    text-align: center;
 }

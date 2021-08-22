@@ -10,6 +10,7 @@ function Table<T, K extends keyof T>({
     data,
     columns,
     sortConfig,
+    classNameTable,
 }: TableProps<T, K>) {
     const [sortLocalConfig, setSortLocalConfig] = useState<SortConfig<T, K>>(
         sortConfig
@@ -50,7 +51,10 @@ function Table<T, K extends keyof T>({
                 Search:
                 <input id="search" type="text" onChange={handleSearch} />
             </label>
-            <table className="table" aria-labelledby="tableLabel">
+            <table
+                className={`table ${classNameTable}`}
+                aria-labelledby="tableLabel"
+            >
                 <TableHeader columns={columns} onClick={onTableHeaderClick} />
                 <TableRows data={sortedData} columns={columns} />
             </table>

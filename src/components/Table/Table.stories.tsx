@@ -21,7 +21,7 @@ const columns: ColumnDefinitionType<WeatherForecast, keyof WeatherForecast>[] =
         {
             key: 'date',
             header: 'Date',
-            width: 150,
+            width: 300,
         },
         {
             key: 'temperatureC',
@@ -39,13 +39,13 @@ const columns: ColumnDefinitionType<WeatherForecast, keyof WeatherForecast>[] =
 
 const defaultForecasts: WeatherForecast[] = [
     {
-        date: new Date(2021, 5).toISOString(),
+        date: new Date(2021, 5).toUTCString(),
         temperatureC: 5,
         temperatureF: 6,
         summary: 'jo',
     },
     {
-        date: new Date(2021, 11).toISOString(),
+        date: new Date(2021, 11).toUTCString(),
         temperatureC: 4,
         temperatureF: 7,
         summary: 'oj',
