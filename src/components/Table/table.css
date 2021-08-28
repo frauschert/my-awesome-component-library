@@ -1,25 +1,16 @@
-.table {
-    color: whitesmoke;
-    background-color: rgb(192, 206, 212);
-    background-image: linear-gradient(
-        to right,
-        rgb(192, 206, 212),
-        rgb(158, 168, 172)
-    );
-    font-size: 24px;
-
-    font-family: Helvetica, Arial, sans-serif;
-    font-weight: 700;
-
+.container .table {
     text-align: right;
 
     line-height: 1;
 
     padding: 10px;
+    margin: 10px;
     border-radius: 20px;
+    border-collapse: collapse;
 }
 
 .table-header {
+    background-color: #557fcc;
     width: 100%;
     border-bottom: 3px solid rgb(82, 82, 82);
     padding: 10px;

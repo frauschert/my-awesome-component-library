@@ -10,7 +10,6 @@ const ThemeSwitcher = () => {
 
     return (
         <>
-            <h1>{theme === 'dark' ? '🌙' : '🌞'}</h1>
             <select className={theme} onChange={handleOnChange}>
                 {Object.values(themes).map((themeKey) => (
                     <option value={themeKey}>{themeKey}</option>

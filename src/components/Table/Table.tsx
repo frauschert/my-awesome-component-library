@@ -1,9 +1,11 @@
-﻿import React, { useState } from 'react'
+﻿import React, { useContext, useState } from 'react'
 import TableHeader from './TableHeader'
 import TableRows from './TableRows'
 import { SortConfig, TableProps } from './types'
 import { search } from '../../utility/search'
 import { sort } from '../../utility/sort'
+import { classNames } from '../../utility/classnames'
+import { ThemeContext } from '../Theme'
 import './table.css'
 
 function Table<T, K extends keyof T>({
@@ -21,6 +23,7 @@ function Table<T, K extends keyof T>({
               }
     )
     const [searchString, setSearchString] = useState('')
+    const { theme } = useContext(ThemeContext)
     const { sortKey, sortDirection } = sortLocalConfig
 
     const onTableHeaderClick = (value: K) =>
@@ -51,13 +54,18 @@ function Table<T, K extends keyof T>({
                 Search:
                 <input id="search" type="text" onChange={handleSearch} />
             </label>
-            <table
-                className={`table ${classNameTable}`}
-                aria-labelledby="tableLabel"
-            >
-                <TableHeader columns={columns} onClick={onTableHeaderClick} />
-                <TableRows data={sortedData} columns={columns} />
-            </table>
+            <div className="container">
+                <table
+                    className={classNames(theme, 'table', classNameTable)}
+                    aria-labelledby="tableLabel"
+                >
+                    <TableHeader
+                        columns={columns}
+                        onClick={onTableHeaderClick}
+                    />
+                    <TableRows data={sortedData} columns={columns} />
+                </table>
+            </div>
         </>
     )
 }

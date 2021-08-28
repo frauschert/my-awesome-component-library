@@ -3,59 +3,67 @@ import { Meta } from '@storybook/react/types-6-0'
 import { Story } from '@storybook/react'
 import Table from './Table'
 import { ColumnDefinitionType, SortConfig, TableProps } from './types'
+import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 export default {
     title: 'Components/Table',
     component: Table,
 } as Meta
 
-interface WeatherForecast {
-    date: string
-    temperatureC: number
-    temperatureF: number
-    summary: string
+interface Person {
+    id: number
+    firstName: string
+    lastName: string
+    age: number
 }
 
-const columns: ColumnDefinitionType<WeatherForecast, keyof WeatherForecast>[] =
-    [
-        {
-            key: 'date',
-            header: 'Date',
-            width: 300,
-        },
-        {
-            key: 'temperatureC',
-            header: 'Temp. (C)',
-        },
-        {
-            key: 'temperatureF',
-            header: 'Temp. (F)',
-        },
-        {
-            key: 'summary',
-            header: 'Summary',
-        },
-    ]
-
-const defaultForecasts: WeatherForecast[] = [
+const columns: ColumnDefinitionType<Person, keyof Person>[] = [
     {
-        date: new Date(2021, 5).toUTCString(),
-        temperatureC: 5,
-        temperatureF: 6,
-        summary: 'jo',
+        key: 'id',
+        header: 'ID',
     },
     {
-        date: new Date(2021, 11).toUTCString(),
-        temperatureC: 4,
-        temperatureF: 7,
-        summary: 'oj',
+        key: 'firstName',
+        header: 'First name',
+    },
+    {
+        key: 'lastName',
+        header: 'Last name',
+        width: 300,
+    },
+    {
+        key: 'age',
+        header: 'Age',
     },
 ]
 
-const sortConfig: SortConfig<WeatherForecast, keyof WeatherForecast> = {
-    sortKey: 'date',
+const defaultData: Person[] = [
+    {
+        id: 1,
+        firstName: 'Michael',
+        lastName: 'Scheider',
+        age: 47,
+    },
+    {
+        id: 2,
+        firstName: 'Fabian',
+        lastName: 'Schlottke',
+        age: 30,
+    },
+    {
+        id: 3,
+        firstName: 'Denis',
+        lastName: 'Döll',
+        age: 4,
+    },
+]
+
+const sortConfig: SortConfig<Person, keyof Person> = {
+    sortKey: 'id',
     sortDirection: 'descending',
 }
+
+const props = {}
 
 // Create a master template for mapping args to render the Button component
 const Template =
@@ -64,11 +72,23 @@ const Template =
         return <Table {...args} />
     }
 
-export const Normal = Template<WeatherForecast, keyof WeatherForecast>().bind(
-    {}
-)
+export const Normal = Template<Person, keyof Person>().bind({})
 Normal.args = {
-    data: defaultForecasts,
+    data: defaultData,
     columns: columns,
     sortConfig: sortConfig,
 }
+export const WithTheme = Template<Person, keyof Person>().bind({})
+WithTheme.args = {
+    data: defaultData,
+    columns: columns,
+    sortConfig: sortConfig,
+}
+WithTheme.decorators = [
+    (Story) => (
+        <ThemeProvider>
+            <Story />
+            <ThemeSwitcher></ThemeSwitcher>
+        </ThemeProvider>
+    ),
+]
