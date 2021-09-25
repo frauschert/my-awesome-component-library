@@ -15,12 +15,10 @@ function Table<T, K extends keyof T>({
     classNameTable,
 }: TableProps<T, K>) {
     const [sortLocalConfig, setSortLocalConfig] = useState<SortConfig<T, K>>(
-        sortConfig
-            ? sortConfig
-            : {
-                  sortKey: undefined,
-                  sortDirection: 'ascending',
-              }
+        sortConfig ?? {
+            sortKey: undefined,
+            sortDirection: 'ascending',
+        }
     )
     const [searchString, setSearchString] = useState('')
     const { theme } = useContext(ThemeContext)
