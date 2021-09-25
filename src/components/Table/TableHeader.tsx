@@ -1,24 +1,39 @@
 ﻿import React from 'react'
 import { TableHeaderProps } from './types'
 import './table.css'
+import DownArrow from '../../icons/downArrow.svg'
+import UpArrow from '../../icons/upArrow.svg'
 
 const TableHeader = <T, K extends keyof T>({
     columns,
     onClick,
+    sortConfig,
 }: TableHeaderProps<T, K>) => {
+    const { sortKey, sortDirection } = sortConfig
     const headers = columns.map((column, index) => {
         const style = {
             width: column.width ?? 100, // 100 is our default value if width is not defined
         }
+        const sortIcon =
+            column.key === sortKey ? (
+                sortDirection === 'descending' ? (
+                    <DownArrow width={16} height={16} />
+                ) : (
+                    <UpArrow width={16} height={16} />
+                )
+            ) : null
 
         return (
             <th
                 key={`headCell-${index}`}
-                className="table-header"
                 style={style}
-                onClick={() => onClick(column.key)}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    onClick(column.key)
+                }}
             >
                 {column.header}
+                {sortIcon}
             </th>
         )
     })

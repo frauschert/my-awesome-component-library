@@ -1,4 +1,6 @@
-﻿export type ColumnDefinitionType<T, K extends keyof T> = {
+﻿import { RequiredBy } from '../../utility/types'
+
+export type ColumnDefinitionType<T, K extends keyof T> = {
     key: K
     header: string
     width?: number
@@ -11,12 +13,12 @@ export type TableProps<T, K extends keyof T> = {
     classNameTable?: string
 }
 
-export type TableHeaderProps<T, K extends keyof T> = Pick<
-    TableProps<T, K>,
-    'columns'
-> & {
-    onClick: (value: K) => void
-}
+export type TableHeaderProps<T, K extends keyof T> = RequiredBy<
+    Pick<TableProps<T, K>, 'columns' | 'sortConfig'> & {
+        onClick: (value: K) => void
+    },
+    'sortConfig'
+>
 
 export type TableRowProps<T, K extends keyof T> = Pick<
     TableProps<T, K>,

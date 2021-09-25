@@ -63,7 +63,11 @@ const sortConfig: SortConfig<Person, keyof Person> = {
     sortDirection: 'descending',
 }
 
-const props = {}
+const props: TableProps<Person, keyof Person> = {
+    columns,
+    data: defaultData,
+    sortConfig,
+}
 
 // Create a master template for mapping args to render the Button component
 const Template =
@@ -73,17 +77,9 @@ const Template =
     }
 
 export const Normal = Template<Person, keyof Person>().bind({})
-Normal.args = {
-    data: defaultData,
-    columns: columns,
-    sortConfig: sortConfig,
-}
+Normal.args = props
 export const WithTheme = Template<Person, keyof Person>().bind({})
-WithTheme.args = {
-    data: defaultData,
-    columns: columns,
-    sortConfig: sortConfig,
-}
+WithTheme.args = { ...Normal.args }
 WithTheme.decorators = [
     (Story) => (
         <ThemeProvider>

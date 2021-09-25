@@ -1,19 +1,22 @@
 .container .table {
-    text-align: right;
-
-    line-height: 1;
-
-    padding: 10px;
-    margin: 10px;
-    border-radius: 20px;
+    text-align: center;
+    font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
     border-collapse: collapse;
+    border: 3px solid #ddd;
+    width: 100%;
 }
 
-.table-header {
-    background-color: #557fcc;
-    width: 100%;
-    border-bottom: 3px solid rgb(82, 82, 82);
-    padding: 10px;
-    cursor: pointer;
+.container td,
+.container th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.container th {
+    padding-top: 12px;
+    padding-bottom: 12px;
     text-align: center;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
 }

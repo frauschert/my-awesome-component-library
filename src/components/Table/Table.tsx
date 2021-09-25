@@ -50,11 +50,11 @@ function Table<T, K extends keyof T>({
 
     return (
         <>
-            <label htmlFor="search">
-                Search:
-                <input id="search" type="text" onChange={handleSearch} />
-            </label>
             <div className="container">
+                <label htmlFor="search">
+                    Search:
+                    <input id="search" type="text" onChange={handleSearch} />
+                </label>
                 <table
                     className={classNames(theme, 'table', classNameTable)}
                     aria-labelledby="tableLabel"
@@ -62,6 +62,7 @@ function Table<T, K extends keyof T>({
                     <TableHeader
                         columns={columns}
                         onClick={onTableHeaderClick}
+                        sortConfig={sortLocalConfig}
                     />
                     <TableRows data={sortedData} columns={columns} />
                 </table>
