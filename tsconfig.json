@@ -18,6 +18,6 @@
         "noEmit": true,
         "jsx": "react"
     },
-    "include": ["src", "src/custom.d.ts"],
+    "include": ["src", "src/custom.d.ts", "src/utility/.ts"],
     "exclude": ["node_modules", "lib"]
 }
