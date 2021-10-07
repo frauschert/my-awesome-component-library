@@ -1,17 +1,35 @@
-import React from 'react'
-import { useDebounceCallback } from '../../utility/hooks/useDebounce'
+import React, { useState, useCallback, useEffect } from 'react'
+import debounce from '../../utility/debounce'
 import { InputProps } from './types'
 
-function Input({ initialValue, onChange }: InputProps) {
-    const [values, setValues] = useDebounceCallback(onChange, 500)
+const Input = (props: InputProps) => {
+    const [value, setValue] = useState<typeof props.initialValue>()
+
+    const debounceChange = useCallback(
+        debounce((value: string | number) => {
+            if (props.type === 'number' && typeof value === 'number') {
+                props.onChange(value)
+            } else if (props.type === 'text' && typeof value === 'string') {
+                props.onChange(value)
+            }
+        }, 500),
+        [props.type, props.onChange]
+    )
+
+    useEffect(() => {
+        if (value !== undefined) {
+            debounceChange(value)
+        }
+    }, [value])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
-        setValues(event.target.value)
+        setValue(event.target.value)
     }
     return (
         <input
-            value={values?.[0] ?? initialValue}
+            value={value}
+            defaultValue={props.initialValue}
             onChange={handleChange}
         ></input>
     )

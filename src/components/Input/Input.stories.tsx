@@ -12,7 +12,8 @@ export default {
 // Create a master template for mapping args to render the Input component
 const Template: Story<InputProps> = (args) => <Input {...args} />
 
-export const Default = Template.bind({})
+export const NumberInput = Template.bind({})
+NumberInput.args = { type: 'number', initialValue: 0 }
 
-export const Secondary = Template.bind({})
-Secondary.args = { initialValue: 'Test' }
+export const TextInput = Template.bind({})
+TextInput.args = { type: 'text', initialValue: 'Test' }
