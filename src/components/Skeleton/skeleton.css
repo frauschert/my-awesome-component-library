@@ -1,30 +1,39 @@
-.placeholder {
+.container {
     max-width: 300px;
 }
 
-.faux-image-wrapper {
-    margin-bottom: 10px;
+.skeletonImageWrapper {
+    margin-bottom: 5px;
     position: relative;
-    padding-bottom: 100%; /* Or height: 200px; */
+    padding-bottom: 100%;
+    width: 300px;
 }
 
-.faux-image {
+.skeletonImage {
     background: #dddddd;
     border-radius: 4px;
     height: 100%;
     position: absolute;
-    width: 100%;
+    width: 75%;
 }
 
-.faux-text {
+.skeletonline {
     background: #dddddd;
     border-radius: 4px;
     height: 20px;
     margin-bottom: 5px;
 }
 
-.faux-text.short {
+.skeletonline.large {
     width: 75%;
+}
+
+.skeletonline.medium {
+    width: 50%;
+}
+
+.skeletonline.short {
+    width: 25%;
 }
 
 .shimmer {

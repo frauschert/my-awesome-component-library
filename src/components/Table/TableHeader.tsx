@@ -12,7 +12,7 @@ const TableHeader = <T, K extends keyof T>({
     const { sortKey, sortDirection } = sortConfig
     const headers = columns.map((column, index) => {
         const style = {
-            width: column.width ?? 100, // 100 is our default value if width is not defined
+            width: column.width ?? 100,
         }
         const sortIcon =
             column.key === sortKey ? (

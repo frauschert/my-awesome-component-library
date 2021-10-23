@@ -2,16 +2,19 @@ import React from 'react'
 
 import './skeleton.css'
 
-const Skeleton = () => {
+export const SkeletonImage = () => {
     return (
-        <div className="placeholder shimmer">
-            <div className="faux-image-wrapper">
-                <div className="faux-image" />
+        <div className="container shimmer skeletonImageWrapper">
+            <div className="skeletonImageWrapper">
+                <div className="skeletonImage" />
             </div>
-            <div className="faux-text" />
-            <div className="faux-text short" />
         </div>
     )
 }
 
-export default Skeleton
+export type SkeletonLineProps = {
+    size: 'short' | 'medium' | 'large'
+}
+export const SkeletonLine = ({ size }: SkeletonLineProps) => {
+    return <div className={`container shimmer skeletonline ${size}`} />
+}

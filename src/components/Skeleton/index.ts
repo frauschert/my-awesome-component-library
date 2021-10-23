@@ -1,1 +1,1 @@
-export { default } from './Skeleton'
+export { SkeletonLine, SkeletonImage } from './Skeleton'
