@@ -31,7 +31,7 @@ const Input = (props: InputProps) => {
             value={value}
             defaultValue={props.initialValue}
             onChange={handleChange}
-        ></input>
+        />
     )
 }
 
