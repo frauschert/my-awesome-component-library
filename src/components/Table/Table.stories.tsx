@@ -2,7 +2,12 @@ import React from 'react'
 import { Meta } from '@storybook/react/types-6-0'
 import { Story } from '@storybook/react'
 import Table from './Table'
-import { ColumnDefinitionType, SortConfig, TableProps } from './types'
+import {
+    ColumnDefinitionType,
+    RowDefinitionType,
+    SortConfig,
+    TableProps,
+} from './types'
 import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 export default {
@@ -17,7 +22,7 @@ interface Person {
     age: number
 }
 
-const columns: ColumnDefinitionType<Person, keyof Person>[] = [
+const columnDefinitions: ColumnDefinitionType<Person, keyof Person>[] = [
     {
         key: 'id',
         header: 'ID',
@@ -37,24 +42,56 @@ const columns: ColumnDefinitionType<Person, keyof Person>[] = [
     },
 ]
 
-const defaultData: Person[] = [
+const defaultData: RowDefinitionType<Person>[] = [
     {
-        id: 1,
-        firstName: 'Michael',
-        lastName: 'Scheider',
-        age: 47,
+        data: {
+            id: 1,
+            firstName: 'Michael',
+            lastName: 'Scheider',
+            age: 47,
+        },
     },
     {
-        id: 2,
-        firstName: 'Fabian',
-        lastName: 'Schlottke',
-        age: 30,
+        data: {
+            id: 2,
+            firstName: 'Fabian',
+            lastName: 'Schlottke',
+            age: 30,
+        },
+        selected: true,
     },
     {
-        id: 3,
-        firstName: 'Denis',
-        lastName: 'Döll',
-        age: 4,
+        data: {
+            id: 3,
+            firstName: 'Denis',
+            lastName: 'Döll',
+            age: 4,
+        },
+    },
+    {
+        data: {
+            id: 4,
+            firstName: 'Michael',
+            lastName: 'Scheider',
+            age: 47,
+        },
+    },
+    {
+        data: {
+            id: 5,
+            firstName: 'Fabian',
+            lastName: 'Schlottke',
+            age: 30,
+        },
+        selected: true,
+    },
+    {
+        data: {
+            id: 6,
+            firstName: 'Denis',
+            lastName: 'Döll',
+            age: 4,
+        },
     },
 ]
 
@@ -64,8 +101,8 @@ const sortConfig: SortConfig<Person, keyof Person> = {
 }
 
 const props: TableProps<Person, keyof Person> = {
-    columns,
-    data: defaultData,
+    rowDefinitions: defaultData,
+    columnDefinitions,
     sortConfig,
 }
 

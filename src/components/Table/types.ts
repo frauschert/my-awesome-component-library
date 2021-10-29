@@ -1,5 +1,10 @@
 ﻿import { RequiredBy } from '../../utility/types'
 
+export type RowDefinitionType<T> = {
+    data: T
+    selected?: boolean
+}
+
 export type ColumnDefinitionType<T, K extends keyof T> = {
     key: K
     header: string
@@ -7,14 +12,14 @@ export type ColumnDefinitionType<T, K extends keyof T> = {
 }
 
 export type TableProps<T, K extends keyof T> = {
-    data: T[]
-    columns: ColumnDefinitionType<T, K>[]
+    rowDefinitions: RowDefinitionType<T>[]
+    columnDefinitions: ColumnDefinitionType<T, K>[]
     sortConfig?: SortConfig<T, K>
     classNameTable?: string
 }
 
 export type TableHeaderProps<T, K extends keyof T> = RequiredBy<
-    Pick<TableProps<T, K>, 'columns' | 'sortConfig'> & {
+    Pick<TableProps<T, K>, 'columnDefinitions' | 'sortConfig'> & {
         onClick: (value: K) => void
     },
     'sortConfig'
@@ -22,7 +27,7 @@ export type TableHeaderProps<T, K extends keyof T> = RequiredBy<
 
 export type TableRowProps<T, K extends keyof T> = Pick<
     TableProps<T, K>,
-    'columns' | 'data'
+    'rowDefinitions' | 'columnDefinitions'
 >
 
 export type SortConfig<T, K extends keyof T> = {

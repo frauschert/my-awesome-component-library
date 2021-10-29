@@ -2,15 +2,14 @@
 import TableHeader from './TableHeader'
 import TableRows from './TableRows'
 import { SortConfig, TableProps } from './types'
-import { search } from '../../utility/search'
-import { sort } from '../../utility/sort'
 import { classNames } from '../../utility/classnames'
 import { ThemeContext } from '../Theme'
 import './table.css'
+import { tableSearch, tableSort } from './utils'
 
 function Table<T, K extends keyof T>({
-    data,
-    columns,
+    rowDefinitions,
+    columnDefinitions,
     sortConfig,
     classNameTable,
 }: TableProps<T, K>) {
@@ -35,15 +34,15 @@ function Table<T, K extends keyof T>({
         setSearchString(event.currentTarget.value)
     }
 
-    const searchedData = search(
-        data,
-        columns.map((col) => col.key),
+    const searchedData = tableSearch(
+        rowDefinitions,
+        columnDefinitions,
         searchString
     )
 
     const sortedData =
         sortKey !== undefined
-            ? sort(searchedData, sortKey, sortDirection)
+            ? tableSort(searchedData, sortKey, sortDirection)
             : searchedData
 
     return (
@@ -58,11 +57,14 @@ function Table<T, K extends keyof T>({
                     aria-labelledby="tableLabel"
                 >
                     <TableHeader
-                        columns={columns}
+                        columnDefinitions={columnDefinitions}
                         onClick={onTableHeaderClick}
                         sortConfig={sortLocalConfig}
                     />
-                    <TableRows data={sortedData} columns={columns} />
+                    <TableRows
+                        rowDefinitions={sortedData}
+                        columnDefinitions={columnDefinitions}
+                    />
                 </table>
             </div>
         </>

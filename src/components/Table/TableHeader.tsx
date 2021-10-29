@@ -5,12 +5,12 @@ import DownArrow from '../../icons/downArrow.svg'
 import UpArrow from '../../icons/upArrow.svg'
 
 const TableHeader = <T, K extends keyof T>({
-    columns,
+    columnDefinitions,
     onClick,
     sortConfig,
 }: TableHeaderProps<T, K>) => {
     const { sortKey, sortDirection } = sortConfig
-    const headers = columns.map((column, index) => {
+    const headers = columnDefinitions.map((column, index) => {
         const style = {
             width: column.width ?? 100,
         }
