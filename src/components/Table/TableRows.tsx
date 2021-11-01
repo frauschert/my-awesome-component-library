@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { RowDefinitionType, TableRowProps } from './types'
 
 const TableRows = <T, K extends keyof T>({
@@ -6,6 +6,10 @@ const TableRows = <T, K extends keyof T>({
     columnDefinitions,
 }: TableRowProps<T, K>) => {
     const [rowValues, setRowValues] = useState(rowDefinitions)
+
+    useEffect(() => {
+        setRowValues(rowDefinitions)
+    }, [...rowDefinitions])
 
     const handleOnSelect = (row: RowDefinitionType<T>, index: number) => {
         const selectedRow = { ...row, selected: !row.selected }
