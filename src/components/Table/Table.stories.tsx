@@ -44,6 +44,7 @@ const columnDefinitions: ColumnDefinitionType<Person, keyof Person>[] = [
 
 const defaultData: RowDefinitionType<Person>[] = [
     {
+        id: 1,
         data: {
             id: 1,
             firstName: 'Michael',
@@ -52,6 +53,7 @@ const defaultData: RowDefinitionType<Person>[] = [
         },
     },
     {
+        id: 2,
         data: {
             id: 2,
             firstName: 'Fabian',
@@ -61,6 +63,7 @@ const defaultData: RowDefinitionType<Person>[] = [
         selected: true,
     },
     {
+        id: 3,
         data: {
             id: 3,
             firstName: 'Denis',
@@ -69,6 +72,7 @@ const defaultData: RowDefinitionType<Person>[] = [
         },
     },
     {
+        id: 4,
         data: {
             id: 4,
             firstName: 'Michael',
@@ -77,6 +81,7 @@ const defaultData: RowDefinitionType<Person>[] = [
         },
     },
     {
+        id: 5,
         data: {
             id: 5,
             firstName: 'Fabian',
@@ -86,6 +91,7 @@ const defaultData: RowDefinitionType<Person>[] = [
         selected: true,
     },
     {
+        id: 6,
         data: {
             id: 6,
             firstName: 'Denis',

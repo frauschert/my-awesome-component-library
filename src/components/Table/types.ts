@@ -1,6 +1,7 @@
 ﻿import { RequiredBy } from '../../utility/types'
 
 export type RowDefinitionType<T> = {
+    id: string | number
     data: T
     selected?: boolean
 }
