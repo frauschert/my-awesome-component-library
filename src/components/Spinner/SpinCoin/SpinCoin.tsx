@@ -4,11 +4,14 @@ import hex from '../../../utility/hex'
 import { SpinnerProps } from '../types'
 import './spin-coin.css'
 
-const defaultColor = hex('#7f58af')
+export const defaultProps = {
+    color: hex('#7f58af'),
+    size: 64,
+}
 
 export default function SpinCoin({
-    color = defaultColor,
-    size = 64,
+    color = defaultProps.color,
+    size = defaultProps.size,
     className,
 }: SpinnerProps) {
     return (
