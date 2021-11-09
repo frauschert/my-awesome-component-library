@@ -1,13 +1,8 @@
 import React from 'react'
 import { classNames } from '../../../utility/classnames'
-import hex from '../../../utility/hex'
 import { SpinnerProps } from '../types'
+import { defaultProps } from '../utils'
 import './spin-coin.css'
-
-export const defaultProps = {
-    color: hex('#7f58af'),
-    size: 64,
-}
 
 export default function SpinCoin({
     color = defaultProps.color,

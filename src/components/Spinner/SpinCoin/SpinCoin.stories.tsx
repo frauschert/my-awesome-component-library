@@ -1,8 +1,9 @@
 import React from 'react'
 import { Meta } from '@storybook/react/types-6-0'
 import { Story } from '@storybook/react'
-import SpinCoin, { defaultProps } from './SpinCoin'
+import SpinCoin from './SpinCoin'
 import { SpinnerProps } from '../types'
+import { defaultProps } from '../utils'
 
 export default {
     title: 'Components/Spinner/SpinCoin',
