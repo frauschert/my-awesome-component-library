@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { classNames } from '../../utility/classnames'
+import generateUniqueID from '../../utility/uniqueId'
 import Toast from './Toast'
 
 import './toast.css'
@@ -26,23 +27,13 @@ type ToastContextState = {
 
 type ToastProviderProps = PropsWithChildren<{ position: Position }>
 
-// Create a random ID
-function generateUEID() {
-    let first: string | number = (Math.random() * 46656) | 0
-    let second: string | number = (Math.random() * 46656) | 0
-    first = ('000' + first.toString(36)).slice(-3)
-    second = ('000' + second.toString(36)).slice(-3)
-
-    return first + second
-}
-
 const ToastContext = createContext<ToastContextState | null>(null)
 
 const ToastProvider = ({ children, position }: ToastProviderProps) => {
     const [toasts, setToasts] = useState<ToastItem[]>([])
 
     const add = (content: ReactNode) => {
-        const id = generateUEID()
+        const id = generateUniqueID()
 
         setToasts([...toasts, { id, content }])
     }
@@ -80,3 +71,4 @@ const useToast = () => {
 }
 
 export { ToastContext, ToastProvider, useToast }
+export type { ToastProviderProps }

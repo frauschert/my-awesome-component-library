@@ -1,7 +1,7 @@
 import React from 'react'
 import { Meta } from '@storybook/react/types-6-0'
 import { Story } from '@storybook/react'
-import { ToastProvider, useToast } from './'
+import { ToastProvider, useToast, ToastProviderProps } from './'
 import Button from '../Button'
 
 const ButtonWrapper = () => {
@@ -15,12 +15,15 @@ export default {
     component: ButtonWrapper,
 } as Meta
 
-const Template: Story = (args) => {
+const Template: Story<ToastProviderProps> = (args) => {
     return (
-        <ToastProvider position="top-right">
+        <ToastProvider {...args}>
             <ButtonWrapper />
         </ToastProvider>
     )
 }
 
 export const Default = Template.bind({})
+Default.args = {
+    position: 'bottom-right',
+}
