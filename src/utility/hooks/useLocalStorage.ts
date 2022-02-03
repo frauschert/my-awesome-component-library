@@ -7,6 +7,7 @@ const useLocalStorage = <T>(key: string, initialValue: T) => {
 
             return item ? JSON.parse(item) : initialValue
         } catch (error) {
+            console.log(error)
             return initialValue
         }
     })
@@ -19,10 +20,12 @@ const useLocalStorage = <T>(key: string, initialValue: T) => {
             setStoredValue(valueToStore)
 
             localStorage.setItem(key, JSON.stringify(valueToStore))
-        } catch (error) {}
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    return [storedValue, setValue]
+    return [storedValue, setValue] as const
 }
 
 export default useLocalStorage
