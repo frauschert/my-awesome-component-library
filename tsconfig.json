@@ -19,5 +19,5 @@
         "jsx": "react"
     },
     "include": ["src", "src/custom.d.ts", "src/utility/.ts"],
-    "exclude": ["node_modules", "lib"]
+    "exclude": ["node_modules", "lib", "src/**/*.stories.tsx"]
 }
