@@ -3,14 +3,14 @@ import useContextMenu from '../../utility/hooks/useContextMenu'
 
 import './contextmenu.css'
 
-const ContextMenu = (props: PropsWithChildren<{}>) => {
+const ContextMenu = (props: PropsWithChildren<any>) => {
     const { xPos, yPos, showMenu } = useContextMenu()
 
     const { children } = props
 
     return showMenu ? (
         <ul
-            className="menu"
+            className="contextmenu"
             style={{
                 top: yPos,
                 left: xPos,

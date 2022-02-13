@@ -9,12 +9,15 @@ export default {
 } as Meta
 
 // Create a master template for mapping args to render the Input component
-const Template: Story = (args) => (
+const Template: Story = () => (
     <ContextMenu>
-        <>
-            <div>Create</div>
-            <div>Download</div>
-        </>
+        <li>Share to..</li>
+        <li>Cut</li>
+        <li>Copy</li>
+        <li>Paste</li>
+        <hr />
+        <li>Refresh</li>
+        <li>Exit</li>
     </ContextMenu>
 )
 
