@@ -33,7 +33,10 @@ export default {
             },
         }),
         postcss({
-            extensions: ['.css'],
+            extract: true,
+            modules: true,
+            extensions: ['.css', '.scss'],
+            use: ['sass'],
         }),
         url(),
         svgr(),
