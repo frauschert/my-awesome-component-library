@@ -1,10 +1,18 @@
+@import '../../styles/_themes.scss';
+
 .container .table {
     border-collapse: collapse;
     margin: 25px 0;
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+
+    @include themify() {
+        background-color: themed('backgroundColor');
+        color: themed('textColor');
+        border: 2px solid themed('textColor');
+        box-shadow: themed('box-shadow');
+    }
 }
 
 .container td,
@@ -13,10 +21,14 @@
 }
 
 .container thead tr {
-    background-color: #009879;
-    color: #ffffff;
     text-align: center;
     cursor: pointer;
+
+    @include themify() {
+        background-color: themed('backgroundColor');
+        color: themed('textColor');
+        border: 2px solid themed('textColor');
+    }
 }
 
 .container tbody tr {
@@ -28,11 +40,6 @@
     background-color: #f3f3f3;
 }
 
-.container tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
-}
-
 .container tbody tr.active-row {
     font-weight: bold;
-    color: #009879;
 }

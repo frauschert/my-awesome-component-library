@@ -4,7 +4,7 @@ import TableRows from './TableRows'
 import { SortConfig, TableProps } from './types'
 import { classNames } from '../../utility/classnames'
 import { ThemeContext } from '../Theme'
-import './table.css'
+import './table.scss'
 import { tableSearch, tableSort } from './utils'
 
 function Table<T, K extends keyof T>({

@@ -1,26 +1,14 @@
-import React, { FC, useReducer } from 'react'
-import { ThemeContext, Theme } from './ThemeContext'
-import './themes.css'
+import React, { FC, useState } from 'react'
+import { ThemeContext, ThemeKey, themes } from './ThemeContext'
 
-const initialState: Theme = 'light'
-
-const themeReducer = (state: Theme, theme: Theme): Theme => {
-    switch (theme) {
-        case 'light':
-            return 'light'
-        case 'dark':
-            return 'dark'
-        default:
-            return state
-    }
-}
+const initialState: ThemeKey = 'light'
 
 const ThemeProvider: FC = ({ children }) => {
-    const [theme, setTheme] = useReducer(themeReducer, initialState)
+    const [theme, setTheme] = useState<ThemeKey>(initialState)
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme }}>
-            {children}
+        <ThemeContext.Provider value={{ theme: themes[theme], setTheme }}>
+            <div className={`theme--${theme}`}>{children}</div>
         </ThemeContext.Provider>
     )
 }

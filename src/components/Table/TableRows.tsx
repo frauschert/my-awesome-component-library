@@ -31,11 +31,9 @@ const TableRows = <T, K extends keyof T>({
                 className={row.selected ? 'active-row' : undefined}
                 onClick={() => handleOnSelect(row)}
             >
-                {columnDefinitions.map((column, index2) => {
-                    return (
-                        <td key={`cell-${index2}`}>{row.data[column.key]}</td>
-                    )
-                })}
+                {columnDefinitions.map((column, index2) => (
+                    <td key={`cell-${index2}`}>{row.data[column.key]}</td>
+                ))}
             </tr>
         )
     })

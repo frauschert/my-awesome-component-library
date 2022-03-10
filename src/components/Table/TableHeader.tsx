@@ -1,6 +1,6 @@
 ﻿import React from 'react'
 import { TableHeaderProps } from './types'
-import './table.css'
+import './table.scss'
 import DownArrow from '../../icons/downArrow.svg'
 import UpArrow from '../../icons/upArrow.svg'
 
