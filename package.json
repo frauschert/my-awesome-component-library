@@ -56,7 +56,7 @@
         "echarts": "^5.2.2"
     },
     "scripts": {
-        "storybook": "start-storybook -p 6006",
+        "storybook": "start-storybook -p 9001 -c .storybook",
         "build-storybook": "build-storybook",
         "build": "rollup -c",
         "prettier": "prettier --write .",
