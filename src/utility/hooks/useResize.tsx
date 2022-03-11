@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { RefObject, useState } from 'react'
 
 const cursor = {
     both: 'nwse-resize',
@@ -6,53 +6,23 @@ const cursor = {
     horizontal: 'ew-resize',
 }
 
-const ResizableComponent = (
-    children: React.ReactNode,
-    options: { step: number; axis: 'both' | 'horizontal' | 'vertical' }
-) => {
-    const ref = React.useRef<HTMLDivElement>()
-    const { initResize, size, cursor } = useResize(ref, options)
-
-    return (
-        <div
-            style={{
-                backgroundColor: 'pink',
-                padding: '20px',
-                position: 'relative',
-            }}
-            ref={() => ref}
-        >
-            {children}
-            <div
-                style={{
-                    borderBottom: '0 solid transparent',
-                    borderRight: '15px solid black',
-                    borderTop: '15px solid transparent',
-                    bottom: 0,
-                    cursor: cursor,
-                    display: 'inline-block',
-                    height: 0,
-                    position: 'absolute',
-                    right: 0,
-                    width: 0,
-                }}
-                onMouseDown={initResize}
-            />
-        </div>
-    )
+export type ResizeOptions = {
+    step: number
+    axis: 'both' | 'horizontal' | 'vertical'
 }
+
 export const useResize = (
-    ref: React.MutableRefObject<HTMLElement | undefined>,
-    options: { step: number; axis: 'both' | 'horizontal' | 'vertical' }
+    ref: RefObject<HTMLElement | undefined>,
+    options: ResizeOptions
 ) => {
     ref = ref || {}
     const { step = 1, axis = 'both' } = options || {}
-    const [coords, setCoords] = React.useState({ x: Infinity, y: Infinity })
-    const [dims, setDims] = React.useState({
+    const [coords, setCoords] = useState({ x: Infinity, y: Infinity })
+    const [dims, setDims] = useState({
         width: Infinity,
         height: Infinity,
     })
-    const [size, setSize] = React.useState({
+    const [size, setSize] = useState({
         width: Infinity,
         height: Infinity,
     })
@@ -81,7 +51,7 @@ export const useResize = (
                 ref.current.style.height = height + 'px'
             }
             if (axis === 'horizontal') ref.current.style.width = width + 'px'
-            if (axis === 'vertical') ref.current.style.height = width + 'px'
+            if (axis === 'vertical') ref.current.style.height = height + 'px'
             setSize({ width, height })
         }
 
