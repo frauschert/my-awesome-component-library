@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, act } from '@testing-library/react-hooks'
-import useLocalStorage from './useLocalStorage'
+import { renderHook } from '@testing-library/react-hooks'
+import { useLocalStorage } from './useStorage'
 
 const TEST_KEY = 'key'
 const TEST_VALUE = { test: 'test' }
