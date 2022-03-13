@@ -1,14 +1,14 @@
 import { DependencyList, EffectCallback, useEffect, useRef } from 'react'
 
 const useDidUpdate = (effect: EffectCallback, deps?: DependencyList) => {
-    const didMountRef = useRef(false)
+    const didMountRef = useRef(true)
 
     useEffect(() => {
-        if (!didMountRef.current) {
-            didMountRef.current = true
-        } else {
-            return effect()
+        if (didMountRef.current) {
+            didMountRef.current = false
+            return
         }
+        return effect()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps)
 }
