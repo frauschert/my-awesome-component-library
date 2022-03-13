@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import useDebounce from '../../utility/hooks/useDebounce'
-import useDidUpdate from '../../utility/hooks/useDidUpdate'
 import { InputProps, NumberInputProps, TextInputProps } from './types'
 
 const Input = (props: InputProps) => {
@@ -43,18 +42,17 @@ const TextInput = (props: TextInputProps) => {
 
 const useInputEffect = (props: InputProps) => {
     const [value, setValue] = useState(props.initialValue ?? '')
-    const debouncedValue = useDebounce(value, 500)
-
-    useDidUpdate(() => {
-        if (props.type === 'number' && typeof debouncedValue === 'number') {
-            props.onChange(debouncedValue)
-        } else if (
-            props.type === 'text' &&
-            typeof debouncedValue === 'string'
-        ) {
-            props.onChange(debouncedValue)
-        }
-    }, [debouncedValue, props.type, props.onChange])
+    useDebounce(
+        () => {
+            if (props.type === 'number' && typeof value === 'number') {
+                props.onChange(value)
+            } else if (props.type === 'text' && typeof value === 'string') {
+                props.onChange(value)
+            }
+        },
+        500,
+        [value]
+    )
 
     return [value, setValue] as const
 }
