@@ -4,7 +4,7 @@ import { useDetectOutsideClick } from '../../utility/hooks/useDetectOutsideClick
 import './dropdownmenu.css'
 
 const DropdownMenu = () => {
-    const dropdownRef = useRef(null)
+    const dropdownRef = useRef<HTMLElement>(null)
     const [isActive, setIsActive] = useDetectOutsideClick(dropdownRef, false)
     const onClick = () => setIsActive(!isActive)
 
