@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import isTouchEvent from '../guards/isTouchEvent'
+import useEventListener from './useEventListener'
 import useLongPress from './useLongPress'
 
 const useContextMenu = () => {
@@ -34,24 +35,13 @@ const useContextMenu = () => {
             delay: 5000,
         })
 
-    useEffect(() => {
-        document.addEventListener('click', handleClick)
-        document.addEventListener('contextmenu', handleContextMenu)
-        document.addEventListener('mousedown', onMouseDown)
-        document.addEventListener('mouseup', onMouseUp)
-        document.addEventListener('mouseleave', onMouseLeave)
-        document.addEventListener('touchstart', onTouchStart)
-        document.addEventListener('touchend', onTouchEnd)
-        return () => {
-            document.removeEventListener('click', handleClick)
-            document.removeEventListener('contextmenu', handleContextMenu)
-            document.removeEventListener('mousedown', onMouseDown)
-            document.removeEventListener('mouseup', onMouseUp)
-            document.removeEventListener('mouseleave', onMouseLeave)
-            document.removeEventListener('touchstart', onTouchStart)
-            document.removeEventListener('touchend', onTouchEnd)
-        }
-    })
+    useEventListener(document, 'click', handleClick)
+    useEventListener(document, 'contextmenu', handleContextMenu)
+    useEventListener(document, 'mousedown', onMouseDown)
+    useEventListener(document, 'mouseup', onMouseUp)
+    useEventListener(document, 'mouseleave', onMouseLeave)
+    useEventListener(document, 'touchstart', onTouchStart)
+    useEventListener(document, 'touchend', onTouchEnd)
 
     return { xPos, yPos, showMenu }
 }

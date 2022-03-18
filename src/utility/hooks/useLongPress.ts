@@ -10,7 +10,6 @@ const useLongPress = (
     const timeout = useRef<ReturnType<typeof setTimeout>>()
     const target = useRef<EventTarget>()
 
-    console.log(delay)
     const start = useCallback(
         (event: MouseEvent | TouchEvent) => {
             if (shouldPreventDefault && event.target) {
