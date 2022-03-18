@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react'
+import { RefObject, useCallback, useState } from 'react'
 import isTouchEvent from '../guards/isTouchEvent'
+import useClickOutside from './useClickOutside'
 import useEventListener from './useEventListener'
-import useLongPress from './useLongPress'
 
-const useContextMenu = () => {
+const useContextMenu = (ref: RefObject<HTMLElement>) => {
     const [xPos, setXPos] = useState(0)
     const [yPos, setYPos] = useState(0)
     const [showMenu, setShowMenu] = useState(false)
@@ -29,19 +29,11 @@ const useContextMenu = () => {
         showMenu && setShowMenu(false)
     }, [showMenu])
 
-    const { onMouseDown, onMouseUp, onMouseLeave, onTouchStart, onTouchEnd } =
-        useLongPress(handleContextMenu, () => console.log('Click triggered!'), {
-            shouldPreventDefault: true,
-            delay: 5000,
-        })
+    useClickOutside(ref, handleClick)
 
-    useEventListener(document, 'click', handleClick)
-    useEventListener(document, 'contextmenu', handleContextMenu)
-    useEventListener(document, 'mousedown', onMouseDown)
-    useEventListener(document, 'mouseup', onMouseUp)
-    useEventListener(document, 'mouseleave', onMouseLeave)
-    useEventListener(document, 'touchstart', onTouchStart)
-    useEventListener(document, 'touchend', onTouchEnd)
+    useEventListener(ref.current, 'contextmenu', handleContextMenu)
+
+    //TODO: support for long press...
 
     return { xPos, yPos, showMenu }
 }
