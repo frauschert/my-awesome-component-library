@@ -1,9 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isRefObject<T>(value: any): value is RefObject<T> {
-    return 'current' in value
-}
+import { useEffect, useRef } from 'react'
 
 function useEventListener<K extends keyof WindowEventMap>(
     element: Window | null | undefined,
@@ -19,7 +14,7 @@ function useEventListener<
     K extends keyof HTMLElementEventMap,
     T extends HTMLElement = HTMLDivElement
 >(
-    element: RefObject<T>,
+    element: T | null | undefined,
     type: K,
     handler: (event: HTMLElementEventMap[K]) => void
 ): void
@@ -30,7 +25,7 @@ function useEventListener<
     KH extends keyof HTMLElementEventMap,
     T extends HTMLElement | void = void
 >(
-    element: Window | Document | RefObject<T> | null | undefined,
+    element: Window | Document | T | null | undefined,
     type: KW | KD | KH,
     handler: (
         this: typeof element,
@@ -48,14 +43,13 @@ function useEventListener<
     }, [handler])
 
     useEffect(() => {
-        const targetElement = isRefObject(element) ? element.current : element
-        if (!targetElement) return
+        if (!element) return
 
         const listener: typeof handler = (e) =>
             handlerRef.current.call(element, e)
 
-        targetElement.addEventListener(type, listener)
-        return () => targetElement.removeEventListener(type, listener)
+        element.addEventListener(type, listener)
+        return () => element.removeEventListener(type, listener)
     }, [type, element])
 }
 
