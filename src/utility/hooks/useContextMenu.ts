@@ -3,7 +3,7 @@ import isTouchEvent from '../guards/isTouchEvent'
 import useClickOutside from './useClickOutside'
 import useEventListener from './useEventListener'
 
-const useContextMenu = (ref: RefObject<HTMLElement>) => {
+const useContextMenu = <T extends HTMLElement>(ref: RefObject<T>) => {
     const [xPos, setXPos] = useState(0)
     const [yPos, setYPos] = useState(0)
     const [showMenu, setShowMenu] = useState(false)
@@ -31,7 +31,7 @@ const useContextMenu = (ref: RefObject<HTMLElement>) => {
 
     useClickOutside(ref, handleClick)
 
-    useEventListener(ref.current, 'contextmenu', handleContextMenu)
+    useEventListener(ref, 'contextmenu', handleContextMenu)
 
     //TODO: support for long press...
 

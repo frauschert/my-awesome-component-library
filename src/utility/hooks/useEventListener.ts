@@ -1,4 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
+
+const isRefObject = <T extends HTMLElement>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any
+): value is RefObject<T> =>
+    !!value && typeof value == 'object' && 'current' in value
 
 function useEventListener<K extends keyof WindowEventMap>(
     element: Window | null | undefined,
@@ -14,7 +20,7 @@ function useEventListener<
     K extends keyof HTMLElementEventMap,
     T extends HTMLElement = HTMLDivElement
 >(
-    element: T | null | undefined,
+    element: RefObject<T> | null | undefined,
     type: K,
     handler: (event: HTMLElementEventMap[K]) => void
 ): void
@@ -23,9 +29,9 @@ function useEventListener<
     KW extends keyof WindowEventMap,
     KD extends keyof DocumentEventMap,
     KH extends keyof HTMLElementEventMap,
-    T extends HTMLElement | void = void
+    T extends HTMLElement
 >(
-    element: Window | Document | T | null | undefined,
+    element: Window | Document | RefObject<T> | null | undefined,
     type: KW | KD | KH,
     handler: (
         this: typeof element,
@@ -43,13 +49,14 @@ function useEventListener<
     }, [handler])
 
     useEffect(() => {
-        if (!element) return
+        const target = isRefObject(element) ? element.current : element
+        if (!target) return
 
         const listener: typeof handler = (e) =>
             handlerRef.current.call(element, e)
 
-        element.addEventListener(type, listener)
-        return () => element.removeEventListener(type, listener)
+        target.addEventListener(type, listener)
+        return () => target.removeEventListener(type, listener)
     }, [type, element])
 }
 
