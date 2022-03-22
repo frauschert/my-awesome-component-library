@@ -2,7 +2,7 @@
 import React, { forwardRef, RefObject } from 'react'
 import useContextMenu from '../../utility/hooks/useContextMenu'
 
-import './contextmenu.css'
+import './contextmenu.scss'
 
 export type ContextMenuProps = { children?: React.ReactNode }
 

@@ -3,7 +3,8 @@
     background-color: #fff;
     border-radius: 2px;
     padding: 5px 0 5px 0;
-    width: 150px;
+    min-width: 150px;
+    max-width: 300px;
     height: auto;
     margin: 0;
     /* use absolute positioning  */
