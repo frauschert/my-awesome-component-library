@@ -1,29 +1,33 @@
-/* eslint-disable react/prop-types */
-import React, { forwardRef, RefObject } from 'react'
+import React, { RefObject, useRef } from 'react'
+import useClickOutside from '../../utility/hooks/useClickOutside'
 import useContextMenu from '../../utility/hooks/useContextMenu'
 
 import './contextmenu.scss'
 
-export type ContextMenuProps = { children?: React.ReactNode }
+export type ContextMenuProps = {
+    targetRef: RefObject<HTMLElement>
+    children?: React.ReactNode
+}
 
-const ContextMenu = forwardRef<HTMLElement, ContextMenuProps>((props, ref) => {
-    const { xPos, yPos, showMenu } = useContextMenu(
-        ref as RefObject<HTMLElement>
-    )
+const ContextMenu = ({ targetRef, children }: ContextMenuProps) => {
+    const ulRef = useRef<HTMLUListElement>(null)
+    const { xPos, yPos, showMenu, close } = useContextMenu(targetRef)
+
+    useClickOutside(ulRef, close)
 
     return showMenu ? (
+        // TODO: consider using react portal here
         <ul
+            ref={ulRef}
             className="contextmenu"
             style={{
                 top: yPos,
                 left: xPos,
             }}
         >
-            {props.children}
+            {children}
         </ul>
     ) : null
-})
-
-ContextMenu.displayName = 'ContextMenu'
+}
 
 export default ContextMenu

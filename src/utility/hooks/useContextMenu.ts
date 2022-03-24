@@ -1,6 +1,5 @@
 import { RefObject, useCallback, useState } from 'react'
 import isTouchEvent from '../guards/isTouchEvent'
-import useClickOutside from './useClickOutside'
 import useEventListener from './useEventListener'
 
 const useContextMenu = <T extends HTMLElement>(ref: RefObject<T>) => {
@@ -25,17 +24,15 @@ const useContextMenu = <T extends HTMLElement>(ref: RefObject<T>) => {
         [setXPos, setYPos]
     )
 
-    const handleClick = useCallback(() => {
+    const close = useCallback(() => {
         showMenu && setShowMenu(false)
     }, [showMenu])
-
-    useClickOutside(ref, handleClick)
 
     useEventListener(ref, 'contextmenu', handleContextMenu)
 
     //TODO: support for long press...
 
-    return { xPos, yPos, showMenu }
+    return { xPos, yPos, showMenu, close }
 }
 
 export default useContextMenu

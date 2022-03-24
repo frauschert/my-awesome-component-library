@@ -16,7 +16,7 @@ const Template: Story = () => {
             <div ref={ref} style={{ overflow: 'hidden' }}>
                 CLICK ME!!!
             </div>
-            <ContextMenu ref={ref}>
+            <ContextMenu targetRef={ref}>
                 <li>Share to..</li>
                 <li>Cut</li>
                 <li>Copy</li>
