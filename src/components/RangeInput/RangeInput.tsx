@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import debounce from '../../utility/debounce'
+import useDebounce from '../../utility/hooks/useDebounce'
 
 export type RangeInputProps = {
     initialValue?: number
@@ -12,17 +13,8 @@ export type RangeInputProps = {
 const RangeInput = (props: RangeInputProps) => {
     const { initialValue, minValue, maxValue, stepValue, onChange } = props
 
-    const [value, setValue] = useState<number>()
-    const debounceChange = useCallback(
-        debounce((value: number) => onChange?.(value), 500),
-        [onChange]
-    )
-
-    useEffect(() => {
-        if (value !== undefined) {
-            debounceChange(value)
-        }
-    }, [value])
+    const [value, setValue] = useState<number>(initialValue ?? 0)
+    useDebounce(() => onChange?.(value), 500, [onChange])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
