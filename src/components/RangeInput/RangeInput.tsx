@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import debounce from '../../utility/debounce'
+import React, { useState } from 'react'
 import useDebounce from '../../utility/hooks/useDebounce'
 
 export type RangeInputProps = {
