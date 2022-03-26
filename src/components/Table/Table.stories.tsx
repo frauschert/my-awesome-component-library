@@ -115,6 +115,7 @@ const props: TableProps<Person, keyof Person> = {
 // Create a master template for mapping args to render the Button component
 const Template =
     <T, K extends keyof T>(): Story<TableProps<T, K>> =>
+    // eslint-disable-next-line react/display-name
     (args) => {
         return <Table {...args} />
     }
@@ -127,7 +128,7 @@ WithTheme.decorators = [
     (Story) => (
         <ThemeProvider>
             <Story />
-            <ThemeSwitcher></ThemeSwitcher>
+            <ThemeSwitcher />
         </ThemeProvider>
     ),
 ]
