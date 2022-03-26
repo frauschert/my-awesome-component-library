@@ -1,11 +1,12 @@
-import { RefObject, useState } from 'react'
+import { RefObject } from 'react'
 import useEventListener from './useEventListener'
+import useToggle from './useToggle'
 
 export default function useHover(ref: RefObject<HTMLElement>) {
-    const [hovered, setHovered] = useState(false)
+    const [hovered, toggle] = useToggle(false)
 
-    useEventListener(ref.current, 'mouseover', () => setHovered(true))
-    useEventListener(ref.current, 'mouseout', () => setHovered(false))
+    useEventListener(ref, 'mouseover', toggle)
+    useEventListener(ref, 'mouseout', toggle)
 
     return hovered
 }

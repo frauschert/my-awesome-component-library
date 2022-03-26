@@ -1,5 +1,5 @@
-import Circle from './SpinCoin'
+import SpinCoin from './SpinCoin'
 
 export default {
-    Circle,
+    SpinCoin,
 }

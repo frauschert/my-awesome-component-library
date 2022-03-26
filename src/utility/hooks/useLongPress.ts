@@ -11,12 +11,12 @@ const useLongPress = (
     const { reset, clear } = useTimeout(callback, delay)
     useEffectOnce(clear)
 
-    useEventListener(ref.current, 'mousedown', reset)
-    useEventListener(ref.current, 'touchstart', reset)
+    useEventListener(ref, 'mousedown', reset)
+    useEventListener(ref, 'touchstart', reset)
 
-    useEventListener(ref.current, 'mouseup', clear)
-    useEventListener(ref.current, 'mouseleave', clear)
-    useEventListener(ref.current, 'touchend', clear)
+    useEventListener(ref, 'mouseup', clear)
+    useEventListener(ref, 'mouseleave', clear)
+    useEventListener(ref, 'touchend', clear)
 }
 
 export default useLongPress
