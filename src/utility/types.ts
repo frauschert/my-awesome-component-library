@@ -34,3 +34,5 @@ export type HexColor<T extends string> =
         : never
 
 export type Color = string & { __type: 'HexColor' }
+
+export type Awaited<T> = T extends PromiseLike<infer U> ? U : T
