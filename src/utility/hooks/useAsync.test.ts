@@ -13,21 +13,21 @@ async function testFunction() {
 
 test('should use async', async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-        useAsync(testFunction)
+        useAsync(testFunction, false)
     )
 
-    expect(result.current[0].loading).toBe(false)
-    expect(result.current[0].data).toBe(null)
-    expect(result.current[0].error).toBe(null)
+    expect(result.current.loading).toBe(false)
+    expect(result.current.value).toBe(null)
+    expect(result.current.error).toBe(null)
 
     act(() => {
-        result.current[1]()
+        result.current.execute()
     })
 
-    expect(result.current[0].loading).toBe(true)
+    expect(result.current.loading).toBe(true)
 
     await waitForNextUpdate()
 
-    expect(result.current[0].loading).toBe(false)
-    expect(result.current[0].data).toBe('success')
+    expect(result.current.loading).toBe(false)
+    expect(result.current.value).toBe('success')
 })

@@ -1,30 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
+import useAsync from './useAsync'
 
 export function useFetch(request: RequestInfo, init?: RequestInit) {
-    const [response, setResponse] = useState<null | Response>(null)
-    const [error, setError] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState(true)
-
+    const abortControllerRef = useRef<AbortController>()
     useEffect(() => {
-        const abortController = new AbortController()
-        setIsLoading(true)
-        ;(async () => {
-            try {
-                const response = await fetch(request, {
-                    ...init,
-                    signal: abortController.signal,
-                })
-                setResponse(await response?.json())
-            } catch (error) {
-                setError(true)
-            } finally {
-                setIsLoading(false)
-            }
-        })()
-        return () => {
-            abortController.abort()
-        }
-    }, [init, request])
+        abortControllerRef.current = new AbortController()
 
-    return { response, error, isLoading }
+        return () => abortControllerRef.current?.abort()
+    }, [request, init])
+
+    const fetchMethod = useCallback(async () => {
+        const response = await fetch(request, {
+            ...init,
+            signal: abortControllerRef.current?.signal,
+        })
+        return response?.json()
+    }, [request, init])
+
+    return useAsync(fetchMethod)
 }

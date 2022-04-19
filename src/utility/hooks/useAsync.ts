@@ -1,98 +1,39 @@
-import { useReducer, useEffect, DependencyList } from 'react'
-import { Awaited } from '../types'
+import { useEffect, useState, useCallback } from 'react'
 
-type LoadingAction = {
-    type: 'LOADING'
-}
+const useAsync = <T>(asyncFunction: () => Promise<T>, immediate = true) => {
+    const [loading, setLoading] = useState(false)
+    const [value, setValue] = useState<T | null>(null)
+    const [error, setError] = useState<Error | null>(null)
 
-type SuccessAction<T> = {
-    type: 'SUCCESS'
-    data: T
-}
+    // The execute function wraps asyncFunction and
+    // handles setting state for pending, value, and error.
+    // useCallback ensures the below useEffect is not called
+    // on every render, but only if asyncFunction changes.
+    const execute = useCallback(() => {
+        setLoading(true)
+        setValue(null)
+        setError(null)
 
-type ErrorAction = {
-    type: 'ERROR'
-    error: Error
-}
-
-type AsyncAction<D> = LoadingAction | SuccessAction<D> | ErrorAction
-
-export type AsyncState<D> = {
-    loading: boolean
-    data: D | null
-    error: Error | null
-}
-
-function asyncReducer<D>(
-    state: AsyncState<D>,
-    action: AsyncAction<D>
-): AsyncState<D> {
-    switch (action.type) {
-        case 'LOADING':
-            return {
-                loading: true,
-                data: null,
-                error: null,
-            }
-        case 'SUCCESS':
-            return {
-                loading: false,
-                data: action.data,
-                error: null,
-            }
-        case 'ERROR':
-            return {
-                loading: false,
-                data: null,
-                error: action.error,
-            }
-    }
-}
-
-type PromiseFn<T> = (...args: any) => Promise<T>
-
-function useAsync<D, F extends PromiseFn<D>>(promiseFn: F) {
-    const [state, dispatch] = useReducer(asyncReducer, {
-        loading: false,
-        data: null,
-        error: null,
-    } as AsyncState<Awaited<F>>)
-
-    async function run(...params: Parameters<F>) {
-        dispatch({ type: 'LOADING' })
-        try {
-            const data = await promiseFn(...params)
-            dispatch({
-                type: 'SUCCESS',
-                data,
+        return asyncFunction()
+            .then((response) => {
+                setValue(response)
             })
-        } catch (e) {
-            dispatch({
-                type: 'ERROR',
-                error: e instanceof Error ? e : new Error('Unknown error'),
+            .catch((error) => {
+                setError(error)
             })
+            .finally(() => setLoading(false))
+    }, [asyncFunction])
+
+    // Call execute if we want to fire it right away.
+    // Otherwise execute can be called later, such as
+    // in an onClick handler.
+    useEffect(() => {
+        if (immediate) {
+            execute()
         }
-    }
+    }, [execute, immediate])
 
-    return [state, run] as const
-}
-
-function useAsyncEffect<D, F extends PromiseFn<D>>(
-    promiseFn: F,
-    params: Parameters<F>,
-    deps: DependencyList[]
-) {
-    const [state, run] = useAsync(promiseFn)
-    useEffect(
-        () => {
-            run(...params)
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        deps
-    )
-
-    return [state, run] as const
+    return { execute, loading, value, error }
 }
 
 export default useAsync
-export { useAsyncEffect }
