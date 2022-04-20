@@ -1,0 +1,25 @@
+@import '../../styles/_themes.scss';
+
+details summary {
+    cursor: pointer;
+
+    @include themify() {
+        background-color: themed('backgroundColor');
+        color: themed('textColor');
+        // border: 2px solid themed('textColor');
+    }
+}
+
+details summary > * {
+    display: inline;
+}
+
+details > div {
+    margin-top: 0;
+    padding: 1rem;
+    @include themify() {
+        background-color: themed('backgroundColor');
+        color: themed('textColor');
+        border: 2px solid themed('textColor');
+    }
+}
