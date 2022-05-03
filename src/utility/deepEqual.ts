@@ -1,4 +1,7 @@
-export default function deepEqual(object1: any, object2: any): boolean {
+export default function deepEqual<T extends Record<string, unknown>>(
+    object1: T,
+    object2: T
+): boolean {
     const keys1 = Object.keys(object1)
     const keys2 = Object.keys(object2)
 
@@ -21,6 +24,6 @@ export default function deepEqual(object1: any, object2: any): boolean {
     return true
 }
 
-function isObject(object: any) {
+function isObject(object: any): object is Record<string, unknown> {
     return object != null && typeof object === 'object'
 }

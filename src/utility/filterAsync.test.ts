@@ -11,8 +11,7 @@ function isThreeAsync(value: number): Promise<boolean> {
 }
 
 test('should return [3]', () => {
-    return filterAsync(arr, (value) => isThreeAsync(value)).then((data) => {
-        console.log(data)
+    return filterAsync(arr, (value) => isThreeAsync(value)).then((data) =>
         expect(data).toStrictEqual([3])
-    })
+    )
 })
