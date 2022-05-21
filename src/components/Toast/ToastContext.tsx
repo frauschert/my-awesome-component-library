@@ -2,9 +2,10 @@ import React, {
     createContext,
     PropsWithChildren,
     ReactNode,
+    useCallback,
     useContext,
     useMemo,
-    useState,
+    useReducer,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { classNames } from '../../utility/classnames'
@@ -29,26 +30,64 @@ type ToastProviderProps = PropsWithChildren<{ position: Position }>
 
 const ToastContext = createContext<ToastContextState | null>(null)
 
-const ToastProvider = ({ children, position }: ToastProviderProps) => {
-    const [toasts, setToasts] = useState<ToastItem[]>([])
+type ToastAdd = {
+    type: 'add'
+    payload: ToastItem
+}
 
-    const add = (content: ReactNode) => {
+type ToastRemove = {
+    type: 'remove'
+    payload: {
+        id: string
+    }
+}
+
+type ToastAction = ToastAdd | ToastRemove
+
+type ToastState = {
+    toasts: ToastItem[]
+}
+
+function toastReducer(state: ToastState, action: ToastAction) {
+    switch (action.type) {
+        case 'add':
+            return {
+                ...state,
+                toasts: [...state.toasts, action.payload],
+            }
+        case 'remove':
+            return {
+                ...state,
+                toasts: state.toasts.filter((t) => t.id !== action.payload.id),
+            }
+        default:
+            return state
+    }
+}
+
+const ToastProvider = ({ children, position }: ToastProviderProps) => {
+    const [state, dispatch] = useReducer(toastReducer, { toasts: [] })
+
+    const add = useCallback((content: ReactNode) => {
         const id = generateUniqueID()
 
-        setToasts([...toasts, { id, content }])
-    }
+        dispatch({ type: 'add', payload: { id, content } })
+    }, [])
 
-    const remove = (id: string) => setToasts(toasts.filter((t) => t.id !== id))
-    const providerValue = useMemo<ToastContextState>(() => {
+    const remove = useCallback(
+        (id: string) => dispatch({ type: 'remove', payload: { id } }),
+        []
+    )
+    const providerValue = useMemo(() => {
         return { add, remove }
-    }, [toasts])
+    }, [add, remove])
 
     return (
         <ToastContext.Provider value={providerValue}>
             {children}
             {createPortal(
                 <div className={classNames('toasts-wrapper', position)}>
-                    {toasts.map((t) => (
+                    {state.toasts.map((t) => (
                         <Toast key={t.id} remove={() => remove(t.id)}>
                             {t.content}
                         </Toast>
