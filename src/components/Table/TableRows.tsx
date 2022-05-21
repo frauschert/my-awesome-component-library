@@ -32,7 +32,9 @@ const TableRows = <T, K extends keyof T>({
                 onClick={() => handleOnSelect(row)}
             >
                 {columnDefinitions.map((column, index2) => (
-                    <td key={`cell-${index2}`}>{row.data[column.key]}</td>
+                    <td key={`cell-${index2}`}>
+                        <>{row.data[column.key]}</>
+                    </td>
                 ))}
             </tr>
         )

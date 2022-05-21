@@ -1,9 +1,13 @@
-import React, { FC, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { ThemeContext, ThemeKey, themes } from './ThemeContext'
 
 const initialState: ThemeKey = 'light'
 
-const ThemeProvider: FC = ({ children }) => {
+type ThemeProviderProps = {
+    children: ReactNode[]
+}
+
+const ThemeProvider = ({ children }: ThemeProviderProps) => {
     const [theme, setTheme] = useState<ThemeKey>(initialState)
 
     return (

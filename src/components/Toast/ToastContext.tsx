@@ -84,17 +84,19 @@ const ToastProvider = ({ children, position }: ToastProviderProps) => {
 
     return (
         <ToastContext.Provider value={providerValue}>
-            {children}
-            {createPortal(
-                <div className={classNames('toasts-wrapper', position)}>
-                    {state.toasts.map((t) => (
-                        <Toast key={t.id} remove={() => remove(t.id)}>
-                            {t.content}
-                        </Toast>
-                    ))}
-                </div>,
-                document.body
-            )}
+            <>
+                {children}
+                {createPortal(
+                    <div className={classNames('toasts-wrapper', position)}>
+                        {state.toasts.map((t) => (
+                            <Toast key={t.id} remove={() => remove(t.id)}>
+                                {t.content}
+                            </Toast>
+                        ))}
+                    </div>,
+                    document.body
+                )}
+            </>
         </ToastContext.Provider>
     )
 }
