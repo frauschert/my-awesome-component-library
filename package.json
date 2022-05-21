@@ -9,9 +9,9 @@
     "author": "Fabian Rauschert",
     "license": "MIT",
     "devDependencies": {
-        "@babel/core": "^7.17.0",
-        "@babel/preset-env": "^7.16.11",
-        "@babel/preset-typescript": "^7.16.7",
+        "@babel/core": "^7.18.0",
+        "@babel/preset-env": "^7.18.0",
+        "@babel/preset-typescript": "^7.17.12",
         "@rollup/plugin-commonjs": "^20.0.0",
         "@rollup/plugin-node-resolve": "^13.0.4",
         "@rollup/plugin-url": "^6.1.0",
