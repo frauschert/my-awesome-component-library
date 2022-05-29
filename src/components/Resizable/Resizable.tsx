@@ -33,7 +33,7 @@ const ResizableComponent = ({ children, options }: ResizableComponentProps) => {
                     right: 0,
                     width: 0,
                 }}
-                onMouseDown={initResize}
+                onPointerDown={initResize}
             />
         </div>
     )

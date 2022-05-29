@@ -27,7 +27,7 @@ export const useResize = (
         height: Infinity,
     })
 
-    const initResize = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const initResize = (event: React.PointerEvent<HTMLElement>) => {
         if (!ref.current) return
         setCoords({ x: event.clientX, y: event.clientY })
         const { width, height } = window.getComputedStyle(ref.current)
@@ -38,7 +38,7 @@ export const useResize = (
         // Round the size based to `props.step`.
         const getValue = (input: number) => Math.ceil(input / step) * step
 
-        const doDrag = (event: MouseEvent) => {
+        const doDrag = (event: PointerEvent) => {
             if (!ref.current) return
 
             // Calculate the box size.
@@ -56,12 +56,12 @@ export const useResize = (
         }
 
         const stopDrag = () => {
-            document.removeEventListener('mousemove', doDrag, false)
-            document.removeEventListener('mouseup', stopDrag, false)
+            document.removeEventListener('pointermove', doDrag, false)
+            document.removeEventListener('pointerup', stopDrag, false)
         }
 
-        document.addEventListener('mousemove', doDrag, false)
-        document.addEventListener('mouseup', stopDrag, false)
+        document.addEventListener('pointermove', doDrag, false)
+        document.addEventListener('pointerup', stopDrag, false)
     }, [dims, coords, step, ref, axis])
 
     return { initResize, size, cursor: cursor[axis] }
