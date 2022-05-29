@@ -10,4 +10,8 @@ export type TextInputProps = {
     onChange: (value: string) => void
 }
 
-export type InputProps = NumberInputProps | TextInputProps
+export type InputProps = (NumberInputProps | TextInputProps) & {
+    label?: string
+    locked?: boolean
+    focussed?: boolean
+}

@@ -2,42 +2,52 @@ import React, { useState } from 'react'
 import useDebounce from '../../utility/hooks/useDebounce'
 import { InputProps, NumberInputProps, TextInputProps } from './types'
 
+import './input.scss'
+
 const Input = (props: InputProps) => {
-    const { type } = props
-
-    switch (type) {
-        case 'number':
-            return <NumberInput {...props} />
-        case 'text':
-            return <TextInput {...props} />
-    }
-}
-
-const NumberInput = (props: NumberInputProps) => {
+    const { type, label } = props
+    const [locked, setLocked] = useState(props.locked ?? false)
+    const [focussed, setFocussed] = useState(
+        (props.focussed && locked) || false
+    )
     const [value, setValue] = useInputEffect({ ...props })
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const parsedValue = parseFloat(event.target.value)
+    const handleNumberChange = (value: string) => {
+        const parsedValue = parseFloat(value)
         if (isNaN(parsedValue)) {
             return
         }
-
         setValue(parsedValue)
     }
 
-    return <input type="number" value={value} onChange={handleChange} />
-}
-
-const TextInput = (props: TextInputProps) => {
-    const [value, setValue] = useInputEffect({ ...props })
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const eventValue = event.target.value
-
-        setValue(eventValue)
+        switch (type) {
+            case 'number':
+                handleNumberChange(event.target.value)
+                break
+            case 'text':
+                setValue(event.target.value)
+                break
+            default:
+                setValue(event.target.value)
+        }
     }
 
-    return <input type="text" value={value} onChange={handleChange} />
+    const fieldClassName = `field ${
+        (locked ? focussed : focussed || value) && 'focussed'
+    } ${locked && !focussed && 'locked'}`
+
+    return (
+        <input
+            type={type}
+            value={value}
+            onChange={handleChange}
+            className={fieldClassName}
+            placeholder={label}
+            onFocus={() => !locked && setFocussed(true)}
+            onBlur={() => !locked && setFocussed(false)}
+        />
+    )
 }
 
 const useInputEffect = (props: InputProps) => {
