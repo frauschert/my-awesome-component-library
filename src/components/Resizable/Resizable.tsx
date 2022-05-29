@@ -1,12 +1,12 @@
-import React, { FC } from 'react'
+import React from 'react'
 import { useResize, ResizeOptions } from '../../utility/hooks/useResize'
 
-export type ResizableComponentProps = { options: ResizeOptions }
+export type ResizableComponentProps = {
+    children: React.ReactNode
+    options: ResizeOptions
+}
 
-const ResizableComponent: FC<ResizableComponentProps> = ({
-    children,
-    options,
-}) => {
+const ResizableComponent = ({ children, options }: ResizableComponentProps) => {
     const ref = React.useRef<HTMLDivElement>(null)
     const { initResize, size, cursor } = useResize(ref, options)
 
