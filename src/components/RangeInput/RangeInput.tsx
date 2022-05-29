@@ -12,14 +12,18 @@ export type RangeInputProps = {
 const RangeInput = (props: RangeInputProps) => {
     const { initialValue, minValue, maxValue, stepValue, onChange } = props
 
-    const [value, setValue] = useState<number>(initialValue ?? 0)
+    const [value, setValue] = useState(initialValue ?? 0)
     useDebounce(() => onChange?.(value), 500, [onChange])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
         const targetValue = parseFloat(event.target.value)
 
-        if (isNaN(targetValue)) {
+        if (
+            isNaN(targetValue) ||
+            targetValue < minValue ||
+            targetValue > maxValue
+        ) {
             return
         }
 
@@ -36,6 +40,14 @@ const RangeInput = (props: RangeInputProps) => {
                 value={value}
                 defaultValue={initialValue}
                 onChange={handleChange}
+            />
+            <input
+                type="number"
+                onChange={handleChange}
+                min={minValue}
+                max={maxValue}
+                value={value}
+                defaultValue={initialValue}
             />
         </>
     )
