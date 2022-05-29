@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from 'react'
+import React, { RefObject, useCallback, useState } from 'react'
 
 const cursor = {
     both: 'nwse-resize',
@@ -15,7 +15,6 @@ export const useResize = (
     ref: RefObject<HTMLElement | undefined>,
     options: ResizeOptions
 ) => {
-    ref = ref || {}
     const { step = 1, axis = 'both' } = options || {}
     const [coords, setCoords] = useState({ x: Infinity, y: Infinity })
     const [dims, setDims] = useState({
@@ -34,11 +33,14 @@ export const useResize = (
         setDims({ width: parseInt(width, 10), height: parseInt(height, 10) })
     }
 
-    React.useEffect(() => {
-        // Round the size based to `props.step`.
-        const getValue = (input: number) => Math.ceil(input / step) * step
+    // Round the size based to `props.step`.
+    const getValue = useCallback(
+        (input: number) => Math.ceil(input / step) * step,
+        [step]
+    )
 
-        const doDrag = (event: PointerEvent) => {
+    const doDrag = useCallback(
+        (event: PointerEvent) => {
             if (!ref.current) return
 
             // Calculate the box size.
@@ -53,8 +55,11 @@ export const useResize = (
             if (axis === 'horizontal') ref.current.style.width = width + 'px'
             if (axis === 'vertical') ref.current.style.height = height + 'px'
             setSize({ width, height })
-        }
+        },
+        [axis, coords.x, coords.y, dims.height, dims.width, getValue, ref]
+    )
 
+    React.useEffect(() => {
         const stopDrag = () => {
             document.removeEventListener('pointermove', doDrag, false)
             document.removeEventListener('pointerup', stopDrag, false)
@@ -62,7 +67,7 @@ export const useResize = (
 
         document.addEventListener('pointermove', doDrag, false)
         document.addEventListener('pointerup', stopDrag, false)
-    }, [dims, coords, step, ref, axis])
+    }, [doDrag])
 
     return { initResize, size, cursor: cursor[axis] }
 }
