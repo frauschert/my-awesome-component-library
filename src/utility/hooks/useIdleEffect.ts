@@ -1,10 +1,10 @@
 import useEventListener from './useEventListener'
 import useTimeout from './useTimeout'
 
-const useIdle = (onIdle: () => void, ms: number) => {
-    const { reset } = useTimeout(onIdle, ms)
+const useIdleEffect = (callback: () => void, ms: number) => {
+    const { reset } = useTimeout(callback, ms)
     useEventListener(window, 'pointermove', reset)
     useEventListener(window, 'keypress', reset)
 }
 
-export default useIdle
+export default useIdleEffect
