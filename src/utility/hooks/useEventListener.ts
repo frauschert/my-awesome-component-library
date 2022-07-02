@@ -9,12 +9,14 @@ const isRefObject = <T extends HTMLElement>(
 function useEventListener<K extends keyof WindowEventMap>(
     element: Window | null | undefined,
     type: K,
-    handler: (event: WindowEventMap[K]) => void
+    handler: (event: WindowEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions | undefined
 ): void
 function useEventListener<K extends keyof DocumentEventMap>(
     element: Document | null | undefined,
     type: K,
-    handler: (event: DocumentEventMap[K]) => void
+    handler: (event: DocumentEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions | undefined
 ): void
 function useEventListener<
     K extends keyof HTMLElementEventMap,
@@ -22,7 +24,8 @@ function useEventListener<
 >(
     element: RefObject<T> | null | undefined,
     type: K,
-    handler: (event: HTMLElementEventMap[K]) => void
+    handler: (event: HTMLElementEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions | undefined
 ): void
 
 function useEventListener<
@@ -40,7 +43,8 @@ function useEventListener<
             | DocumentEventMap[KD]
             | HTMLElementEventMap[KH]
             | Event
-    ) => void
+    ) => void,
+    options?: boolean | AddEventListenerOptions | undefined
 ) {
     const handlerRef = useRef(handler)
 
@@ -55,9 +59,9 @@ function useEventListener<
         const listener: typeof handler = (e) =>
             handlerRef.current.call(element, e)
 
-        target.addEventListener(type, listener)
-        return () => target.removeEventListener(type, listener)
-    }, [type, element])
+        target.addEventListener(type, listener, options)
+        return () => target.removeEventListener(type, listener, options)
+    }, [type, element, options])
 }
 
 export default useEventListener
