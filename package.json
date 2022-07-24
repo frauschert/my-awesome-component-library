@@ -55,6 +55,9 @@
     "dependencies": {
         "echarts": "^5.2.2"
     },
+    "resolutions": {
+        "trim": "^0.0.3"
+    },
     "scripts": {
         "storybook": "start-storybook -p 9001 -c .storybook",
         "build-storybook": "build-storybook",
