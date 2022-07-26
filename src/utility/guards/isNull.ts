@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isNull(value: any): value is null {
-    return typeof value === null
+export default function isNull<T>(value: T | null): value is null {
+    return value === null
 }
-
-export default isNull
