@@ -10,10 +10,10 @@ export default {
 
 // Create a master template for mapping args to render the Input component
 const Template: Story = () => {
-    const ref = useRef<HTMLDivElement>()
+    const ref = useRef<HTMLDivElement>(null)
     return (
         <>
-            <div ref={ref} style={{ overflow: 'hidden' }}>
+            <div ref={ref} style={{ overflow: 'hidden', position: 'absolute' }}>
                 CLICK ME!!!
             </div>
             <ContextMenu targetRef={ref}>

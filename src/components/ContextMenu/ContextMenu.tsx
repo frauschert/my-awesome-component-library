@@ -4,14 +4,17 @@ import useContextMenu from '../../utility/hooks/useContextMenu'
 
 import './contextmenu.scss'
 
-export type ContextMenuProps = {
-    targetRef: RefObject<HTMLElement>
+export type ContextMenuProps<T extends HTMLElement> = {
+    targetRef: RefObject<T>
     children?: React.ReactNode
 }
 
-const ContextMenu = ({ targetRef, children }: ContextMenuProps) => {
+const ContextMenu = <T extends HTMLElement>({
+    targetRef,
+    children,
+}: ContextMenuProps<T>) => {
     const ulRef = useRef<HTMLUListElement>(null)
-    const { xPos, yPos, showMenu, close } = useContextMenu(targetRef)
+    const { xPos, yPos, showMenu, close } = useContextMenu(targetRef, 'touch')
 
     useClickOutside(ulRef, close)
 

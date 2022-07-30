@@ -1,22 +1,36 @@
-import { RefObject } from 'react'
-import useEffectOnce from './useEffectOnce'
+import { RefObject, useCallback, useRef } from 'react'
 import useEventListener from './useEventListener'
-import useTimeout from './useTimeout'
+import type { Permutations } from '../../utility/types'
+
+//  indicates the device type (mouse, pen, touch or all) for
+export type LongPressType = Permutations<'mouse' | 'pen' | 'touch'>
 
 const useLongPress = (
     ref: RefObject<HTMLElement>,
-    callback: () => void,
-    delay: number = 250
+    callback: (event: PointerEvent) => void,
+    delay: number = 250,
+    type: LongPressType = 'mouse pen touch'
 ) => {
-    const { reset, clear } = useTimeout(callback, delay)
-    useEffectOnce(clear)
+    const timeout = useRef<ReturnType<typeof setTimeout>>()
 
-    useEventListener(ref, 'mousedown', reset)
-    useEventListener(ref, 'touchstart', reset)
+    const clear = useCallback(() => {
+        timeout.current && clearTimeout(timeout.current)
+    }, [])
 
-    useEventListener(ref, 'mouseup', clear)
-    useEventListener(ref, 'mouseleave', clear)
-    useEventListener(ref, 'touchend', clear)
+    const set = useCallback(
+        (event: PointerEvent) => {
+            if (!type.includes(event.pointerType)) return
+            clear()
+
+            timeout.current = setTimeout(() => callback(event), delay)
+        },
+        [callback, delay, type, clear]
+    )
+
+    useEventListener(ref, 'pointerdown', set)
+
+    useEventListener(ref, 'pointerup', clear)
+    useEventListener(ref, 'pointerleave', clear)
 }
 
 export default useLongPress

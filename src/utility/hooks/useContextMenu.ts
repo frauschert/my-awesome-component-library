@@ -1,14 +1,18 @@
 import { RefObject, useCallback, useState } from 'react'
 import isTouchEvent from '../guards/isTouchEvent'
 import useEventListener from './useEventListener'
+import useLongPress, { LongPressType } from './useLongPress'
 
-const useContextMenu = <T extends HTMLElement>(ref: RefObject<T>) => {
+const useContextMenu = <T extends HTMLElement>(
+    ref: RefObject<T>,
+    type: LongPressType = 'mouse pen touch'
+) => {
     const [xPos, setXPos] = useState(0)
     const [yPos, setYPos] = useState(0)
     const [showMenu, setShowMenu] = useState(false)
 
     const handleContextMenu = useCallback(
-        (e: MouseEvent | TouchEvent) => {
+        (e: MouseEvent | TouchEvent | PointerEvent) => {
             e.preventDefault()
 
             if (!isTouchEvent(e)) {
@@ -30,7 +34,7 @@ const useContextMenu = <T extends HTMLElement>(ref: RefObject<T>) => {
 
     useEventListener(ref, 'contextmenu', handleContextMenu)
 
-    //TODO: support for long press...
+    useLongPress(ref, handleContextMenu, 500, type)
 
     return { xPos, yPos, showMenu, close }
 }

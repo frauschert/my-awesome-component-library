@@ -36,3 +36,8 @@ export type HexColor<T extends string> =
 export type Color = string & { __type: 'HexColor' }
 
 export type Awaited<T> = T extends PromiseLike<infer U> ? U : T
+
+export type Permutations<
+    T extends string,
+    U extends string = T
+> = T extends unknown ? T | `${T} ${Permutations<Exclude<U, T>>}` : never
