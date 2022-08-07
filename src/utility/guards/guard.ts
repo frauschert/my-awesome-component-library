@@ -12,6 +12,9 @@ const isString: Guard<string> = (x: unknown): x is string =>
     typeof x == 'string'
 const isNumber: Guard<number> = (x: unknown): x is number =>
     typeof x == 'number'
+const isBoolean: Guard<boolean> = (x: unknown): x is boolean =>
+    typeof x == 'boolean'
+const isNull: Guard<null> = (x: unknown): x is null => x == null
 
 const isType =
     <A extends Record<string, unknown>>(
@@ -19,7 +22,7 @@ const isType =
     ): Guard<A> =>
     (x: unknown): x is A =>
         typeof x == 'object' &&
-        x !== null &&
-        Object.entries(x).every((val) => propertyGuards[val[0]](val[1]))
+        !isNull(x) &&
+        Object.entries(x).every(([key, value]) => propertyGuards[key](value))
 
-export { isArrayOf, isType, isNumber, isString }
+export { isArrayOf, isType, isNumber, isString, isBoolean }
