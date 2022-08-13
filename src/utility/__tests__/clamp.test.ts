@@ -1,4 +1,4 @@
-import clamp from './clamp'
+import clamp from '../clamp'
 
 test('should return value', () => expect(clamp(0, 10, 5)).toBe(5))
 test('should return min', () => expect(clamp(0, 10, -1)).toBe(0))

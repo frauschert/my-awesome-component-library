@@ -3,7 +3,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react-hooks'
-import useToggle from './useToggle'
+import useToggle from '../useToggle'
 
 test('should use toggle', () => {
     const { result } = renderHook(() => useToggle())

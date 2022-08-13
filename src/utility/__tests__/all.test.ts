@@ -1,4 +1,4 @@
-import all from './all'
+import all from '../all'
 
 test('should return true', () =>
     expect(all((x) => x === 3, [3, 3, 3])).toEqual(true))
