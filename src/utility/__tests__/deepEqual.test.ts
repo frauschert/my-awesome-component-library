@@ -1,4 +1,4 @@
-import deepEqual from './deepEqual'
+import deepEqual from '../deepEqual'
 
 const testObj = {
     id: 1,

@@ -1,4 +1,4 @@
-import pluck from './pluck'
+import pluck from '../pluck'
 
 test('should return ["Batman", "Robin", "Joker"]', () =>
     expect(

@@ -1,4 +1,4 @@
-import groupBy from './groupBy'
+import groupBy from '../groupBy'
 
 test('should group vehicles by make', () =>
     expect(

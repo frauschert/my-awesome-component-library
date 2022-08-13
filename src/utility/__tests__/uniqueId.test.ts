@@ -1,4 +1,4 @@
-import generateUniqueID from './uniqueId'
+import generateUniqueID from '../uniqueId'
 
 describe('generateUniqueID', () => {
     test('should be equal', () => {

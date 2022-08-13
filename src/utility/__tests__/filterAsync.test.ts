@@ -1,4 +1,4 @@
-import { filterAsync } from './filterAsync'
+import { filterAsync } from '../filterAsync'
 
 const arr = [1, 2, 3, 4]
 
