@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { renderHook, act } from '@testing-library/react-hooks'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import useAsync from '../useAsync'
 
 async function testFunction() {
@@ -12,9 +12,7 @@ async function testFunction() {
 }
 
 test('should use async', async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-        useAsync(testFunction, false)
-    )
+    const { result } = renderHook(() => useAsync(testFunction, false))
 
     expect(result.current.loading).toBe(false)
     expect(result.current.value).toBe(null)
@@ -26,8 +24,11 @@ test('should use async', async () => {
 
     expect(result.current.loading).toBe(true)
 
-    await waitForNextUpdate()
-
-    expect(result.current.loading).toBe(false)
-    expect(result.current.value).toBe('success')
+    await waitFor(
+        () => {
+            expect(result.current.loading).toBe(false)
+            expect(result.current.value).toBe('success')
+        },
+        { timeout: 1000 }
+    )
 })
