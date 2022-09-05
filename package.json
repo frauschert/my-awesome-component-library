@@ -1,11 +1,11 @@
 {
-    "name": "my-awesome-component-library",
-    "version": "1.0.0",
+    "name": "@frauschert/my-awesome-component-library",
+    "version": "0.0.1",
     "description": "collection of my components",
     "main": "lib/index.js",
     "module": "lib/index.esm.js",
     "types": "lib/index.d.ts",
-    "repository": "https://github.com/frauschert/my-awesome-component-library",
+    "repository": "git://github.com/frauschert/my-awesome-component-library.git",
     "author": "Fabian Rauschert",
     "license": "MIT",
     "devDependencies": {
@@ -64,5 +64,8 @@
         "build": "rollup -c",
         "prettier": "prettier --write .",
         "test": "jest"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
     }
 }
