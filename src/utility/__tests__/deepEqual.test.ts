@@ -20,3 +20,11 @@ test('should return false', () => {
     })
     expect(result).toBe(false)
 })
+
+test('should return false (different key length)', () => {
+    const result = deepEqual(testObj, {
+        ...testObj,
+        onKeyMore: true,
+    } as never)
+    expect(result).toBe(false)
+})

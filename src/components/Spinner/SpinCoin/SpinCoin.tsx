@@ -11,6 +11,7 @@ export default function SpinCoin({
 }: SpinnerProps) {
     return (
         <div
+            role="spinner"
             className={classNames('spin-coin', className)}
             style={{ background: color, width: size, height: size }}
         />

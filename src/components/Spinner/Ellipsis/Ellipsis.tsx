@@ -15,6 +15,7 @@ export default function Ellipsis({
 
     return (
         <div
+            role="spinner"
             className={classNames('ellipsis', className)}
             style={{ width: size, height: size }}
         >

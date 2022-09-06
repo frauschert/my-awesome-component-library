@@ -9,7 +9,7 @@ describe('debounce', () => {
 
     beforeEach(() => {
         func = jest.fn()
-        debouncedFunc = debounce(func, 1000)
+        debouncedFunc = debounce(func)
     })
 
     test('execute just once', () => {
