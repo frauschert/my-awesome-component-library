@@ -1,12 +1,12 @@
 import React from 'react'
 import { classNames } from '../../../utility/classnames'
 import { SpinnerProps } from '../types'
-import { defaultProps } from '../utils'
+import { defaultSpinnerProps } from '../utils'
 import './spin-coin.css'
 
 export default function SpinCoin({
-    color = defaultProps.color,
-    size = defaultProps.size,
+    color = defaultSpinnerProps.color,
+    size = defaultSpinnerProps.size,
     className,
 }: SpinnerProps) {
     return (

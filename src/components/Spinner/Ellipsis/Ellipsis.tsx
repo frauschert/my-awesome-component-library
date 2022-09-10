@@ -1,14 +1,14 @@
 import React from 'react'
 import { classNames } from '../../../utility/classnames'
 import { SpinnerProps } from '../types'
-import { defaultProps } from '../utils'
+import { defaultSpinnerProps } from '../utils'
 import './ellipsis.css'
 
-export default function Ellipsis({
-    color = defaultProps.color,
-    size = defaultProps.size,
-    className,
-}: SpinnerProps) {
+export default function Ellipsis(props: SpinnerProps) {
+    const { size, color, className } = {
+        ...defaultSpinnerProps,
+        ...props,
+    }
     const circles = [...Array(4)].map((_, index) => (
         <div key={index} style={{ background: color }} />
     ))
