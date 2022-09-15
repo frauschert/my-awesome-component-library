@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import useDebounce from '../../utility/hooks/useDebounce'
+import useDebounceEffect from '../../utility/hooks/useDebounceEffect'
 
 export type RangeInputProps = {
     initialValue?: number
@@ -13,7 +13,7 @@ const RangeInput = (props: RangeInputProps) => {
     const { initialValue, minValue, maxValue, stepValue, onChange } = props
 
     const [value, setValue] = useState(initialValue ?? 0)
-    useDebounce(() => onChange?.(value), 500, [onChange])
+    useDebounceEffect(() => onChange?.(value), 500, [onChange])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()

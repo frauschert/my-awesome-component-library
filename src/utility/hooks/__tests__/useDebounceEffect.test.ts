@@ -1,12 +1,12 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import useDebounce from '../useDebounce'
+import useDebounceEffect from '../useDebounceEffect'
 
 test('should use debounce', async () => {
     const delay = 1000
     let executed = false
     const { rerender } = renderHook(
         ({ initialValue }) =>
-            useDebounce(() => (executed = true), delay, [initialValue]),
+            useDebounceEffect(() => (executed = true), delay, [initialValue]),
         { initialProps: { initialValue: 0 } }
     )
 

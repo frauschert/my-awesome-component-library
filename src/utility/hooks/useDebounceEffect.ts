@@ -2,7 +2,7 @@ import { DependencyList, useEffect } from 'react'
 import useEffectOnce from './useEffectOnce'
 import useTimeout from './useTimeout'
 
-export default function useDebounce(
+export default function useDebounceEffect(
     callback: () => void,
     delay: number,
     dependencies: DependencyList

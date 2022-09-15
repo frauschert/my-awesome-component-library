@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import useDebounce from '../../utility/hooks/useDebounce'
+import useDebounceEffect from '../../utility/hooks/useDebounceEffect'
 import { InputProps, NumberInputProps, TextInputProps } from './types'
 
 import './input.scss'
@@ -52,7 +52,7 @@ const Input = (props: InputProps) => {
 
 const useInputEffect = (props: InputProps) => {
     const [value, setValue] = useState(props.initialValue ?? '')
-    useDebounce(
+    useDebounceEffect(
         () => {
             if (props.type === 'number' && typeof value === 'number') {
                 props.onChange(value)
