@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useDetectOutsideClick } from '../../utility/hooks/useDetectOutsideClick'
+import useDetectOutsideClick from '../../utility/hooks/useDetectOutsideClick'
 
 import './dropdownmenu.css'
 

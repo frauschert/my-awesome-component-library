@@ -1,16 +1,13 @@
 import { useState, RefObject, useCallback } from 'react'
 import useEventListener from './useEventListener'
 
-export const useDetectOutsideClick = <
+export default function useDetectOutsideClick<
     T extends HTMLElement | null = HTMLElement
->(
-    el: RefObject<T>,
-    initialState: boolean
-) => {
+>(el: RefObject<T>, initialState: boolean) {
     const [isActive, setIsActive] = useState(initialState)
 
     const handler = useCallback(
-        (e: MouseEvent | TouchEvent) => {
+        (e: PointerEvent) => {
             if (e.target instanceof HTMLElement) {
                 // If the active element exists and is clicked outside of
                 if (el.current !== null && !el.current.contains(e.target)) {
@@ -21,8 +18,7 @@ export const useDetectOutsideClick = <
         [el, isActive]
     )
 
-    useEventListener(document, 'click', handler)
-    useEventListener(document, 'touchstart', handler)
+    useEventListener(document, 'pointerdown', handler)
 
     return [isActive, setIsActive] as const
 }
