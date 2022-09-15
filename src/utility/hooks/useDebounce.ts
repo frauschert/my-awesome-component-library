@@ -1,4 +1,5 @@
 import { DependencyList, useEffect } from 'react'
+import useEffectOnce from './useEffectOnce'
 import useTimeout from './useTimeout'
 
 export default function useDebounce(
@@ -8,6 +9,5 @@ export default function useDebounce(
 ) {
     const { reset, clear } = useTimeout(callback, delay)
     useEffect(reset, [...dependencies, reset])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(clear, [])
+    useEffectOnce(clear)
 }
