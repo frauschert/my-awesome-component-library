@@ -3,7 +3,7 @@ import './fileupload.css'
 
 export type FileUploadProps = {
     dragging: boolean
-    file: File | null
+    files: FileList | null
     onSelectFileClick: () => void
     onDrag: (event: React.DragEvent<HTMLDivElement>) => void
     onDragStart: (event: React.DragEvent<HTMLDivElement>) => void
@@ -11,13 +11,13 @@ export type FileUploadProps = {
     onDragOver: (event: React.DragEvent<HTMLDivElement>) => void
     onDragEnter: (event: React.DragEvent<HTMLDivElement>) => void
     onDragLeave: (event: React.DragEvent<HTMLDivElement>) => void
-    onDrop: (event: React.DragEvent<HTMLDivElement>) => void
+    onDrop: (event: React.DragEvent<HTMLElement>) => void
 }
 
 const FileUpload = (props: PropsWithChildren<FileUploadProps>) => {
     const {
         dragging,
-        file,
+        files,
         onSelectFileClick,
         onDrag,
         onDragStart,
@@ -33,7 +33,9 @@ const FileUpload = (props: PropsWithChildren<FileUploadProps>) => {
         uploaderClasses += ' file-uploader--dragging'
     }
 
-    const fileName = file ? file.name : 'No File Uploaded!'
+    const fileNames = files
+        ? [...files].map((file) => file.name)
+        : ['No File Uploaded!']
 
     return (
         <div
@@ -47,7 +49,11 @@ const FileUpload = (props: PropsWithChildren<FileUploadProps>) => {
             onDrop={onDrop}
         >
             <div className="file-uploader__contents">
-                <span className="file-uploader__file-name">{fileName}</span>
+                {fileNames.map((fileName) => (
+                    <span key={fileName} className="file-uploader__file-name">
+                        {fileName}
+                    </span>
+                ))}
                 <span>Drag & Drop File</span>
                 <span>or</span>
                 <span onClick={onSelectFileClick}>Select File</span>
