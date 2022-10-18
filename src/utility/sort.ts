@@ -1,6 +1,6 @@
 ﻿type SortDirection = 'ascending' | 'descending'
 
-export function sort<T, K extends keyof T>(
+export default function sort<T, K extends keyof T>(
     data: T[],
     sortKey: K,
     direction: SortDirection = 'ascending'
