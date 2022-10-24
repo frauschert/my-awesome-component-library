@@ -1,4 +1,4 @@
-function groupBy<
+export default function groupBy<
     T extends Record<K, PropertyKey>,
     K extends Extract<keyof T, PropertyKey>
 >(items: readonly T[], key: K) {
@@ -10,5 +10,3 @@ function groupBy<
         {} as Record<T[K], T[]>
     )
 }
-
-export default groupBy
