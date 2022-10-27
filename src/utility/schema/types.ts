@@ -43,6 +43,8 @@ type ClassPropertySchema = {
     }
 }
 
+type Schema = ClassSchema | EnumSchema
+
 type ClassPropertySchemaType = 'id' | 'Int32' | 'UInt32' | 'list<Int32>'
 
 type ParseSchema<TDefinition extends Record<string, unknown>> = {
@@ -63,6 +65,8 @@ type ParsePropertySchema<TProperties extends Record<string, unknown>> = {
 
 type Blub = ParseSchema<typeof schema>
 
+type t = typeof schema
+
 const createSchema = <T extends Record<string, unknown>>(
     value: T
 ): ParseSchema<T> => value as ParseSchema<T>
@@ -74,11 +78,18 @@ const isClassSchema = (value: ClassSchema | EnumSchema): value is ClassSchema =>
 const isEnumSchema = (value: ClassSchema | EnumSchema): value is EnumSchema =>
     value.type === 'enum'
 
-const doSomethingWithClassSchema = (classSchema: ClassSchema) => {
-    return {} as any
-}
+const doSomethingWithClassSchema = (classSchema: ClassSchema): ClassSchema => ({
+    ...classSchema,
+    properties: Object.entries(classSchema.properties).reduce(
+        (acc, [key, value]) => ({
+            ...acc,
+            [key]: value,
+        }),
+        {} as Record<string, ClassPropertySchema>
+    ),
+})
 
-const doSomethingWithDefinition = (
+const createContent = (
     definition: Record<string, ClassSchema | EnumSchema>
 ) => {
     return Object.values(definition).map((value) => {
@@ -90,7 +101,7 @@ const doSomethingWithDefinition = (
     })
 }
 
-doSomethingWithDefinition(definition)
+createContent(definition)
 
 Object.values(definition.Instance.properties).map((value) => value.default)
 
