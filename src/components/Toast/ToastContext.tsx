@@ -108,7 +108,7 @@ const useToast = () => {
         throw new Error('Context was null!')
     }
 
-    return { ...context }
+    return context
 }
 
 export { ToastContext, ToastProvider, useToast }

@@ -2,12 +2,15 @@ import React from 'react'
 import { Meta } from '@storybook/react/types-6-0'
 import { Story } from '@storybook/react'
 import { ToastProvider, useToast, ToastProviderProps } from './'
+import toastManager from './ToastManager'
 import Button from '../Button'
 
 const ButtonWrapper = () => {
-    const { add } = useToast()
+    //const { add } = useToast()
 
-    return <Button label="ToastButton" onClick={() => add('Blub')} />
+    return (
+        <Button label="ToastButton" onClick={() => toastManager.add('Blub')} />
+    )
 }
 
 export default {
@@ -17,9 +20,9 @@ export default {
 
 const Template: Story<ToastProviderProps> = (args) => {
     return (
-        <ToastProvider {...args}>
-            <ButtonWrapper />
-        </ToastProvider>
+        //<ToastProvider {...args}>
+        <ButtonWrapper />
+        //</ToastProvider>
     )
 }
 
