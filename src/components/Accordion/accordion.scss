@@ -1,25 +1,37 @@
 @import '../../styles/_themes.scss';
 
-details summary {
+.accordion {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.accordion-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     cursor: pointer;
-
-    @include themify() {
-        background-color: themed('backgroundColor');
-        color: themed('textColor');
-        // border: 2px solid themed('textColor');
-    }
+    background-color: #21aeca;
 }
 
-details summary > * {
-    display: inline;
+.accordion-title:hover {
+    background-color: #3ab4cc;
 }
 
-details > div {
-    margin-top: 0;
+.accordion-title,
+.accordion-content {
     padding: 1rem;
-    @include themify() {
-        background-color: themed('backgroundColor');
-        color: themed('textColor');
-        border: 2px solid themed('textColor');
+}
+
+.accordion-content {
+    background-color: #39b9d2;
+}
+
+@media screen and (max-width: 700px) {
+    body {
+        font-size: 18px;
+    }
+
+    .accordion {
+        width: 90%;
     }
 }
