@@ -1,9 +1,7 @@
 import React, { PropsWithChildren } from 'react'
 import Portal from '../Portal'
 
-type ModalProps = any
-
-const Modal = ({ children }: PropsWithChildren<ModalProps>) => {
+const Modal = ({ children }: PropsWithChildren) => {
     return (
         <Portal wrapperId="modal-wrapper">
             <div style={{ margin: '10px', border: '1px solid black' }}>

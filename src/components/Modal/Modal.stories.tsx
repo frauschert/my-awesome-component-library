@@ -9,7 +9,7 @@ export default {
 } as Meta
 
 // Create a master template for mapping args to render the Input component
-const Template: Story<PropsWithChildren<any>> = (args) => {
+const Template: Story<PropsWithChildren> = (args) => {
     const [open, setOpen] = useState(false)
 
     return open ? (
