@@ -1,3 +1,5 @@
+import React from 'react'
+
 export type NumberInputProps = {
     type: 'number'
     initialValue?: number
@@ -10,8 +12,9 @@ export type TextInputProps = {
     onChange: (value: string) => void
 }
 
-export type InputProps = (NumberInputProps | TextInputProps) & {
-    label?: string
-    locked?: boolean
-    focussed?: boolean
-}
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
+    (NumberInputProps | TextInputProps) & {
+        label?: string
+        locked?: boolean
+        focussed?: boolean
+    }

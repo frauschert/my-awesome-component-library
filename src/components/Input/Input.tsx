@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 import useDebounceEffect from '../../utility/hooks/useDebounceEffect'
-import { InputProps, NumberInputProps, TextInputProps } from './types'
+import { InputProps } from './types'
 
 import './input.scss'
 
-const Input = (props: InputProps) => {
-    const { type, label } = props
+const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+    const { type, label, ...rest } = props
     const [locked, setLocked] = useState(props.locked ?? false)
     const [focussed, setFocussed] = useState(
         (props.focussed && locked) || false
@@ -39,6 +39,8 @@ const Input = (props: InputProps) => {
 
     return (
         <input
+            {...rest}
+            ref={ref}
             type={type}
             value={value}
             onChange={handleChange}
@@ -48,7 +50,9 @@ const Input = (props: InputProps) => {
             onBlur={() => !locked && setFocussed(false)}
         />
     )
-}
+})
+
+Input.displayName = 'Input'
 
 const useInputEffect = (props: InputProps) => {
     const [value, setValue] = useState(props.initialValue ?? '')
