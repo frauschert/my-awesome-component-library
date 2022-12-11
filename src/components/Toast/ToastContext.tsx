@@ -7,9 +7,9 @@ import React, {
     useMemo,
     useReducer,
 } from 'react'
-import { createPortal } from 'react-dom'
 import { classNames } from '../../utility/classnames'
 import generateUniqueID from '../../utility/uniqueId'
+import Portal from '../Portal'
 import Toast from './Toast'
 
 import './toast.css'
@@ -86,16 +86,15 @@ const ToastProvider = ({ children, position }: ToastProviderProps) => {
         <ToastContext.Provider value={providerValue}>
             <>
                 {children}
-                {createPortal(
+                <Portal wrapperId="toast-wrapper">
                     <div className={classNames('toasts-wrapper', position)}>
                         {state.toasts.map((t) => (
                             <Toast key={t.id} remove={() => remove(t.id)}>
                                 {t.content}
                             </Toast>
                         ))}
-                    </div>,
-                    document.body
-                )}
+                    </div>
+                </Portal>
             </>
         </ToastContext.Provider>
     )
