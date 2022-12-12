@@ -4,10 +4,12 @@ import React, {
     ReactNode,
     useCallback,
     useContext,
+    useEffect,
     useMemo,
     useReducer,
 } from 'react'
 import { classNames } from '../../utility/classnames'
+import { createSubscribable } from '../../utility/createSubscribable'
 import generateUniqueID from '../../utility/uniqueId'
 import Portal from '../Portal'
 import Toast from './Toast'
@@ -65,6 +67,8 @@ function toastReducer(state: ToastState, action: ToastAction) {
     }
 }
 
+const subscribable = createSubscribable<ReactNode>()
+
 const ToastProvider = ({ children, position }: ToastProviderProps) => {
     const [state, dispatch] = useReducer(toastReducer, { toasts: [] })
 
@@ -78,6 +82,9 @@ const ToastProvider = ({ children, position }: ToastProviderProps) => {
         (id: string) => dispatch({ type: 'remove', payload: { id } }),
         []
     )
+
+    useEffect(() => subscribable.subscribe(add), [add])
+
     const providerValue = useMemo(() => {
         return { add, remove }
     }, [add, remove])
@@ -110,5 +117,7 @@ const useToast = () => {
     return context
 }
 
-export { ToastContext, ToastProvider, useToast }
+const notify = subscribable.publish
+
+export { ToastContext, ToastProvider, useToast, notify }
 export type { ToastProviderProps }
