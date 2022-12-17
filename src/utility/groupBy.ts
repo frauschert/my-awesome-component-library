@@ -1,12 +1,7 @@
-export default function groupBy<
-    T extends Record<K, PropertyKey>,
-    K extends Extract<keyof T, PropertyKey>
->(items: readonly T[], key: K) {
-    return items.reduce(
-        (acc, item) => ({
-            ...acc,
-            [item[key]]: [...(acc[item[key]] || []), item],
-        }),
-        {} as Record<T[K], T[]>
-    )
+export default function groupBy<T, K>(items: T[], cb: (value: T) => K) {
+    return items.reduce((acc, item) => {
+        const groupKey = cb(item)
+        acc.set(groupKey, (acc.get(groupKey) || []).concat(item))
+        return acc
+    }, new Map<K, T[]>())
 }
