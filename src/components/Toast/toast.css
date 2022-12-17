@@ -3,23 +3,23 @@
 }
 
 .bottom-right {
-    bottom: 20px;
-    right: 20px;
+    bottom: 1em;
+    right: 1em;
 }
 
 .bottom-left {
-    bottom: 20px;
-    left: 20px;
+    bottom: 1em;
+    left: 1em;
 }
 
 .top-right {
-    top: 20px;
-    right: 20px;
+    top: 1em;
+    right: 1em;
 }
 
 .top-left {
-    top: 20px;
-    left: 20px;
+    top: 1em;
+    left: 1em;
 }
 
 .toast {

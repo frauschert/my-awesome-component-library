@@ -7,7 +7,24 @@ import Button from '../Button'
 const ButtonWrapper = () => {
     //const { add } = useToast()
 
-    return <Button label="ToastButton" onClick={() => notify('Blub')} />
+    const positions = [
+        'bottom-left',
+        'bottom-right',
+        'top-left',
+        'top-right',
+    ] as const
+    return (
+        <Button
+            label="ToastButton"
+            onClick={() =>
+                notify({
+                    content: 'Blub',
+                    position:
+                        positions[Math.floor(Math.random() * (3 - 0 + 1) + 0)],
+                })
+            }
+        />
+    )
 }
 
 export default {

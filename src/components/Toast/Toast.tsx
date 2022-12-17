@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, PropsWithChildren } from 'react'
-
+import React, { useEffect, useRef, ReactNode } from 'react'
 import './toast.css'
 
-type ToastProps = PropsWithChildren<{ remove: () => void }>
+type ToastProps = {
+    children: ReactNode
+    remove: () => void
+}
 
 function Toast({ children, remove }: ToastProps) {
     const removeRef = useRef(remove)
@@ -16,7 +18,7 @@ function Toast({ children, remove }: ToastProps) {
     }, [])
 
     return (
-        <div className="toast">
+        <div className={'toast'}>
             <div className="toast__text">{children}</div>
             <div>
                 <button onClick={remove} className="toast__close-btn">

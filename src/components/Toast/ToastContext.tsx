@@ -1,6 +1,5 @@
 import React, {
     createContext,
-    PropsWithChildren,
     ReactNode,
     useContext,
     useEffect,
@@ -8,29 +7,32 @@ import React, {
 } from 'react'
 import { classNames } from '../../utility/classnames'
 import { createSubscribable } from '../../utility/createSubscribable'
+import groupBy from '../../utility/groupBy'
 import Portal from '../Portal'
 import Toast from './Toast'
 
 import './toast.css'
+import type { Position, ToastItem, ToastItemWithoutId } from './types'
 import { useToasts } from './useToasts'
 
-type Position = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
-
 type ToastContextState = {
-    add: (content: ReactNode) => void
+    add: (item: ToastItem) => void
     remove: (id: string) => void
 }
 
-type ToastProviderProps = PropsWithChildren<{ position: Position }>
+type ToastProviderProps = {
+    children: ReactNode
+    position: Position
+}
 
 const ToastContext = createContext<ToastContextState | null>(null)
 
-const subscribable = createSubscribable<ReactNode>()
+const { subscribe, publish: notify } = createSubscribable<ToastItemWithoutId>()
 
 const ToastProvider = ({ children, position }: ToastProviderProps) => {
     const [toasts, add, remove] = useToasts()
 
-    useEffect(() => subscribable.subscribe(add), [add])
+    useEffect(() => subscribe(add), [add])
 
     const providerValue = useMemo(() => {
         return { add, remove }
@@ -41,13 +43,23 @@ const ToastProvider = ({ children, position }: ToastProviderProps) => {
             <>
                 {children}
                 <Portal wrapperId="toast-wrapper">
-                    <div className={classNames('toasts-wrapper', position)}>
-                        {toasts.map((t) => (
-                            <Toast key={t.id} remove={() => remove(t.id)}>
-                                {t.content}
-                            </Toast>
-                        ))}
-                    </div>
+                    {Array.from(
+                        groupBy(toasts, (item) => item.position ?? position)
+                    ).map(([itemPos, items]) => (
+                        <div
+                            key={itemPos}
+                            className={classNames('toasts-wrapper', itemPos)}
+                        >
+                            {items.map((item) => (
+                                <Toast
+                                    key={item.id}
+                                    remove={() => remove(item.id)}
+                                >
+                                    {item.content}
+                                </Toast>
+                            ))}
+                        </div>
+                    ))}
                 </Portal>
             </>
         </ToastContext.Provider>
@@ -63,8 +75,6 @@ const useToast = () => {
 
     return context
 }
-
-const notify = subscribable.publish
 
 export { ToastContext, ToastProvider, useToast, notify }
 export type { ToastProviderProps }

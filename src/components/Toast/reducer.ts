@@ -1,9 +1,4 @@
-import { ReactNode } from 'react'
-
-type ToastItem = {
-    id: string
-    content: ReactNode
-}
+import type { ToastItem } from './types'
 
 type ToastAdd = {
     type: 'add'
