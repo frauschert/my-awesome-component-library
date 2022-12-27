@@ -54,6 +54,7 @@ const ToastProvider = ({ children, position }: ToastProviderProps) => {
                                 <Toast
                                     key={item.id}
                                     remove={() => remove(item.id)}
+                                    {...item}
                                 >
                                     {item.content}
                                 </Toast>
