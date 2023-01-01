@@ -1,7 +1,8 @@
+import { useTheme } from './ThemeContext'
 import ThemeProvider from './ThemeProvider'
 import ThemeSwitcher from './ThemeSwitcher'
 
-export { ThemeContext, themes } from './ThemeContext'
-export type { ThemeKey, ThemeName, ThemeContextProps } from './ThemeContext'
+export { themes } from './ThemeContext'
+export type { ThemeKey } from './ThemeContext'
 
-export { ThemeProvider, ThemeSwitcher }
+export { ThemeProvider, ThemeSwitcher, useTheme }

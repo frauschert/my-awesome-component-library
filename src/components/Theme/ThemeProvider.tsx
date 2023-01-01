@@ -1,19 +1,17 @@
-import React, { ReactNode, useState } from 'react'
-import { ThemeContext, ThemeKey, themes } from './ThemeContext'
+import React, { ReactNode } from 'react'
 
-const initialState: ThemeKey = 'light'
+import { Provider } from './ThemeContext'
+import { ThemeWrapper } from './ThemeWrapper'
 
 type ThemeProviderProps = {
-    children: ReactNode[]
+    children: ReactNode
 }
 
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
-    const [theme, setTheme] = useState<ThemeKey>(initialState)
-
     return (
-        <ThemeContext.Provider value={{ theme: themes[theme], setTheme }}>
-            <div className={`theme--${theme}`}>{children}</div>
-        </ThemeContext.Provider>
+        <Provider>
+            <ThemeWrapper>{children}</ThemeWrapper>
+        </Provider>
     )
 }
 

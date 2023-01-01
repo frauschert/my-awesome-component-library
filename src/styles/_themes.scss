@@ -1,9 +1,9 @@
 @import './_colors.scss';
 
 $text--light: black;
-$text--dark: rgb(228, 224, 224);
+$text--dark: #ddd;
 $bg--light: white;
-$bg--dark: black;
+$bg--dark: #222;
 
 $bg--blue: rgb(60, 69, 202);
 
@@ -19,24 +19,14 @@ $themes: (
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.15),
     ),
     dark: (
-        backgroundColor: #222,
-        textColor: #ddd,
+        backgroundColor: $bg--dark,
+        textColor: $text--dark,
         buttonTextColor: #aaa,
         buttonTextTransform: uppercase,
         buttonTextHoverColor: #ddd,
         buttonColor: #333,
         buttonBorder: 1px solid #333,
         box-shadow: 0 0 20px rgba(34, 34, 34, 0.15),
-    ),
-    purple: (
-        backgroundColor: purple,
-        textColor: #ddd,
-        buttonTextColor: #aaa,
-        buttonTextTransform: uppercase,
-        buttonTextHoverColor: #ddd,
-        buttonColor: #333,
-        buttonBorder: 1px solid #333,
-        box-shadow: 0 0 20px rgba(128, 0, 128, 0.15),
     ),
 );
 

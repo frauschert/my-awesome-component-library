@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
-import { ThemeKey, ThemeContext, themes } from './ThemeContext'
+import React from 'react'
+import { ThemeKey, themes, useTheme } from './ThemeContext'
 
 const ThemeSwitcher = () => {
-    const { theme, setTheme } = useContext(ThemeContext)
+    const [{ theme }, setTheme] = useTheme()
     const handleOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault()
-        setTheme?.(e.target.value as ThemeKey)
+        setTheme?.({ theme: e.target.value as ThemeKey })
     }
 
     return (

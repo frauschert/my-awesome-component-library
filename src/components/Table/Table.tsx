@@ -1,9 +1,9 @@
-﻿import React, { useContext, useState } from 'react'
+﻿import React, { useState } from 'react'
 import TableHeader from './TableHeader'
 import TableRows from './TableRows'
 import { SortConfig, TableProps } from './types'
 import { classNames } from '../../utility/classnames'
-import { ThemeContext } from '../Theme'
+import { useTheme } from '../Theme'
 import './table.scss'
 import { tableSearch, tableSort } from './utils'
 
@@ -20,7 +20,7 @@ function Table<T, K extends keyof T>({
         }
     )
     const [searchString, setSearchString] = useState('')
-    const { theme } = useContext(ThemeContext)
+    const [{ theme }] = useTheme()
     const { sortKey, sortDirection } = sortLocalConfig
 
     const onTableHeaderClick = (value: K) =>
