@@ -7,10 +7,14 @@ import React, {
     useEffect,
 } from 'react'
 
-export function createContext<Store>(initialState: Store) {
+type SetStateAction<S> = S | ((prevState: S) => S)
+
+export function createContext<Store extends Record<string, unknown>>(
+    initialState: Store
+) {
     function useStoreData(): {
         get: () => Store
-        set: (value: Partial<Store>) => void
+        set: (value: SetStateAction<Store>) => void
         subscribe: (callback: () => void) => () => void
     } {
         const store = useRef(initialState)
@@ -19,8 +23,13 @@ export function createContext<Store>(initialState: Store) {
 
         const subscribers = useRef(new Set<() => void>())
 
-        const set = useCallback((value: Partial<Store>) => {
-            store.current = { ...store.current, ...value }
+        const set = useCallback((value: SetStateAction<Store>) => {
+            if (typeof value === 'function') {
+                store.current = value(store.current)
+            } else {
+                store.current = value
+            }
+
             subscribers.current.forEach((callback) => callback())
         }, [])
 
@@ -82,11 +91,11 @@ export function createContext<Store>(initialState: Store) {
               }
     }
 
-    function useStore(): [Store, (value: Partial<Store>) => void]
-    function useStore<SelectorOutput>(
+    function useStore(): [Store, (value: SetStateAction<Store>) => void]
+    function useStore<SelectorOutput = Store>(
         selector: (store: Store) => SelectorOutput
-    ): [SelectorOutput, (value: Partial<Store>) => void]
-    function useStore<SelectorOutput>(
+    ): [SelectorOutput, (value: SetStateAction<Store>) => void]
+    function useStore<SelectorOutput = Store>(
         selector?: (store: Store) => SelectorOutput
     ) {
         const store = useContext(StoreContext)
