@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react/types-6-0'
 import { Story } from '@storybook/react'
 import SpinCoin from './SpinCoin'
 import { SpinnerProps } from '../types'
-import { defaultProps } from '../utils'
+import { defaultSpinnerProps } from '../utils'
 
 export default {
     title: 'Components/Spinner/SpinCoin',
@@ -19,4 +19,4 @@ const Template: Story<SpinnerProps> = (args) => {
 }
 
 export const Default = Template.bind({})
-Default.args = { ...defaultProps }
+Default.args = { ...defaultSpinnerProps }
