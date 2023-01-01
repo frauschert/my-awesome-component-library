@@ -1,13 +1,13 @@
 import React, {
     useRef,
-    createContext,
+    createContext as createReactContext,
     useContext,
     useCallback,
     useState,
     useEffect,
 } from 'react'
 
-export function createFastContext<Store>(initialState: Store) {
+export function createContext<Store>(initialState: Store) {
     function useStoreData(): {
         get: () => Store
         set: (value: Partial<Store>) => void
@@ -38,7 +38,7 @@ export function createFastContext<Store>(initialState: Store) {
 
     type UseStoreDataReturnType = ReturnType<typeof useStoreData>
 
-    const StoreContext = createContext<UseStoreDataReturnType | null>(null)
+    const StoreContext = createReactContext<UseStoreDataReturnType | null>(null)
 
     function Provider({ children }: { children: React.ReactNode }) {
         return (
