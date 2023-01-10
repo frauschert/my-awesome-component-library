@@ -22,13 +22,15 @@ const style: React.CSSProperties = {
 const items = ['Create', 'Edit', 'Download', 'Import', 'Export', 'Print']
 
 const Template: Story<GridProps> = (args) => (
-    <Grid>
-        {items.map((item, index) => (
-            <div key={index} style={style}>
-                {item}
-            </div>
-        ))}
-    </Grid>
+    <div style={{ width: '600' }}>
+        <Grid>
+            {items.map((item, index) => (
+                <div key={index} style={style}>
+                    {item}
+                </div>
+            ))}
+        </Grid>
+    </div>
 )
 
 export const Example = Template.bind({})

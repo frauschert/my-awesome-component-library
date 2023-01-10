@@ -8,5 +8,6 @@
     "javascript.inlayHints.parameterNames.enabled": "all",
     "typescript.inlayHints.parameterNames.enabled": "all",
     "typescript.referencesCodeLens.enabled": true,
-    "typescript.referencesCodeLens.showOnAllFunctions": true
+    "typescript.referencesCodeLens.showOnAllFunctions": true,
+    "editor.linkedEditing": true
 }
