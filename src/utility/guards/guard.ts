@@ -1,4 +1,4 @@
-type Guard<T> = (x: unknown) => x is T
+type Guard<T = any> = (x: unknown) => x is T
 type PropertyGuards<A extends Record<string, unknown>> = {
     [K in keyof A]: Guard<A[K]>
 }
@@ -17,12 +17,33 @@ const isBoolean: Guard<boolean> = (x: unknown): x is boolean =>
 const isNull: Guard<null> = (x: unknown): x is null => x == null
 
 const isType =
-    <A extends Record<string, unknown>>(
-        propertyGuards: PropertyGuards<A>
-    ): Guard<A> =>
-    (x: unknown): x is A =>
+    <T extends Record<string, unknown>>(
+        propertyGuards: PropertyGuards<T>
+    ): Guard<T> =>
+    (x: unknown): x is T =>
         typeof x == 'object' &&
         !isNull(x) &&
         Object.entries(x).every(([key, value]) => propertyGuards[key](value))
 
-export { isArrayOf, isType, isNumber, isString, isBoolean }
+function isEnum<T extends Record<string, unknown>>(e: T): Guard<T[keyof T]> {
+    const keys = Object.keys(e).filter((k) => {
+        return !/^\d/.test(k)
+    })
+    const values = keys.map((k) => {
+        return e[k]
+    })
+    return (x: unknown): x is T[keyof T] =>
+        values.includes(x) || (isString(x) && keys.includes(x))
+}
+
+const or =
+    <T, U>(a: Guard<T>, b: Guard<U>): Guard<T | U> =>
+    (x: unknown): x is T | U =>
+        a(x) || b(x)
+
+const and =
+    <T, U>(a: Guard<T>, b: Guard<U>): Guard<T & U> =>
+    (x: unknown): x is T & U =>
+        a(x) && b(x)
+
+export { isArrayOf, isType, isNumber, isString, isBoolean, isEnum, or, and }
