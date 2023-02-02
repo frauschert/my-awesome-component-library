@@ -1,4 +1,55 @@
+import {
+    intersection,
+    isBoolean,
+    isLiteral,
+    isNumber,
+    isRecord,
+    isString,
+    isType,
+    oneOf,
+    or,
+    TypeOf,
+    union,
+} from '../guards/guard'
+import isUndefined from '../guards/isUndefined'
 import schema from './schema.json'
+
+const guiLabelSchema = isType({
+    label: or(isString, isUndefined),
+})
+
+const classPropertySchema = isType({
+    type: oneOf(['id', 'Int32', 'UInt32']),
+    description: isString,
+    default: union([isString, isNumber, isUndefined]),
+    gui: intersection([
+        guiLabelSchema,
+        isType({
+            unit: or(isString, isUndefined),
+            unitScale: or(isNumber, isUndefined),
+            decimalPlace: or(isNumber, isUndefined),
+            hidden: or(isUndefined, isType({ default: isBoolean })),
+        }),
+    ]),
+    validation: isType({ min: isNumber, max: isNumber }),
+})
+
+const classSchema = isType({
+    type: isLiteral('class'),
+    description: isString,
+    base: isType({
+        $ref: isString,
+    }),
+    gui: guiLabelSchema,
+    properties: isRecord(classPropertySchema),
+})
+
+function test() {
+    const { Instance } = schema
+    if (classSchema(Instance)) {
+        Instance.base
+    }
+}
 
 type EnumSchema = {
     type: 'enum'
@@ -12,15 +63,7 @@ type EnumItemSchema = {
     gui: GuiLabelSchema
 }
 
-type ClassSchema = {
-    type: 'class'
-    description: string
-    base: {
-        $ref: string
-    }
-    gui: GuiLabelSchema
-    properties: Record<string, ClassPropertySchema>
-}
+type ClassSchema = TypeOf<typeof classSchema>
 
 type GuiLabelSchema = {
     label: string
@@ -43,9 +86,20 @@ type ClassPropertySchema = {
     }
 }
 
+const isId = (x: unknown): x is 'id' => x === 'id'
+const isInt32 = (x: unknown): x is 'Int32' => x === 'Int32'
+const isUInt32 = (x: unknown): x is 'UInt32' => x === 'UInt32'
+const isUInt32 = (x: unknown): x is 'UInt32' => x === 'UInt32'
+const isClassPropertySchemaType = (x: unknown): x is ClassPropertySchemaType =>
+    isId(x)
+
 type Schema = ClassSchema | EnumSchema
 
-type ClassPropertySchemaType = 'id' | 'Int32' | 'UInt32' | 'list<Int32>'
+type ClassPropertySchemaPrimitiveType = 'id' | 'Int32' | 'UInt32'
+type ClassPropertySchemaListType = `list<${ClassPropertySchemaPrimitiveType}>`
+type ClassPropertySchemaType =
+    | ClassPropertySchemaPrimitiveType
+    | ClassPropertySchemaListType
 
 type ParseSchema<TDefinition extends Record<string, unknown>> = {
     [Key in keyof TDefinition]: TDefinition[Key] extends {
@@ -73,8 +127,15 @@ const createSchema = <T extends Record<string, unknown>>(
 
 const definition = createSchema(schema)
 
-const isClassSchema = (value: ClassSchema | EnumSchema): value is ClassSchema =>
-    value.type === 'class'
+// const isClassSchema = (value: ClassSchema | EnumSchema): value is ClassSchema =>
+//     value.type === 'class'
+const isBase = isType({ $ref: isString })
+const isGuiLabelSchema = isType<GuiLabelSchema>({ label: isString })
+const isClassSchema = isType({
+    type: (x: unknown): x is 'class' => x === 'class',
+    description: isString,
+    base: isBase,
+})
 const isEnumSchema = (value: ClassSchema | EnumSchema): value is EnumSchema =>
     value.type === 'enum'
 
