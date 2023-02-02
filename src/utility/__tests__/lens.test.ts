@@ -12,17 +12,17 @@ interface Model {
     loginContext: LoginContext
 }
 
-const loginContextLens = createLens<Model, LoginContext>(
+const loginContextLens = createLens<Model, 'loginContext'>(
     (model) => model.loginContext,
     (model, loginContext) => ({ ...model, loginContext })
 )
 
-const userLens = createLens<LoginContext, User>(
+const userLens = createLens<LoginContext, 'user'>(
     (loginContext) => loginContext.user,
     (loginContext, user) => ({ ...loginContext, user })
 )
 
-const nameLens = createLens<User, string>(
+const nameLens = createLens<User, 'name'>(
     (user) => user.name,
     (user, name) => ({ ...user, name })
 )
