@@ -24,6 +24,6 @@ export default function deepEqual<T extends Record<string, unknown>>(
     return true
 }
 
-function isObject(object: any): object is Record<string, unknown> {
+function isObject(object: unknown): object is Record<string, unknown> {
     return object != null && typeof object === 'object'
 }

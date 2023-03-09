@@ -25,6 +25,22 @@
             }
         ]
     },
+    "SomeElement": {
+        "type": "class",
+        "description": "Defines an element",
+        "gui": {
+            "label": "Element"
+        },
+        "properties": {
+            "name": {
+                "description": "The name",
+                "type": "string",
+                "gui": {
+                    "label": "Name"
+                }
+            }
+        }
+    },
     "Instance": {
         "type": "class",
         "description": "Defines an instance",

@@ -31,5 +31,18 @@ const classSchema = z.object({
 
 const schema = z.union([classSchema, enumSchema])
 
+type ClassPropertySchema = z.infer<typeof classPropertySchema>
 type ClassSchema = z.infer<typeof classSchema>
 type Schema = z.infer<typeof schema>
+
+type KeysMatching<T extends object, V> = {
+    [K in keyof T]-?: T[K] extends V ? K : never
+}[keyof T]
+
+type ClassKeys = KeysMatching<typeof testData, { properties: unknown }>
+
+type SchemaInterpreterProps = { type: ClassKeys; data: any }
+function SchemaInterpreter({ type }: SchemaInterpreterProps) {
+    const schema = testData[type]
+    return null
+}
