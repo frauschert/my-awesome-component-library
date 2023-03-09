@@ -30,6 +30,10 @@ const classSchema = z.object({
 })
 
 const schema = z.union([classSchema, enumSchema])
+const result = schema.safeParse(testData);
+if(!result.success) {
+    result.
+}
 
 type ClassPropertySchema = z.infer<typeof classPropertySchema>
 type ClassSchema = z.infer<typeof classSchema>

@@ -1,4 +1,13 @@
 type Guard<T> = (x: unknown) => x is T
+type Assert<T> = (x: unknown) => asserts x is T
+type ParseSuccess<T> = { success: true; data: T }
+type ParseError = { success: false; error: Error }
+type ParseResult<T> = ParseSuccess<T> | ParseError
+type Parser<T> = {
+    parse: (x: unknown) => ParseResult<T>
+}
+type ParserFactory<T> = () => Parser<T>
+
 type PropertyGuards<A extends Record<string, unknown>> = {
     [K in keyof A]: Guard<A[K]>
 }
@@ -34,6 +43,9 @@ type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (
     ? R
     : never
 
+const isnt = (val: unknown, typeName: string) =>
+    new Error(`\`${val}\` is not a ${typeName}`)
+
 const isArrayOf =
     <A>(itemGuard: Guard<A>): Guard<A[]> =>
     (x: unknown): x is A[] =>
@@ -41,6 +53,21 @@ const isArrayOf =
 
 const isString: Guard<string> = (x: unknown): x is string =>
     typeof x == 'string'
+
+function assertString(x: unknown): asserts x is string {
+    if (!isString(x)) throw isnt(x, 'string')
+}
+
+const stringParserFactory: ParserFactory<string> = () => {
+    return {
+        guard: isString,
+        assert: (x: unknown) => {
+            assertString(x)
+            return x
+        },
+    }
+}
+
 const isNumber: Guard<number> = (x: unknown): x is number =>
     typeof x == 'number'
 const isBoolean: Guard<boolean> = (x: unknown): x is boolean =>
@@ -114,6 +141,16 @@ const isOptional =
     <T>(guard: Guard<T>) =>
     (x: unknown): x is T | undefined =>
         x === undefined || guard(x)
+
+const p: { string: typeof stringParserFactory } = {
+    string: stringParserFactory,
+}
+
+const stringParser = p.string()
+const result = stringParser.parse(1)
+if (result.success) {
+    result.data
+}
 
 export {
     isArrayOf,
