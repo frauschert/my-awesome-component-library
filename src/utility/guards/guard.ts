@@ -19,6 +19,20 @@ export declare type EnumLike = {
     [nu: number]: string
 }
 
+function parseSuccess<T>(arg: T): ParseResult<T> {
+    return {
+        success: true,
+        data: arg,
+    }
+}
+
+function parseError(val: unknown, typeName: string): ParseError {
+    return {
+        success: false,
+        error: new Error(`\`${val}\` is not a ${typeName}`),
+    }
+}
+
 function assert<T, G extends Guard<T>>(
     val: unknown,
     guard: G
@@ -58,18 +72,18 @@ function assertString(x: unknown): asserts x is string {
     if (!isString(x)) throw isnt(x, 'string')
 }
 
-const stringParserFactory: ParserFactory<string> = () => {
-    return {
-        guard: isString,
-        assert: (x: unknown) => {
-            assertString(x)
-            return x
-        },
-    }
-}
+const parseFn =
+    <T>(guard: Guard<T>, typeName: string) =>
+    (x: unknown) =>
+        guard(x) ? parseSuccess(x) : parseError(x, typeName)
+
+const createParser = <T>(guard: Guard<T>, typeName: string): Parser<T> => ({
+    parse: parseFn(guard, typeName),
+})
 
 const isNumber: Guard<number> = (x: unknown): x is number =>
     typeof x == 'number'
+
 const isBoolean: Guard<boolean> = (x: unknown): x is boolean =>
     typeof x == 'boolean'
 const isNull: Guard<null> = (x: unknown): x is null => x == null
@@ -142,15 +156,51 @@ const isOptional =
     (x: unknown): x is T | undefined =>
         x === undefined || guard(x)
 
-const p: { string: typeof stringParserFactory } = {
-    string: stringParserFactory,
+type Infer<T extends Parser<unknown>> = T extends Parser<infer U> ? U : never
+
+function objectParser<S extends Record<string, Parser<T>>, T = unknown>(
+    schema: S
+): Parser<{
+    [K in keyof S]: Infer<S[K]>
+}> {
+    return {
+        parse: (x: unknown) => {
+            if (!x) return parseError(x, 'object')
+            if (typeof x !== 'object') return parseError(x, 'object')
+            if (Array.isArray(x)) return parseError(x, 'object')
+            return Object.keys(schema)
+                .filter((k) => k in x)
+                .map((k) => schema[k].parse((x as any)[k]))
+                .every((res) => res.success)
+                ? parseSuccess(
+                      x as {
+                          [K in keyof S]: Infer<S[K]>
+                      }
+                  )
+                : parseError(x, 'object')
+        },
+    }
 }
 
-const stringParser = p.string()
-const result = stringParser.parse(1)
-if (result.success) {
-    result.data
+const p = {
+    string: () => createParser(isString, 'string'),
+    number: () => createParser(isNumber, 'number'),
+    boolean: () => createParser(isBoolean, 'boolean'),
+    literal: <T extends Primitive>(val: T) =>
+        createParser(isLiteral(val), 'literal'),
+    isOneOf: <U extends string | number, T extends readonly [U, ...U[]]>(
+        val: T
+    ) => createParser(isOneOf(val), 'oneof'),
+    object: objectParser,
 }
+
+const parser = p.object({
+    name: p.string(),
+    age: p.number(),
+    role: p.isOneOf(['admin', 'user']),
+})
+
+parser.parse({ name: 'John Doe', age: 25 })
 
 export {
     isArrayOf,
