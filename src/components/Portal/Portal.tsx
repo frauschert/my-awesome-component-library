@@ -16,7 +16,7 @@ type PortalProps = {
 export default function Portal({
     children,
     wrapperId = 'react-portal-wrapper',
-}: PortalProps): React.ReactNode {
+}: PortalProps): React.ReactPortal | null {
     const [wrapperElement, setWrapperElement] = useState<HTMLElement>()
 
     useLayoutEffect(() => {
