@@ -60,16 +60,18 @@ const useAsync = <T>(asyncFunction: () => Promise<T>, immediate = true) => {
     // dispatches state updates for pending, value, and error.
     // useCallback ensures the below useEffect is not called
     // on every render, but only if asyncFunction changes.
-    const execute = useCallback(() => {
+    const execute = useCallback(async () => {
         dispatch({ type: 'loading' })
 
-        asyncFunction()
-            .then((response) => {
-                dispatch({ type: 'success', payload: response })
-            })
-            .catch((error) => {
+        try {
+            const response = await asyncFunction()
+            dispatch({ type: 'success', payload: response })
+        } catch (error) {
+            if (error instanceof Error)
                 dispatch({ type: 'error', payload: error })
-            })
+            else
+                dispatch({ type: 'error', payload: new Error('Unknown error') })
+        }
     }, [asyncFunction])
 
     // Call execute if we want to fire it right away.

@@ -1,8 +1,12 @@
 import { useEffect, useCallback, useRef } from 'react'
 import useAsync from './useAsync'
 
-export function useFetch(request: RequestInfo, init?: RequestInit) {
+export function useFetch<T = unknown>(
+    request: RequestInfo,
+    init?: RequestInit
+) {
     const abortControllerRef = useRef<AbortController>()
+
     useEffect(() => {
         abortControllerRef.current = new AbortController()
 
@@ -14,8 +18,28 @@ export function useFetch(request: RequestInfo, init?: RequestInit) {
             ...init,
             signal: abortControllerRef.current?.signal,
         })
-        return response?.json()
+
+        if (response.ok) {
+            return (await response.json()) as T
+        }
+
+        throw new Error(
+            `Failed to fetch: ${response.status} - ${response.statusText}`
+        )
     }, [request, init])
 
-    return useAsync(fetchMethod)
+    const { execute, ...asyncResult } = useAsync(fetchMethod)
+
+    const reload = useCallback(async () => {
+        abortControllerRef.current?.abort()
+        abortControllerRef.current = new AbortController()
+        await execute()
+    }, [execute])
+
+    return {
+        ...asyncResult,
+        execute,
+        reload,
+        cancel: () => abortControllerRef.current?.abort(),
+    }
 }
