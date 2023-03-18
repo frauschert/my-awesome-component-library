@@ -22,6 +22,15 @@ function useEventListener<
     K extends keyof HTMLElementEventMap,
     T extends HTMLElement = HTMLDivElement
 >(
+    element: T | null | undefined,
+    type: K,
+    handler: (event: HTMLElementEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions | undefined
+): void
+function useEventListener<
+    K extends keyof HTMLElementEventMap,
+    T extends HTMLElement = HTMLDivElement
+>(
     element: RefObject<T> | null | undefined,
     type: K,
     handler: (event: HTMLElementEventMap[K]) => void,
@@ -34,7 +43,7 @@ function useEventListener<
     KH extends keyof HTMLElementEventMap,
     T extends HTMLElement
 >(
-    element: Window | Document | RefObject<T> | null | undefined,
+    element: Window | Document | T | RefObject<T> | null | undefined,
     type: KW | KD | KH,
     handler: (
         this: typeof element,
