@@ -53,7 +53,7 @@
         "properties": {
             "someId": {
                 "description": "References another schema",
-                "type": "id",
+                "type": "number",
                 "default": -1,
                 "item": {
                     "$ref": "AnotherClass"
@@ -67,7 +67,7 @@
             },
             "someUnsignedInteger": {
                 "description": "",
-                "type": "UInt32",
+                "type": "number",
                 "default": 0,
                 "unit": "°",
                 "unitScale": 1e-3,
@@ -81,7 +81,7 @@
             },
             "index": {
                 "description": "",
-                "type": "Int32",
+                "type": "number",
                 "readonly": true,
                 "default": -1,
                 "gui": {
@@ -89,7 +89,7 @@
                 }
             },
             "priority": {
-                "type": "Int32",
+                "type": "number",
                 "description": "Priority",
                 "default": 0,
                 "validation": {

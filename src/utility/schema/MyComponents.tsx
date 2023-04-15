@@ -1,15 +1,31 @@
 import React from 'react'
-import { useSchema } from './useSchema'
+import { schema } from './useSchema'
+import mySchema from './schema.json'
 
-const MyComponent = () => {
-    const { SomeId, SomeOtherField } = useSchema({
-        someId: { type: 'number', description: 'some text' },
-        someOtherField: { type: 'boolean', description: '' },
-    })
+// const { BuildJob } = schema({
+//     BuildJob: {
+//         description: '',
+//         gui: {
+//             label: 'Build job',
+//         },
+//         properties: {
+//             someId: { type: 'number', description: 'some text' },
+//             someOtherField: { type: 'boolean', description: '' },
+//         },
+//     },
+// })
+
+// const { SomeId, SomeOtherField } = BuildJob.properties
+
+const { Instance, SomeElement } = schema(mySchema)
+
+const { Name, SomeId, Priority, Index } = Instance.properties
+const { Name: SomeElementName } = SomeElement.properties
+
+const MyClassComponent = () => {
     return (
         <>
-            <SomeId value={1} min={1} />
-            <SomeOtherField checked={true} />
+            <SomeId value={1} />
         </>
     )
 }
