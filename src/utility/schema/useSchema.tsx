@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { ComponentType } from 'react'
+import React, { ComponentType, useReducer } from 'react'
 
 interface Property {
     description: string
@@ -97,8 +97,8 @@ type ExcludeFromRecord<T extends Record<string, unknown>, U> = {
     [P in keyof T]: Exclude<T[P], U>
 }
 
-type ComponentSchema<T extends Record<string, ClassSchema | EnumSchema>> = {
-    [K in keyof T]: MergeProperties<
+type ComponentSchema<T extends Record<string, Schema>> = {
+    [K in keyof T as T[K] extends ClassSchema ? K : never]: MergeProperties<
         ExcludeFromRecord<T, EnumSchema>,
         K
     > extends infer U
@@ -108,18 +108,42 @@ type ComponentSchema<T extends Record<string, ClassSchema | EnumSchema>> = {
         : never
 }
 
-type SchemaResult<TProperties extends Record<string, Property>> = {
+type ExtractProperties<
+    T extends Record<string, Schema>,
+    K extends keyof T
+> = T[K] extends ClassSchema
+    ? T[K]['base'] extends { $ref: infer Ref }
+        ? Ref extends keyof T
+            ? ExtractProperties<T, Ref> & T[K]['properties']
+            : never
+        : T[K]['properties']
+    : never
+
+type t<
+    T extends Record<string, Schema>,
+    K extends keyof T
+> = T[K] extends ClassSchema
+    ? T[K]['base'] extends { $ref: infer Ref }
+        ? Ref extends keyof T
+            ? t<T, Ref> & SchemaResult<T[K]['properties']>
+            : never
+        : SchemaResult<T[K]['properties']>
+    : never
+
+type CS<T extends Record<string, Schema>> = {
+    [K in keyof T as T[K] extends ClassSchema ? K : never]: SchemaResult<
+        ExtractProperties<T, K>
+    >
+}
+
+type SchemaResult<
+    TProperties extends Record<string, Property> = Record<string, Property>
+> = {
     properties: PropertySchema<TProperties>
 }
 
-export function schema<T extends Record<string, Schema>>(
-    schemas: T
-): ComponentSchema<T> {
-    type ComponentProperties = {
-        properties: PropertySchema<Record<string, Property>>
-    }
-
-    const schemaMap = new Map<string, ComponentProperties>()
+export function schema<T extends Record<string, Schema>>(schemas: T): CS<T> {
+    const schemaMap = new Map<string, SchemaResult>()
 
     function addToMap(key: string, properties: Record<string, Property>) {
         if (!schemaMap.has(key)) {
@@ -155,7 +179,7 @@ export function schema<T extends Record<string, Schema>>(
         }
     })
 
-    return Object.fromEntries(schemaMap) as unknown as ComponentSchema<T>
+    return Object.fromEntries(schemaMap) as unknown as CS<T>
 
     // return Object.entries(schemas).reduce((acc, [key, value]) => {
     //     if (value.type === 'class') {
@@ -188,11 +212,12 @@ export function propertySchema<T extends Record<string, Property>>(
         return value.charAt(0).toUpperCase() + value.slice(1)
     }
 
-    function getComponent(value: Property) {
+    function getComponent(name: string, value: Property) {
         switch (value.type) {
             case 'string':
                 return (props: StringProperty) => (
                     <input
+                        name={name}
                         type="text"
                         value={props.value}
                         onChange={props.onChange}
@@ -203,6 +228,7 @@ export function propertySchema<T extends Record<string, Property>>(
             case 'number':
                 return (props: NumberProperty) => (
                     <input
+                        name={name}
                         type="number"
                         value={props.value}
                         onChange={props.onChange}
@@ -217,6 +243,7 @@ export function propertySchema<T extends Record<string, Property>>(
                 return (props: BooleanProperty) => (
                     <label>
                         <input
+                            name={name}
                             type="checkbox"
                             checked={props.checked}
                             onChange={props.onChange}
@@ -235,7 +262,7 @@ export function propertySchema<T extends Record<string, Property>>(
 
         return {
             ...acc,
-            [capitalizedKey]: getComponent(value),
+            [capitalizedKey]: getComponent(key, value),
         }
     }, {} as PropertySchema<T>)
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import { schema } from './useSchema'
 import mySchema from './schema.json'
 
@@ -25,7 +25,9 @@ const { Name: SomeElementName } = SomeElement.properties
 const MyClassComponent = () => {
     return (
         <>
-            <SomeId value={1} />
+            <form onSubmit={(e) => console.log(e.currentTarget)}>
+                <SomeId value={1} onChange={} />
+            </form>
         </>
     )
 }
