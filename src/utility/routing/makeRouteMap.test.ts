@@ -3,22 +3,23 @@ import { makeNavigate, makeRouteMap } from './makeRouteMap'
 describe('makeRouteMap', () => {
     it('Should create simple routes as expected', () => {
         const routeMap = makeRouteMap({
-            index: '/',
-            admin: '/admin',
+            index: { path: '/' },
+            admin: {
+                path: '/admin',
+                children: makeRouteMap({ dashboard: { path: '/dashboard' } }),
+            },
         })
 
-        expect(routeMap.index()).toEqual('/')
-        expect(routeMap.admin()).toEqual('/admin')
+        expect(routeMap.index.path).toEqual('/')
+        expect(routeMap.admin.children.dashboard.path).toEqual(
+            '/admin/dashboard'
+        )
     })
     it('Should handle path params', () => {
         const routeMap = makeRouteMap({
-            editUser: '/users/:id/edit',
+            editUser: { path: '/users/:id/edit' },
         })
-        expect(
-            routeMap.editUser({
-                id: 240,
-            })
-        ).toEqual('/users/240/edit')
+        expect(routeMap.editUser.path).toEqual('/users/:id/edit')
     })
 })
 

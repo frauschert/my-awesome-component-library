@@ -9,33 +9,41 @@ type RouteParams<Path extends string> = {
     [Key in PathSegments<Path>]: string | number
 }
 
-type RouteMap<T extends Record<string, string>> = {
-    [K in keyof T]: keyof RouteParams<T[K]> extends never
-        ? () => string
-        : (params: RouteParams<T[K]>) => string
+type RouteMap<T extends Record<string, Route> = Record<string, Route>> = {
+    [K in keyof T]: T[K]
+}
+
+type Route<TPath extends string = string> = {
+    path: TPath
+    children?: RouteMap
 }
 
 export function makeRouteMap<
-    Key extends string,
-    Value extends string,
-    T extends Record<Key, Value>
+    TKey extends string,
+    TValue extends Route<TRouteKey>,
+    TRouteKey extends string,
+    T extends Record<TKey, TValue>
 >(routes: T): RouteMap<T> {
-    return Object.entries(routes as Record<string, string>).reduce(
-        (acc, [key, path]) => {
-            const pathSegments = path.split('/')
-            const routeParams = pathSegments.filter((p) => p.startsWith(':'))
+    function suffix(record: RouteMap, suffix: string) {
+        return Object.entries(record).reduce((acc, [key, value]) => {
             return {
                 ...acc,
-                [key]:
-                    routeParams.length === 0
-                        ? () => path
-                        : (params: Record<string, string | number>) =>
-                              pathSegments
-                                  .map((pathSegment) => {
-                                      const value = params[pathSegment.slice(1)]
-                                      return value ? String(value) : pathSegment
-                                  })
-                                  .join('/'),
+                [key]: { ...value, path: suffix + value.path },
+            }
+        }, record)
+    }
+    return Object.entries(routes as Record<string, Route>).reduce(
+        (acc, [key, path]) => {
+            return {
+                ...acc,
+                [key]: path.children
+                    ? {
+                          path: path.path,
+                          children: makeRouteMap(
+                              suffix(path.children, path.path)
+                          ),
+                      }
+                    : { path: path.path },
             }
         },
         {} as RouteMap<T>
