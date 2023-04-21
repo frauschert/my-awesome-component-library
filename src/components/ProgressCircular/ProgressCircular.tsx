@@ -9,7 +9,7 @@ type ProgressCircularProps = {
     indicatorWidth?: number
     indicatorColor?: string
     indicatorCap?: 'round' | 'inherit' | 'butt' | 'square'
-    label?: string
+    children?: React.ReactNode
     labelColor?: string
     spinnerMode?: boolean
     spinnerSpeed?: number
@@ -24,20 +24,19 @@ const ProgressCircular = (props: ProgressCircularProps) => {
         indicatorWidth = 10,
         indicatorColor = `#07c`,
         indicatorCap = 'round',
-        label = `Loading...`,
         labelColor = `#333`,
         spinnerMode = false,
         spinnerSpeed = 1,
+        children,
     } = props
 
-    const center = size / 2,
-        radius =
-            center -
-            (trackWidth > indicatorWidth ? trackWidth : indicatorWidth),
-        dashArray = 2 * Math.PI * radius,
-        dashOffset = dashArray * ((100 - progress) / 100)
+    const center = size / 2
+    const radius =
+        center - (trackWidth > indicatorWidth ? trackWidth : indicatorWidth)
+    const dashArray = 2 * Math.PI * radius
+    const dashOffset = dashArray * ((100 - progress) / 100)
 
-    const hideLabel = size < 100 || !label.length || spinnerMode ? true : false
+    const hideLabel = size < 100 || !children
 
     return (
         <>
@@ -59,7 +58,9 @@ const ProgressCircular = (props: ProgressCircularProps) => {
                         className={`svg-pi-indicator ${
                             spinnerMode ? 'svg-pi-indicator--spinner' : ''
                         }`}
-                        style={{ animationDuration: `${spinnerSpeed * 1000}` }}
+                        style={{
+                            animationDuration: `${spinnerSpeed * 1e3}ms`,
+                        }}
                         cx={center}
                         cy={center}
                         fill="transparent"
@@ -74,7 +75,7 @@ const ProgressCircular = (props: ProgressCircularProps) => {
 
                 {!hideLabel && (
                     <div className="svg-pi-label" style={{ color: labelColor }}>
-                        <span className="svg-pi-label__loading">{label}</span>
+                        {children}
 
                         {!spinnerMode && (
                             <span className="svg-pi-label__progress">

@@ -1,13 +1,3 @@
-/*
- * SVG Progress Indicator
- *
- * Set-up the indicator using SVG attributes that are 
- * supported as properties in CSS.
- *
- * @since 07/07/22
- * @link  https://codepen.io/_rahul/pen/BarobwE
- */
-
 .svg-pi-wrapper {
     position: relative;
 }
