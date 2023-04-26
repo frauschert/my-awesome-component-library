@@ -6,14 +6,11 @@ describe('makeRouteMap', () => {
             index: { path: '/' },
             admin: {
                 path: '/admin',
-                children: makeRouteMap({ dashboard: { path: '/dashboard' } }),
             },
         })
 
         expect(routeMap.index.path).toEqual('/')
-        expect(routeMap.admin.children.dashboard.path).toEqual(
-            '/admin/dashboard'
-        )
+        expect(routeMap.admin.path).toEqual('/admin')
     })
     it('Should handle path params', () => {
         const routeMap = makeRouteMap({

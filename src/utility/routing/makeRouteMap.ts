@@ -15,7 +15,6 @@ type RouteMap<T extends Record<string, Route> = Record<string, Route>> = {
 
 type Route<TPath extends string = string> = {
     path: TPath
-    children?: RouteMap
 }
 
 export function makeRouteMap<
@@ -24,26 +23,11 @@ export function makeRouteMap<
     TRouteKey extends string,
     T extends Record<TKey, TValue>
 >(routes: T): RouteMap<T> {
-    function suffix(record: RouteMap, suffix: string) {
-        return Object.entries(record).reduce((acc, [key, value]) => {
-            return {
-                ...acc,
-                [key]: { ...value, path: suffix + value.path },
-            }
-        }, record)
-    }
     return Object.entries(routes as Record<string, Route>).reduce(
         (acc, [key, path]) => {
             return {
                 ...acc,
-                [key]: path.children
-                    ? {
-                          path: path.path,
-                          children: makeRouteMap(
-                              suffix(path.children, path.path)
-                          ),
-                      }
-                    : { path: path.path },
+                [key]: { path: path.path },
             }
         },
         {} as RouteMap<T>
