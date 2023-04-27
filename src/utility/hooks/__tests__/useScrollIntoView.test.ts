@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
-import useScrollIntoView from '../useScrollIntoView'
 import { useRef } from 'react'
+import useScrollIntoView from '../useScrollIntoView'
 
 describe('useScrollIntoView', () => {
     test('scrollIntoView should be called', () => {
