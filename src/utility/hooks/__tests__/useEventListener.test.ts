@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { fireEvent, renderHook } from '@testing-library/react'
 import useEventListener from '../useEventListener'
 
 test('should attach and call event correctly', () => {
@@ -8,15 +8,11 @@ test('should attach and call event correctly', () => {
 
     renderHook(() => useEventListener(div, 'click', handler))
 
-    act(() => {
-        div.dispatchEvent(new Event('click'))
-    })
+    fireEvent.click(div)
 
     expect(handler).toHaveBeenCalledTimes(1)
 
-    act(() => {
-        div.dispatchEvent(new Event('click'))
-    })
+    fireEvent.click(div)
 
     expect(handler).toHaveBeenCalledTimes(2)
 })
