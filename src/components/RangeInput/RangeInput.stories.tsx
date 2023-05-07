@@ -1,15 +1,19 @@
-import React from 'react'
-import { Meta } from '@storybook/react/types-6-0'
-import { Story } from '@storybook/react'
-import RangeInput, { RangeInputProps } from './RangeInput'
+import { StoryObj, Meta } from '@storybook/react'
+import RangeInput from './RangeInput'
 
-export default {
+const meta: Meta<typeof RangeInput> = {
     title: 'Components/RangeInput',
     component: RangeInput,
-} as Meta
+}
 
-// Create a master template for mapping args to render the Input component
-const Template: Story<RangeInputProps> = (args) => <RangeInput {...args} />
+export default meta
 
-export const Default = Template.bind({})
-Default.args = { initialValue: 50, minValue: 0, maxValue: 100 }
+type Story = StoryObj<typeof RangeInput>
+
+export const Template: Story = {
+    args: {
+        initialValue: 50,
+        minValue: 0,
+        maxValue: 100,
+    },
+}

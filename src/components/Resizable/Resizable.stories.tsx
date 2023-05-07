@@ -1,25 +1,27 @@
 import React from 'react'
-import { Meta } from '@storybook/react/types-6-0'
-import { Story } from '@storybook/react'
-import Resizable, { ResizableComponentProps } from './Resizable'
+import { StoryObj, Meta } from '@storybook/react'
+import Resizable from './Resizable'
 
-export default {
+const meta: Meta<typeof Resizable> = {
     title: 'Components/Resizable',
     component: Resizable,
-} as Meta
+}
 
-const Template: Story<ResizableComponentProps> = (args) => (
-    <>
-        <Resizable {...args}>
-            <div>Test</div>
-            <div>Test2</div>
-        </Resizable>
-        <div>Test3</div>
-    </>
-)
+export default meta
 
-export const Default = Template.bind({})
-Default.args = { options: { step: 10, axis: 'both' } }
-Default.parameters = {
-    layout: 'centered',
+type Story = StoryObj<typeof Resizable>
+
+export const Template: Story = {
+    args: {
+        options: {
+            step: 10,
+            axis: 'both',
+        },
+        children: (
+            <>
+                <div>Test</div>
+                <div>Test2</div>
+            </>
+        ),
+    },
 }

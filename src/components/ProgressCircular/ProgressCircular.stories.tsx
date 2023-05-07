@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
 import ProgressCircular from './ProgressCircular'
-import React from 'react'
 
 const meta: Meta<typeof ProgressCircular> = {
     title: 'Components/ProgressCircular',

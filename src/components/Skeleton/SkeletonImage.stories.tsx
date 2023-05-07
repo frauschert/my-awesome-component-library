@@ -1,16 +1,13 @@
-import React from 'react'
-import { Meta } from '@storybook/react/types-6-0'
-import { Story } from '@storybook/react'
+import { StoryObj, Meta } from '@storybook/react'
 import { SkeletonImage } from './Skeleton'
 
-export default {
+const meta: Meta<typeof SkeletonImage> = {
     title: 'Components/Skeleton/SkeletonImage',
     component: SkeletonImage,
-} as Meta
-
-const Template: Story = (args) => <SkeletonImage {...args} />
-
-export const Default = Template.bind({})
-Default.parameters = {
-    layout: 'centered',
 }
+
+export default meta
+
+type Story = StoryObj<typeof SkeletonImage>
+
+export const Template: Story = {}
