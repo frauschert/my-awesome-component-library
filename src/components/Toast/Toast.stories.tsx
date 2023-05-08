@@ -1,6 +1,6 @@
 import React from 'react'
-import { Meta } from '@storybook/react/types-6-0'
-import { Story } from '@storybook/react'
+
+import { Story, Meta } from '@storybook/react'
 import { ToastProvider, useToast, ToastProviderProps, notify } from './'
 import Button from '../Button'
 
@@ -30,7 +30,7 @@ const ButtonWrapper = () => {
 export default {
     title: 'Components/Toast',
     component: ButtonWrapper,
-} as Meta
+} as Meta<typeof ButtonWrapper>
 
 const Template: Story<ToastProviderProps> = (args) => {
     return (
