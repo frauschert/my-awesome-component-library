@@ -1,19 +1,25 @@
-import React from 'react'
-import { Meta } from '@storybook/react/types-6-0'
-import { Story } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react'
 import Input from './Input'
-import { InputProps } from './types'
 
-export default {
+const meta: Meta<typeof Input> = {
     title: 'Components/Input',
     component: Input,
-} as Meta
+}
 
-// Create a master template for mapping args to render the Input component
-const Template: Story<InputProps> = (args) => <Input {...args} />
+export default meta
 
-export const NumberInput = Template.bind({})
-NumberInput.args = { type: 'number', initialValue: 0 }
+type Story = StoryObj<typeof Input>
 
-export const TextInput = Template.bind({})
-TextInput.args = { type: 'text', initialValue: 'Test' }
+export const NumberInput: Story = {
+    args: {
+        type: 'number',
+        initialValue: 0,
+    },
+}
+
+export const TextInput: Story = {
+    args: {
+        type: 'text',
+        initialValue: 'Test',
+    },
+}
