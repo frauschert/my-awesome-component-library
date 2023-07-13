@@ -3,7 +3,7 @@ type Lens<A, B> = {
     set: (a: A, b: B) => A
 }
 
-export default function createLens<T, K extends keyof T>(
+export function createLens<T, K extends keyof T>(
     get: (a: T) => T[K],
     set: (a: T, b: T[K]) => T
 ): Lens<T, T[K]> {
