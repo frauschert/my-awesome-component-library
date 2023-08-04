@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 import './button.scss'
 
-export interface ButtonProps {
+interface ButtonProps {
     /**
      * Is this the principal call to action on the page?
      */
@@ -32,18 +32,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         { primary = true, backgroundColor, size = 'medium', onClick, label },
         ref
     ) => {
-        const mode = primary
-            ? 'storybook-button--primary'
-            : 'storybook-button--secondary'
+        const mode = primary ? 'button--primary' : 'button--secondary'
         return (
             <button
                 ref={ref}
                 type="button"
-                className={[
-                    'storybook-button',
-                    `storybook-button--${size}`,
-                    mode,
-                ].join(' ')}
+                className={['button', `button--${size}`, mode].join(' ')}
                 style={backgroundColor ? { backgroundColor } : {}}
                 onClick={onClick}
             >
