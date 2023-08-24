@@ -3,6 +3,7 @@ import useClickOutside from '../../utility/hooks/useClickOutside'
 import useContextMenu from '../../utility/hooks/useContextMenu'
 
 import './contextmenu.scss'
+import Portal from '../Portal/Portal'
 
 export type ContextMenuProps<T extends HTMLElement> = {
     targetRef: RefObject<T>
@@ -18,19 +19,23 @@ const ContextMenu = <T extends HTMLElement>({
 
     useClickOutside(ulRef, close)
 
-    return showMenu ? (
-        // TODO: consider using react portal here
-        <ul
-            ref={ulRef}
-            className="contextmenu"
-            style={{
-                top: yPos,
-                left: xPos,
-            }}
-        >
-            {children}
-        </ul>
-    ) : null
+    return (
+        <Portal wrapperId="contextMenu">
+            {showMenu && (
+                // TODO: consider using react portal here
+                <ul
+                    ref={ulRef}
+                    className="contextmenu"
+                    style={{
+                        top: yPos,
+                        left: xPos,
+                    }}
+                >
+                    {children}
+                </ul>
+            )}
+        </Portal>
+    )
 }
 
 export default ContextMenu

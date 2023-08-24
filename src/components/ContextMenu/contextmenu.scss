@@ -1,8 +1,10 @@
 .contextmenu {
+    font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
     font-size: 14px;
+    font-weight: 400;
     background-color: #fff;
     border-radius: 2px;
-    padding: 5px 0 5px 0;
+    padding: 5px;
     min-width: 150px;
     max-width: 300px;
     height: auto;
@@ -10,12 +12,13 @@
     /* use absolute positioning  */
     position: absolute;
     list-style: none;
-    box-shadow: 0 0 20px 0 #ccc;
+    box-shadow: 0 0 5px 0 #ccc;
     opacity: 1;
     transition: opacity 0.5s linear;
 }
 
 .contextmenu ul {
+    all: unset;
     list-style: none;
     padding: 0;
     margin: 0;
