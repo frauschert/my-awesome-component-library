@@ -1,6 +1,8 @@
-export default function debounce<T extends (...args: any[]) => ReturnType<T>>(
+export default function debounce<
+    T extends (...args: unknown[]) => ReturnType<T>
+>(
     callback: T,
-    ms: number = 500
+    delay: number = 500
 ): (...args: Parameters<T>) => Promise<ReturnType<T>> {
     let timer: ReturnType<typeof setTimeout> | undefined
 
@@ -12,7 +14,7 @@ export default function debounce<T extends (...args: any[]) => ReturnType<T>>(
             timer = setTimeout(() => {
                 const returnValue = callback(...args)
                 resolve(returnValue)
-            }, ms)
+            }, delay)
         })
     }
 }
