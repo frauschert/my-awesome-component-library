@@ -24,11 +24,8 @@ export function createContext<Store extends Record<string, unknown>>(
         const subscribers = useRef(new Set<() => void>())
 
         const set = useCallback((value: SetStateAction<Store>) => {
-            if (typeof value === 'function') {
-                store.current = value(store.current)
-            } else {
-                store.current = value
-            }
+            store.current =
+                typeof value === 'function' ? value(store.current) : value
 
             subscribers.current.forEach((callback) => callback())
         }, [])
