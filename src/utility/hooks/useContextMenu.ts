@@ -1,7 +1,10 @@
 import { RefObject, useCallback, useState } from 'react'
-import isTouchEvent from '../guards/isTouchEvent'
 import useEventListener from './useEventListener'
 import useLongPress, { LongPressType } from './useLongPress'
+
+function isTouchEvent(event: unknown): event is TouchEvent {
+    return !!event && typeof event === 'object' && 'touches' in event
+}
 
 const useContextMenu = <T extends HTMLElement>(
     ref: RefObject<T>,
