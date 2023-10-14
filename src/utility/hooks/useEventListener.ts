@@ -1,8 +1,7 @@
 import { RefObject, useEffect, useRef } from 'react'
 
 const isRefObject = <T extends HTMLElement>(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any
+    value: unknown
 ): value is RefObject<T> =>
     !!value && typeof value == 'object' && 'current' in value
 
