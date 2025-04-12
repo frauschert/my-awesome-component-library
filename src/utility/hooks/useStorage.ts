@@ -1,34 +1,110 @@
 import { useCallback, useEffect, useState } from 'react'
 
-function useStorage<T>(key: string, defaultValue: T, storageObject: Storage) {
-    const [value, setValue] = useState<T | undefined>(() => {
+interface StorageOptions<T> {
+    serialize?: (value: T) => string
+    deserialize?: (value: string) => T
+    migrationVersion?: number
+    migrate?: (oldData: unknown) => T
+    onError?: (error: Error) => void
+}
+
+function useStorage<T>(
+    key: string,
+    defaultValue: T,
+    storageObject: Storage,
+    options: StorageOptions<T> = {}
+) {
+    const {
+        serialize = JSON.stringify,
+        deserialize = JSON.parse,
+        migrationVersion = 1,
+        migrate,
+        onError = console.error,
+    } = options
+
+    const [value, setValue] = useState<T>(() => {
         try {
             const item = storageObject.getItem(key)
+            if (!item) return defaultValue
 
-            return item ? JSON.parse(item) : defaultValue
+            const parsed = deserialize(item)
+            const storedVersion = parsed?.__version
+
+            if (migrate && storedVersion !== migrationVersion) {
+                return migrate(parsed)
+            }
+
+            return parsed
         } catch (error) {
-            console.log(error)
+            onError(error as Error)
             return defaultValue
         }
     })
 
     useEffect(() => {
-        if (value === undefined) return storageObject.removeItem(key)
+        const handleStorage = (e: StorageEvent) => {
+            if (e.key === key && e.storageArea === storageObject) {
+                try {
+                    const newValue = e.newValue
+                        ? deserialize(e.newValue)
+                        : defaultValue
+                    setValue(newValue)
+                } catch (error) {
+                    onError(error as Error)
+                }
+            }
+        }
 
-        storageObject.setItem(key, JSON.stringify(value))
-    }, [key, value, storageObject])
+        window.addEventListener('storage', handleStorage)
+        return () => window.removeEventListener('storage', handleStorage)
+    }, [key, storageObject, deserialize, defaultValue, onError])
+
+    const updateValue = useCallback(
+        (newValue: T | ((prev: T) => T)) => {
+            try {
+                setValue((prev) => {
+                    const resolvedValue =
+                        typeof newValue === 'function'
+                            ? (newValue as (prev: T) => T)(prev)
+                            : newValue
+
+                    const valueToStore = {
+                        ...resolvedValue,
+                        __version: migrationVersion,
+                    }
+
+                    storageObject.setItem(key, serialize(valueToStore))
+                    return resolvedValue
+                })
+            } catch (error) {
+                onError(error as Error)
+            }
+        },
+        [key, serialize, storageObject, migrationVersion, onError]
+    )
 
     const remove = useCallback(() => {
-        setValue(undefined)
-    }, [])
+        try {
+            storageObject.removeItem(key)
+            setValue(defaultValue)
+        } catch (error) {
+            onError(error as Error)
+        }
+    }, [key, storageObject, defaultValue, onError])
 
-    return [value, setValue, remove] as const
+    return [value, updateValue, remove] as const
 }
 
-export const useLocalStorage = <T>(key: string, defaultValue: T) =>
-    useStorage(key, defaultValue, localStorage)
+export const useLocalStorage = <T>(
+    key: string,
+    defaultValue: T,
+    options?: StorageOptions<T>
+) => useStorage(key, defaultValue, localStorage, options)
 
-export const useSessionStorage = <T>(key: string, defaultValue: T) =>
-    useStorage(key, defaultValue, sessionStorage)
+export const useSessionStorage = <T>(
+    key: string,
+    defaultValue: T,
+    options?: StorageOptions<T>
+) => useStorage(key, defaultValue, sessionStorage, options)
 
 export default useLocalStorage
