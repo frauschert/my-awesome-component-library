@@ -43,23 +43,35 @@ export function ContextMenuDivider(props: MenuDivider) {
 }
 
 export function ContextMenuSubmenu(props: MenuSubmenu & { index: number }) {
-    const [submenuIndex, setSubmenuIndex] = React.useState<number | null>(null)
+    const [open, setOpen] = React.useState(false)
+    let timeout: NodeJS.Timeout | null = null
+
+    // Open submenu on hover, close on mouse leave with delay for better UX
+    const handleMouseEnter = () => {
+        if (timeout) clearTimeout(timeout)
+        setOpen(true)
+    }
+    const handleMouseLeave = () => {
+        timeout = setTimeout(() => setOpen(false), 120)
+    }
+
     return (
         <li
             className="menu-submenu"
-            onMouseEnter={() => setSubmenuIndex(props.index)}
-            onMouseLeave={() => setSubmenuIndex(null)}
+            tabIndex={0}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onFocus={handleMouseEnter}
+            onBlur={handleMouseLeave}
+            aria-haspopup="menu"
+            aria-expanded={open}
         >
             {props.icon && <span className="icon">{props.icon}</span>}
             {props.label}
-            {submenuIndex === props.index && (
+            {open && (
                 <ul className="submenu">
-                    {props.children.map((entry, index) => (
-                        <ContextMenuEntry
-                            key={index}
-                            index={index}
-                            {...entry}
-                        />
+                    {props.children.map((entry, idx) => (
+                        <ContextMenuEntry key={idx} index={idx} {...entry} />
                     ))}
                 </ul>
             )}

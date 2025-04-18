@@ -1,29 +1,106 @@
+// Modern context menu styling
 .contextmenu {
-    font-family: 'Gotham SSm A', 'Gotham SSm B', sans-serif;
-    font-size: 14px;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
     font-weight: 400;
-    background-color: #fff;
-    border-radius: 2px;
-    padding: 5px;
-    min-width: 150px;
-    max-width: 300px;
-    height: auto;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    padding: 8px 0;
+    min-width: 180px;
+    max-width: 320px;
     margin: 0;
-    /* use absolute positioning  */
     position: absolute;
     list-style: none;
-    box-shadow: 0 0 5px 0 #ccc;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 1.5px 4px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
     opacity: 1;
-    transition: opacity 0.5s linear;
-}
-
-.contextmenu ul {
-    all: unset;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    z-index: 1000;
+    transition: box-shadow 0.2s;
 }
 
 .contextmenu li {
-    border-bottom: 1px solid #dddddd;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px 8px 16px;
+    color: #222;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+    min-width: 0;
+    user-select: none;
+}
+
+.contextmenu li:not(.menu-divider):hover:not(.disabled),
+.contextmenu li:focus-visible {
+    background: #f5f7fa;
+    color: #1976d2;
+}
+
+.contextmenu .menu-item.disabled {
+    color: #bdbdbd;
+    cursor: not-allowed;
+}
+
+.contextmenu .menu-divider {
+    height: 1px;
+    background: #ececec;
+    margin: 4px 0;
+    border: none;
+    min-height: 0;
+    max-height: 1px;
+    padding: 0;
+}
+
+.contextmenu .icon {
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+}
+
+.contextmenu .shortcut {
+    margin-left: auto;
+    color: #888;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.contextmenu .menu-submenu::after {
+    content: '▶';
+    font-size: 12px;
+    color: #bbb;
+    margin-left: auto;
+    margin-right: -8px;
+}
+
+.contextmenu .submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 4px;
+    min-width: 180px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 1.5px 4px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+    z-index: 1100;
+    padding: 8px 0;
+    animation: submenu-fade-in 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes submenu-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }

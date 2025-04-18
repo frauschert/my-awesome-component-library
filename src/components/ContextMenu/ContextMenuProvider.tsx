@@ -1,3 +1,4 @@
+import './contextmenu.scss'
 import React from 'react'
 import type { MenuEntry } from './types'
 import { ContextMenuEntry } from './MenuEntry'
