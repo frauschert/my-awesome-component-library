@@ -1,5 +1,5 @@
 import * as useDebounce from './useDebounceEffect'
-import * as useContextMenu from './useContextMenu'
+import * as useContextMenu from '../../components/ContextMenu/useContextMenu'
 import * as usePrevious from './usePrevious'
 import { useLocalStorage, useSessionStorage } from './useStorage'
 

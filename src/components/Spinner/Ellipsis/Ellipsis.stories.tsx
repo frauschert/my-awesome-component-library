@@ -1,4 +1,4 @@
-import { StoryObj, Meta } from '@storybook/react'
+import type { StoryObj, Meta } from '@storybook/react'
 import Ellipsis from './Ellipsis'
 
 const meta: Meta<typeof Ellipsis> = {

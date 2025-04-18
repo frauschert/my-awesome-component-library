@@ -1,4 +1,4 @@
-import { StoryObj, Meta } from '@storybook/react'
+import type { StoryObj, Meta } from '@storybook/react'
 import SpinCoin from './SpinCoin'
 
 const meta: Meta<typeof SpinCoin> = {

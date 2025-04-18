@@ -1,18 +1,22 @@
 import React from 'react'
-import { Meta } from '@storybook/react/types-6-0'
-import { Story } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react'
 import FileUpload, { FileUploadProps } from './FileUpload'
 
-export default {
+const meta: Meta<typeof FileUpload> = {
     title: 'Components/FileUpload/FileUpload',
     component: FileUpload,
-} as Meta
+}
+export default meta
+type Story = StoryObj<React.ComponentProps<typeof FileUpload>>
 
-// Create a master template for mapping args to render the Input component
-const Template: Story<FileUploadProps> = (args) => <FileUpload {...args} />
+export const Default: Story = {
+    args: {
+        dragging: false,
+        onDrop: (files) => console.log('Files dropped:', files),
+        onDragOver: (event) => console.log('Drag over:', event),
+    },
+}
 
-export const Default = Template.bind({})
-Default.args = { dragging: false }
-
-export const Dragging = Template.bind({})
-Dragging.args = { dragging: true }
+export const Dragging: Story = {
+    args: { dragging: true },
+}

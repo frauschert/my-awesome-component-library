@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Story, Meta } from '@storybook/react'
+import { StoryObj, Meta } from '@storybook/react'
 import { ToastProvider, useToast, ToastProviderProps, notify } from './'
 import Button from '../Button'
 
@@ -32,15 +32,13 @@ export default {
     component: ButtonWrapper,
 } as Meta<typeof ButtonWrapper>
 
-const Template: Story<ToastProviderProps> = (args) => {
-    return (
+export const Template: StoryObj<ToastProviderProps> = {
+    args: {
+        position: 'bottom-right',
+    },
+    render: (args) => (
         <ToastProvider {...args}>
             <ButtonWrapper />
         </ToastProvider>
-    )
-}
-
-export const Default = Template.bind({})
-Default.args = {
-    position: 'bottom-right',
+    ),
 }

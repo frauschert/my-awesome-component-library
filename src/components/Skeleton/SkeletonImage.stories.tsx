@@ -1,4 +1,4 @@
-import { StoryObj, Meta } from '@storybook/react'
+import type { StoryObj, Meta } from '@storybook/react'
 import { SkeletonImage } from './Skeleton'
 
 const meta: Meta<typeof SkeletonImage> = {
