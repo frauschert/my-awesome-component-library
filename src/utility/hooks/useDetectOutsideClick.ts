@@ -10,7 +10,11 @@ export default function useDetectOutsideClick<
         (e: PointerEvent) => {
             if (e.target instanceof HTMLElement) {
                 // Only close if active and click is outside
-                if (isActive && el.current !== null && !el.current.contains(e.target)) {
+                if (
+                    isActive &&
+                    el.current !== null &&
+                    !el.current.contains(e.target)
+                ) {
                     setIsActive(false)
                 }
             }
