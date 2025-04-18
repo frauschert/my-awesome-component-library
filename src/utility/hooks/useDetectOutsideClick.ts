@@ -9,9 +9,9 @@ export default function useDetectOutsideClick<
     const handler = useCallback(
         (e: PointerEvent) => {
             if (e.target instanceof HTMLElement) {
-                // If the active element exists and is clicked outside of
-                if (el.current !== null && !el.current.contains(e.target)) {
-                    setIsActive(!isActive)
+                // Only close if active and click is outside
+                if (isActive && el.current !== null && !el.current.contains(e.target)) {
+                    setIsActive(false)
                 }
             }
         },
