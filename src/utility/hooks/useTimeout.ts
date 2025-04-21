@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react'
 
+/**
+ * A custom hook that provides a way to set a timeout and clear it.
+ * @param callback - The function to be called after the delay.
+ * @param delay - The delay in milliseconds before the callback is executed.
+ * @returns An object containing `reset` and `clear` functions.
+ */
 export default function useTimeout(callback: () => void, delay: number) {
     const callbackRef = useRef(callback)
     const timeoutRef = useRef<number | undefined>()
