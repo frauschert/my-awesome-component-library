@@ -54,7 +54,6 @@ function useEventListener<
     element: Window | Document | T | RefObject<T> | null | undefined,
     type: KW | KD | KH,
     handler: (
-        this: typeof element,
         e:
             | WindowEventMap[KW]
             | DocumentEventMap[KD]
@@ -70,15 +69,15 @@ function useEventListener<
     }, [handler])
 
     useEffect(() => {
-        const target = isRefObject(element) ? element.current : element
-        if (!target) return
+        const eventTarget = isRefObject(element) ? element.current : element
+        if (!eventTarget) return
 
-        const listener: typeof handler = (e) =>
-            handlerRef.current.call(element, e)
-
-        target.addEventListener(type, listener, options)
-        return () => target.removeEventListener(type, listener, options)
-    }, [type, element, options])
+        const listener = (event: Event) => handlerRef.current(event)
+        eventTarget.addEventListener(type, listener, options)
+        return () => {
+            eventTarget.removeEventListener(type, listener, options)
+        }
+    }, [element, type, options])
 }
 
 export default useEventListener
