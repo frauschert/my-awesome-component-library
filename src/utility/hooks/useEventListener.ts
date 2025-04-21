@@ -5,6 +5,15 @@ const isRefObject = <T extends HTMLElement>(
 ): value is RefObject<T> =>
     !!value && typeof value == 'object' && 'current' in value
 
+/**
+ * Custom hook to add an event listener to a DOM element.
+ *
+ * @param {Window | Document | HTMLElement | RefObject<HTMLElement> | null | undefined} element - The target element to attach the event listener to.
+ * @param {string} type - The type of event to listen for (e.g., 'click', 'scroll').
+ * @param {function} handler - The event handler function to be called when the event occurs.
+ * @param {boolean | AddEventListenerOptions | undefined} options - Options for the event listener (e.g., capture, passive).
+ * @returns {void}
+ */
 function useEventListener<K extends keyof WindowEventMap>(
     element: Window | null | undefined,
     type: K,
