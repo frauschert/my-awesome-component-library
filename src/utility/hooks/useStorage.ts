@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-interface StorageOptions<T> {
+export interface StorageOptions<T> {
     serialize?: (value: T) => string
     deserialize?: (value: string) => T
     migrationVersion?: number
