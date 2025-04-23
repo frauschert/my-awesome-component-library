@@ -1,6 +1,4 @@
-export default function debounce<
-    T extends (...args: unknown[]) => ReturnType<T>
->(
+export default function debounce<T extends (...args: any[]) => ReturnType<T>>(
     callback: T,
     delay: number = 500
 ): (...args: Parameters<T>) => Promise<ReturnType<T>> {
