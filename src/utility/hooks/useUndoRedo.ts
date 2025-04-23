@@ -12,11 +12,12 @@ type UndoRedoAction<T> =
     | { type: 'SET'; newPresent: T }
     | { type: 'CLEAR'; initialPresent: T }
 
-function createReducer<T>() {
+function createReducer<T>(isEqual?: (a: T, b: T) => boolean) {
     return (state: State<T>, action: UndoRedoAction<T>): State<T> => {
         const { past, present, future } = state
         switch (action.type) {
             case 'UNDO': {
+                if (past.length === 0) return state // Guard: nothing to undo
                 const previous = past[past.length - 1]
                 const newPast = past.slice(0, past.length - 1)
                 return {
@@ -26,6 +27,7 @@ function createReducer<T>() {
                 }
             }
             case 'REDO': {
+                if (future.length === 0) return state // Guard: nothing to redo
                 const next = future[0]
                 const newFuture = future.slice(1)
                 return {
@@ -36,7 +38,10 @@ function createReducer<T>() {
             }
             case 'SET': {
                 const { newPresent } = action
-                if (newPresent === present) {
+                const equal = isEqual
+                    ? isEqual(newPresent, present)
+                    : newPresent === present
+                if (equal) {
                     return state
                 }
                 return {
@@ -57,9 +62,28 @@ function createReducer<T>() {
     }
 }
 
-// Hook
-const useHistory = <T>(initialPresent: T) => {
-    const reducer = createReducer<T>()
+/**
+ * useUndoRedo is a custom React hook that provides undo/redo functionality for any state.
+ *
+ * @template T - The type of the state to manage.
+ * @param initialPresent - The initial state value.
+ * @param isEqual - Optional custom equality function for comparing state values.
+ * @returns An object with:
+ *   - state: The current state value.
+ *   - set: Function to set a new state value.
+ *   - undo: Function to undo the last state change.
+ *   - redo: Function to redo the last undone state change.
+ *   - clear: Function to clear history and reset to initial state.
+ *   - canUndo: Boolean indicating if undo is possible.
+ *   - canRedo: Boolean indicating if redo is possible.
+ *   - past: Array of previous state values.
+ *   - future: Array of future state values (for redo).
+ */
+export default function useUndoRedo<T>(
+    initialPresent: T,
+    isEqual?: (a: T, b: T) => boolean
+) {
+    const reducer = createReducer<T>(isEqual)
     const [state, dispatch] = useReducer(reducer, {
         past: [],
         present: initialPresent,
@@ -87,8 +111,16 @@ const useHistory = <T>(initialPresent: T) => {
         () => dispatch({ type: 'CLEAR', initialPresent }),
         [dispatch, initialPresent]
     )
-    // If needed we could also return past and future state
-    return { state: state.present, set, undo, redo, clear, canUndo, canRedo }
-}
 
-export default useHistory
+    return {
+        state: state.present,
+        set,
+        undo,
+        redo,
+        clear,
+        canUndo,
+        canRedo,
+        past: state.past,
+        future: state.future,
+    }
+}
