@@ -13,7 +13,7 @@ export default function useMemoCompare<T>(
     next: T,
     compare: (prev: T, next: T) => boolean
 ) {
-    const previousRef = useRef<T>()
+    const previousRef = useRef<T>(undefined)
     const previous = previousRef.current
 
     const isEqual = previous !== undefined ? compare(previous, next) : false
