@@ -43,7 +43,7 @@ describe('useSize', () => {
     })
 
     function TestComponent() {
-        const ref = useRef<HTMLDivElement>(null)
+        const ref = useRef<HTMLDivElement>(null!)
         const size = useSize(ref)
         return (
             <div ref={ref} data-testid="box">
