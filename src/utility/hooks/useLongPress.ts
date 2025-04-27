@@ -40,7 +40,7 @@ export default function useLongPress(
     delay: number = 250,
     type: LongPressType = ['mouse', 'pen', 'touch']
 ) {
-    const timeout = useRef<ReturnType<typeof setTimeout>>()
+    const timeout = useRef<ReturnType<typeof setTimeout>>(null)
 
     const clear = useCallback(() => {
         timeout.current && clearTimeout(timeout.current)
