@@ -1,0 +1,56 @@
+// Context Menu CSS Custom Properties
+// These can be overridden at the component or application level for customization
+
+:root {
+    // Base context menu properties
+    --contextmenu-font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial,
+        sans-serif;
+    --contextmenu-animation-duration: 0.2s;
+    --contextmenu-animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Spacing
+    --contextmenu-gap: 8px;
+    --contextmenu-margin: 4px;
+
+    // Border radius variants
+    --contextmenu-border-radius-small: 4px;
+    --contextmenu-border-radius-medium: 8px;
+    --contextmenu-border-radius-large: 12px;
+}
+
+// Context menu size variants
+.contextmenu {
+    &.contextmenu--small {
+        --contextmenu-font-size: 12px;
+        --contextmenu-item-padding: 6px 12px;
+        --contextmenu-icon-size: 16px;
+        min-width: 140px;
+    }
+
+    &.contextmenu--large {
+        --contextmenu-font-size: 16px;
+        --contextmenu-item-padding: 12px 24px;
+        --contextmenu-icon-size: 20px;
+        min-width: 220px;
+    }
+
+    &.contextmenu--compact {
+        --contextmenu-padding: 4px 0;
+        --contextmenu-item-padding: 4px 16px;
+    }
+}
+
+// Utility classes for different context menu styles
+.contextmenu--rounded {
+    --contextmenu-border-radius: var(--contextmenu-border-radius-large);
+}
+
+.contextmenu--flat {
+    --contextmenu-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --contextmenu-border-radius: 2px;
+}
+
+.contextmenu--elevated {
+    --contextmenu-shadow: 0 12px 48px rgba(0, 0, 0, 0.24),
+        0 4px 8px rgba(0, 0, 0, 0.12);
+}
