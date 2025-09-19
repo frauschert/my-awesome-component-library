@@ -22,13 +22,29 @@ export function ContextMenuEntry({ index, ...rest }: ContextMenuEntryProps) {
 
 function ContextMenuItem(props: ContextMenuItem) {
     const { hideMenu } = useContextMenu()
+
+    const handleClick = () => {
+        if (!props.disabled) {
+            props.onClick()
+            hideMenu()
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleClick()
+        }
+    }
+
     return (
         <li
             className={`menu-item ${props.disabled ? 'disabled' : ''}`}
-            onClick={() => {
-                props.onClick()
-                hideMenu()
-            }}
+            role="menuitem"
+            tabIndex={props.disabled ? -1 : 0}
+            aria-disabled={props.disabled ? 'true' : 'false'}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
         >
             {props.icon && <span className="icon">{props.icon}</span>}
             {props.label}
@@ -39,21 +55,34 @@ function ContextMenuItem(props: ContextMenuItem) {
     )
 }
 export function ContextMenuDivider(props: MenuDivider) {
-    return <li className="menu-divider" />
+    return <li className="menu-divider" role="separator" />
 }
 
 export function ContextMenuSubmenu(props: MenuSubmenu & { index: number }) {
     const [open, setOpen] = React.useState(false)
-    let timeout: NodeJS.Timeout | null = null
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
     // Open submenu on hover, close on mouse leave with delay for better UX
     const handleMouseEnter = () => {
-        if (timeout) clearTimeout(timeout)
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
+        }
         setOpen(true)
     }
+
     const handleMouseLeave = () => {
-        timeout = setTimeout(() => setOpen(false), 120)
+        timeoutRef.current = setTimeout(() => setOpen(false), 120)
     }
+
+    // Cleanup timeout on unmount
+    React.useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+        }
+    }, [])
 
     return (
         <li

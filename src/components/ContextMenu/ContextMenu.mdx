@@ -1,0 +1,151 @@
+import { Meta, ArgTypes, Canvas, Story, Source } from '@storybook/blocks'
+import * as ContextMenuStories from './ContextMenu.stories'
+
+<Meta of={ContextMenuStories} />
+
+# ContextMenu
+
+A flexible and accessible context menu component that supports nested menus, icons, shortcuts, and keyboard navigation.
+
+## Features
+
+-   ✅ **Nested Submenus**: Support for multiple levels of nested menus
+-   ✅ **Icons & Shortcuts**: Display icons and keyboard shortcuts
+-   ✅ **Accessibility**: Full keyboard navigation and screen reader support
+-   ✅ **Smart Positioning**: Automatically adjusts position to stay within viewport
+-   ✅ **Disabled Items**: Support for disabled menu items
+-   ✅ **TypeScript**: Fully typed with discriminated unions
+
+## Basic Usage
+
+The context menu is triggered by right-clicking on any element within the `ContextMenuProvider`.
+
+<Canvas of={ContextMenuStories.Simple} />
+
+## Complete Example
+
+<Canvas of={ContextMenuStories.Default} />
+
+## Props
+
+<ArgTypes of={ContextMenuStories} />
+
+## Menu Entry Types
+
+The `menuEntries` prop accepts an array of different menu entry types:
+
+### MenuItem
+
+```typescript
+{
+  type: 'item'
+  label: string
+  onClick: () => void
+  icon?: React.ReactNode
+  disabled?: boolean
+  shortcut?: string
+}
+```
+
+### MenuDivider
+
+```typescript
+{
+    type: 'divider'
+}
+```
+
+### MenuSubmenu
+
+```typescript
+{
+  type: 'submenu'
+  label: string
+  children: MenuEntry[]
+  icon?: React.ReactNode
+}
+```
+
+## Examples
+
+### With Icons and Shortcuts
+
+<Canvas of={ContextMenuStories.WithIconsAndShortcuts} />
+
+### With Disabled Items
+
+<Canvas of={ContextMenuStories.WithDisabledItems} />
+
+### Nested Submenus
+
+<Canvas of={ContextMenuStories.NestedSubmenus} />
+
+### Real-world Example
+
+<Canvas of={ContextMenuStories.FileManagerStyle} />
+
+## Keyboard Navigation
+
+-   **Right Arrow / Enter**: Open submenu or activate item
+-   **Left Arrow / Escape**: Close submenu or menu
+-   **Up/Down Arrows**: Navigate between menu items
+-   **Space/Enter**: Activate menu item
+
+## Accessibility
+
+-   Full keyboard navigation support
+-   ARIA attributes for screen readers
+-   Focus management
+-   Semantic HTML structure
+
+## Advanced Usage
+
+```tsx
+import { ContextMenuProvider } from '@frauschert/my-awesome-component-library'
+
+const App = () => {
+    const menuEntries = [
+        {
+            type: 'item' as const,
+            label: 'Copy',
+            icon: <CopyIcon />,
+            shortcut: 'Ctrl+C',
+            onClick: () => navigator.clipboard.writeText(selectedText),
+        },
+        {
+            type: 'divider' as const,
+        },
+        {
+            type: 'submenu' as const,
+            label: 'Share',
+            icon: <ShareIcon />,
+            children: [
+                {
+                    type: 'item' as const,
+                    label: 'Email',
+                    onClick: () => shareViaEmail(),
+                },
+            ],
+        },
+    ]
+
+    return (
+        <ContextMenuProvider menuEntries={menuEntries}>
+            <YourContent />
+        </ContextMenuProvider>
+    )
+}
+```
+
+## Styling
+
+The component uses CSS classes that can be customized:
+
+-   `.contextmenu` - Main menu container
+-   `.menu-item` - Individual menu items
+-   `.menu-item.disabled` - Disabled menu items
+-   `.menu-divider` - Divider elements
+-   `.menu-submenu` - Submenu containers
+-   `.submenu` - Submenu content
+-   `.icon` - Icon containers
+-   `.shortcut` - Keyboard shortcut text
