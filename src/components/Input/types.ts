@@ -17,4 +17,8 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
         label?: string
         locked?: boolean
         focussed?: boolean
+        helperText?: React.ReactNode
+        errorText?: React.ReactNode
+        invalid?: boolean
+        sizeVariant?: 'sm' | 'md' | 'lg'
     }
