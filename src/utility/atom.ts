@@ -17,8 +17,8 @@ export function atom<AtomType>(
         typeof initialValue === 'function' ? (undefined as any) : initialValue
 
     const subscribers = new Set<(newValue: AtomType) => void>()
-    let dependencies = new Set<Atom<any>>()
-    let unsubscribers: Array<() => void> = []
+    // Track current dependencies and their unsubscribe functions for derived atoms
+    let dependencyMap = new Map<Atom<any>, () => void>()
     const isDerived = typeof initialValue === 'function'
 
     function computeValue() {
@@ -45,27 +45,19 @@ export function atom<AtomType>(
                 ;(computeValue as any)._computing = false
             }
             // Unsubscribe from dependencies that are no longer needed
-            unsubscribers.forEach((unsub, i) => {
-                const dep = Array.from(dependencies)[i]
-                if (dep && !newDependencies.has(dep)) {
+            for (const [dep, unsub] of dependencyMap.entries()) {
+                if (!newDependencies.has(dep)) {
                     unsub()
+                    dependencyMap.delete(dep)
                 }
-            })
+            }
             // Subscribe to new dependencies
-            const newUnsubscribers: Array<() => void> = []
-            newDependencies.forEach((dep) => {
-                if (!dependencies.has(dep)) {
-                    newUnsubscribers.push(dep.subscribe(computeValue, false))
-                } else {
-                    // Keep the old unsubscriber if still needed
-                    const idx = Array.from(dependencies).indexOf(dep)
-                    if (idx !== -1) {
-                        newUnsubscribers[idx] = unsubscribers[idx]
-                    }
+            for (const dep of newDependencies) {
+                if (!dependencyMap.has(dep)) {
+                    const unsub = dep.subscribe(computeValue, false)
+                    dependencyMap.set(dep, unsub)
                 }
-            })
-            dependencies = newDependencies
-            unsubscribers = newUnsubscribers
+            }
             // Only notify if value actually changed
             if (changed) {
                 subscribers.forEach((cb) => cb(value))
@@ -80,7 +72,12 @@ export function atom<AtomType>(
     }
 
     return {
-        get: () => value,
+        get: () => {
+            if (isDerived) {
+                computeValue()
+            }
+            return value
+        },
         set: (newValue) => {
             if (isDerived) {
                 throw new Error('Cannot set value of derived atom')
