@@ -21,6 +21,19 @@
     flex-direction: column;
 }
 
+.modal__content--sm {
+    max-width: 360px;
+}
+.modal__content--md {
+    max-width: 560px;
+}
+.modal__content--lg {
+    max-width: 800px;
+}
+.modal__content--xl {
+    max-width: 1040px;
+}
+
 .modal__header {
     display: flex;
     align-items: center;
@@ -49,6 +62,14 @@
 .modal__body {
     padding: 16px;
     overflow: auto;
+}
+
+.modal__footer {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 12px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 /* Dark theme hook */

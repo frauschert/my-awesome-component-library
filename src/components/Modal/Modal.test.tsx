@@ -84,4 +84,24 @@ describe('Modal', () => {
         )
         expect(trigger).toHaveFocus()
     })
+
+    it('applies size class and renders footer', () => {
+        const onClose = jest.fn()
+        render(
+            <Modal
+                open
+                title="Sized"
+                size="lg"
+                footer={<button>OK</button>}
+                onClose={onClose}
+            >
+                Body
+            </Modal>
+        )
+        const dialog = screen.getByRole('dialog', { name: 'Sized' })
+        expect(dialog).toBeInTheDocument()
+        // The role is on content element; ensure it has the size modifier class
+        expect(dialog).toHaveClass('modal__content--lg')
+        expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument()
+    })
 })

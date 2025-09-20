@@ -12,6 +12,7 @@ type ModalBaseProps = PropsWithChildren<{
     open: boolean
     onClose?: () => void
     title?: React.ReactNode
+    footer?: React.ReactNode
     ariaLabel?: string
     ariaDescribedBy?: string
     role?: 'dialog' | 'alertdialog'
@@ -21,6 +22,7 @@ type ModalBaseProps = PropsWithChildren<{
     trapFocus?: boolean
     lockScroll?: boolean
     zIndex?: number
+    size?: 'sm' | 'md' | 'lg' | 'xl'
     className?: string
     contentClassName?: string
     overlayClassName?: string
@@ -46,6 +48,7 @@ const Modal = ({
     open,
     onClose,
     title,
+    footer,
     ariaLabel,
     ariaDescribedBy,
     role = 'dialog',
@@ -55,6 +58,7 @@ const Modal = ({
     trapFocus = true,
     lockScroll = true,
     zIndex,
+    size = 'md',
     className,
     contentClassName,
     overlayClassName,
@@ -179,7 +183,12 @@ const Modal = ({
                     aria-labelledby={title ? titleId : undefined}
                     aria-label={!title ? ariaLabel : undefined}
                     aria-describedby={ariaDescribedBy}
-                    className={['modal__content', className, contentClassName]
+                    className={[
+                        'modal__content',
+                        `modal__content--${size}`,
+                        className,
+                        contentClassName,
+                    ]
                         .filter(Boolean)
                         .join(' ')}
                     tabIndex={-1}
@@ -205,6 +214,9 @@ const Modal = ({
                         </div>
                     ) : null}
                     <div className="modal__body">{children}</div>
+                    {footer ? (
+                        <div className="modal__footer">{footer}</div>
+                    ) : null}
                 </div>
             </div>
         </Portal>
