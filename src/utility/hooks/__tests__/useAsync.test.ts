@@ -9,15 +9,22 @@ const mockSuccess = () =>
 const mockError = () => Promise.reject(new Error('An error occurred'))
 
 describe('useAsync', () => {
-    it('should start with loading state', () => {
+    it('should start with loading state', async () => {
         const { result } = renderHook(() => useAsync(mockSuccess))
         expect(result.current.isLoading).toBe(true)
         expect(result.current.data).toBe(undefined)
         expect(result.current.error).toBe(undefined)
+
+        // Wait for the async update to settle to avoid act() warnings
+        await waitFor(() => {
+            expect(result.current.isLoading).toBe(false)
+        })
     })
 
     it('should return value after successful async call', async () => {
-        const { result } = renderHook(() => useAsync(mockSuccess))
+        const { result } = renderHook(() =>
+            useAsync<{ data: string }>(mockSuccess)
+        )
 
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false)
@@ -27,7 +34,7 @@ describe('useAsync', () => {
     })
 
     it('should return error object after failed async call', async () => {
-        const { result } = renderHook(() => useAsync(mockError))
+        const { result } = renderHook(() => useAsync<unknown>(mockError))
 
         await waitFor(() => {
             expect(result.current.isLoading).toBe(false)
@@ -37,7 +44,9 @@ describe('useAsync', () => {
     })
 
     it('should execute async function when execute method is called', async () => {
-        const { result } = renderHook(() => useAsync(mockSuccess, false))
+        const { result } = renderHook(() =>
+            useAsync<{ data: string }>(mockSuccess, false)
+        )
 
         expect(result.current.isLoading).toBe(false)
 

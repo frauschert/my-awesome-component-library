@@ -44,7 +44,11 @@ export function ContextMenuProvider({
 
     const showMenu = (e: React.MouseEvent) => {
         e.preventDefault()
-        const adjustedPosition = adjustPosition(e.pageX, e.pageY)
+        // In some tests or environments, pageX/pageY may be undefined.
+        // Fallback to clientX/clientY or 0 to avoid NaN styles.
+        const x = (e as any).pageX ?? (e as any).clientX ?? 0
+        const y = (e as any).pageY ?? (e as any).clientY ?? 0
+        const adjustedPosition = adjustPosition(x, y)
         setMenuVisible(true)
         setPosition(adjustedPosition)
 

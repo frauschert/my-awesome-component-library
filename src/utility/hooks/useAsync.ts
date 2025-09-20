@@ -45,16 +45,22 @@ const asyncReducer = <T>(
     }
 }
 
-const useAsync = <T>(asyncFunction: () => Promise<T>, immediate = true) => {
-    const [state, dispatch] = useReducer<
-        React.Reducer<AsyncState<T>, AsyncAction<T>>
-    >(asyncReducer, {
-        isLoading: false,
-        isError: false,
-        isSuccess: false,
-        data: undefined,
-        error: undefined,
-    })
+type UseAsyncReturn<T> = AsyncState<T> & { execute: () => Promise<void> }
+
+const useAsync = <T>(
+    asyncFunction: () => Promise<T>,
+    immediate = true
+): UseAsyncReturn<T> => {
+    const [state, dispatch] = useReducer(
+        asyncReducer as React.Reducer<AsyncState<T>, AsyncAction<T>>,
+        {
+            isLoading: false,
+            isError: false,
+            isSuccess: false,
+            data: undefined,
+            error: undefined,
+        }
+    )
 
     // The execute function wraps asyncFunction and
     // dispatches state updates for pending, value, and error.

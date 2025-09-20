@@ -8,6 +8,15 @@ const Boom: React.FC = () => {
 }
 
 describe('withErrorBoundary', () => {
+    const originalError = console.error
+    beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {})
+    })
+    afterAll(() => {
+        ;(console.error as jest.Mock).mockRestore()
+        console.error = originalError
+    })
+
     it('renders fallback when error occurs', () => {
         const Fallback = () => <div data-testid="fallback">Fallback</div>
         const Wrapped = withErrorBoundary(Boom, { fallback: <Fallback /> })
