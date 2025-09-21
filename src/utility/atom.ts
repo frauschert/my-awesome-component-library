@@ -20,14 +20,61 @@ export function atom<AtomType>(
     // Track current dependencies and their unsubscribe functions for derived atoms
     let dependencyMap = new Map<Atom<any>, () => void>()
     const isDerived = typeof initialValue === 'function'
+    let hasActiveDeps = false
 
-    function computeValue() {
-        if (isDerived) {
-            // Circular dependency protection
-            if ((computeValue as any)._computing) {
-                throw new Error('Circular dependency detected in atom')
+    // Coalesced recompute state
+    const recomputeState = { computing: false, scheduled: false, dirty: false }
+    let notifiedThisTick = false
+
+    function scheduleRecompute() {
+        if (recomputeState.computing) {
+            recomputeState.dirty = true
+            if (!recomputeState.scheduled) {
+                recomputeState.scheduled = true
+                queueMicrotask(() => {
+                    recomputeState.scheduled = false
+                    if (recomputeState.dirty && !recomputeState.computing) {
+                        recomputeState.dirty = false
+                        computeValue(!notifiedThisTick)
+                    }
+                    notifiedThisTick = false
+                })
             }
-            ;(computeValue as any)._computing = true
+            return
+        }
+        if (!notifiedThisTick) {
+            computeValue(true)
+            notifiedThisTick = true
+            if (!recomputeState.scheduled) {
+                recomputeState.scheduled = true
+                queueMicrotask(() => {
+                    recomputeState.scheduled = false
+                    if (recomputeState.dirty && !recomputeState.computing) {
+                        recomputeState.dirty = false
+                        computeValue(false)
+                    }
+                    notifiedThisTick = false
+                })
+            }
+        } else {
+            recomputeState.dirty = true
+            if (!recomputeState.scheduled) {
+                recomputeState.scheduled = true
+                queueMicrotask(() => {
+                    recomputeState.scheduled = false
+                    if (recomputeState.dirty && !recomputeState.computing) {
+                        recomputeState.dirty = false
+                        computeValue(false)
+                    }
+                    notifiedThisTick = false
+                })
+            }
+        }
+    }
+
+    function computeValue(notifySubscribers: boolean) {
+        if (isDerived) {
+            recomputeState.computing = true
             let changed = false
             // Track new dependencies for this computation
             const newDependencies = new Set<Atom<any>>()
@@ -42,40 +89,56 @@ export function atom<AtomType>(
                     changed = true
                 }
             } finally {
-                ;(computeValue as any)._computing = false
+                recomputeState.computing = false
             }
-            // Unsubscribe from dependencies that are no longer needed
-            for (const [dep, unsub] of dependencyMap.entries()) {
-                if (!newDependencies.has(dep)) {
-                    unsub()
-                    dependencyMap.delete(dep)
+            if (hasActiveDeps) {
+                // Unsubscribe from dependencies that are no longer needed
+                for (const [dep, unsub] of dependencyMap.entries()) {
+                    if (!newDependencies.has(dep)) {
+                        unsub()
+                        dependencyMap.delete(dep)
+                    }
                 }
-            }
-            // Subscribe to new dependencies
-            for (const dep of newDependencies) {
-                if (!dependencyMap.has(dep)) {
-                    const unsub = dep.subscribe(computeValue, false)
-                    dependencyMap.set(dep, unsub)
+                // Subscribe to new dependencies
+                for (const dep of newDependencies) {
+                    if (!dependencyMap.has(dep)) {
+                        const unsub = dep.subscribe(
+                            () => scheduleRecompute(),
+                            false
+                        )
+                        dependencyMap.set(dep, unsub)
+                    }
+                }
+            } else {
+                // If no active subscribers, don't maintain subscriptions; we still recomputed on demand
+                if (dependencyMap.size) {
+                    for (const [, unsub] of dependencyMap) unsub()
+                    dependencyMap.clear()
                 }
             }
             // Only notify if value actually changed
-            if (changed) {
+            if (changed && notifySubscribers) {
                 subscribers.forEach((cb) => cb(value))
+            }
+            // Drain any coalesced pending work
+            if (recomputeState.dirty) {
+                recomputeState.dirty = false
+                // Guard against tight loops by scheduling the next pass
+                queueMicrotask(() => scheduleRecompute())
             }
         } else {
             subscribers.forEach((cb) => cb(value))
         }
     }
 
-    if (isDerived) {
-        computeValue()
-    }
+    // Initialize derived value once
+    if (isDerived) computeValue(false)
 
     return {
         get: () => {
-            if (isDerived) {
-                computeValue()
-            }
+            // For derived atoms, recompute on demand. If there are no subscribers,
+            // we avoid maintaining dependency subscriptions.
+            if (isDerived) computeValue(subscribers.size > 0)
             return value
         },
         set: (newValue) => {
@@ -87,11 +150,26 @@ export function atom<AtomType>(
         },
         subscribe: (callback, notifyImmediately = true) => {
             subscribers.add(callback)
+            const firstSubscriber = subscribers.size === 1
+            if (isDerived && firstSubscriber && !hasActiveDeps) {
+                // Turn on dependency tracking subscriptions now that we have listeners
+                hasActiveDeps = true
+                computeValue(false)
+            }
             if (notifyImmediately) {
                 callback(value)
             }
             return () => {
                 subscribers.delete(callback)
+                const noSubscribers = subscribers.size === 0
+                if (isDerived && noSubscribers && hasActiveDeps) {
+                    // Tear down dependency subscriptions when last subscriber leaves
+                    hasActiveDeps = false
+                    if (dependencyMap.size) {
+                        for (const [, unsub] of dependencyMap) unsub()
+                        dependencyMap.clear()
+                    }
+                }
             }
         },
         _subscribers: () => subscribers.size,

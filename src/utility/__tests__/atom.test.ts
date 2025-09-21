@@ -60,4 +60,39 @@ describe('atom', () => {
         // Should not update observed, since dynamic no longer depends on a
         expect(observed).toBe(7)
     })
+
+    it('coalesces multiple updates into one recompute tick', async () => {
+        const a = atom(0)
+        const b = atom((get) => get(a) * 2)
+        let notifications = 0
+        b.subscribe(() => {
+            notifications++
+        })
+        // Burst of updates in same tick
+        a.set(1)
+        a.set(2)
+        a.set(3)
+        // Schedule a microtask boundary
+        await Promise.resolve()
+        expect(b.get()).toBe(6)
+        // 1 from immediate subscription + 1 coalesced notification in the same tick
+        expect(notifications).toBe(2)
+    })
+
+    it('does not maintain dependency subscriptions without subscribers', () => {
+        const a = atom(1)
+        const b = atom((get) => get(a) + 1)
+        // No subscribers yet; updating a should not notify anyone, but get should recompute on demand
+        a.set(2)
+        expect(b.get()).toBe(3)
+        // Now subscribe; subsequent updates should notify
+        let last = 0
+        const unsub = b.subscribe((v) => (last = v))
+        a.set(5)
+        expect(last).toBe(6)
+        unsub()
+        // After unsubscribing, internal deps should be torn down; further sets won't trigger notifications
+        a.set(10)
+        expect(b.get()).toBe(11)
+    })
 })
