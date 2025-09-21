@@ -24,3 +24,26 @@ Examples:
 ## Tests
 
 See `src/utility/__tests__/curry.test.ts` for grouped-argument, zero-arity, default-parameter, and extra-argument cases.
+
+---
+
+# Utility: scan
+
+Applies a reducer over an array, returning the intermediate accumulator values (one per input element).
+
+## Overloads
+
+-   scan(reducer, initialValue, array): R[]
+-   scan(reducer, array): T[] // Uses first element as seed; [] -> []
+
+## Examples
+
+-   scan((acc, n) => acc + n, 0, [1,2,3]) -> [1,3,6]
+-   scan((a, b) => a + b, [1,2,3]) -> [1,3,6]
+-   scan((a, b) => a + b, ['a','b','c']) -> ['a','ab','abc']
+-   scan<string[], number>((acc, n) => [...acc, String(n)], [], [1,2,3]) -> [["1"],["1","2"],["1","2","3"]]
+
+## Lazy variant
+
+-   Array.from(scanIter([1,2,3], (a,n) => a+n, 0)) -> [1,3,6]
+-   Array.from(scanIter(new Set([1,2,3]), (a,n) => a+n, 0)) -> [1,3,6]
