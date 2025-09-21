@@ -97,6 +97,52 @@
     --field-font-size: 18px;
 }
 
+/* Adornments */
+.field__adornment {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.6);
+}
+.field__adornment--start {
+    left: 8px;
+}
+.field__adornment--end {
+    right: 8px;
+    gap: 4px;
+}
+
+/* Clear button */
+.field__clear {
+    all: unset;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+.field__clear:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+.field__clear:focus-visible {
+    outline: 2px solid #2684ff;
+    outline-offset: 2px;
+}
+
+/* Disabled/readOnly visuals */
+.field[aria-disabled='true'],
+.field input[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.field input[readonly] {
+    background: rgba(0, 0, 0, 0.02);
+}
+
 .field__helper {
     font-size: 12px;
     line-height: 16px;

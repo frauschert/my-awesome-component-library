@@ -1,6 +1,7 @@
 import React from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 import Input from './Input'
+import { TextField, NumberField } from './'
 
 const meta: Meta<typeof Input> = {
     title: 'Components/Input',
@@ -12,56 +13,72 @@ export default meta
 type Story = StoryObj<typeof Input>
 
 export const NumberInput: Story = {
-    args: {
-        type: 'number',
-        initialValue: 0,
-        label: 'Amount',
-        helperText: 'Enter a number',
-    },
+    args: {},
+    render: (args) => (
+        <NumberField
+            label="Amount"
+            helperText="Enter a number"
+            defaultValue={0}
+        />
+    ),
 }
 
 export const TextInput: Story = {
     args: {
-        type: 'text',
-        initialValue: 'Test',
-        label: 'Your name',
+        // TextField wrapper usage
     },
+    render: () => <TextField label="Your name" defaultValue="Test" />,
 }
 
 export const WithError: Story = {
     args: {
-        type: 'text',
-        initialValue: '',
-        label: 'Email',
-        errorText: 'Please enter a valid email',
-        invalid: true,
+        // TextField wrapper usage
     },
+    render: () => (
+        <TextField
+            label="Email"
+            errorText="Please enter a valid email"
+            invalid
+            defaultValue=""
+        />
+    ),
 }
 
 export const Sizes: Story = {
     render: () => (
         <div style={{ display: 'grid', gap: 12, maxWidth: 360 }}>
-            <Input
-                type="text"
-                sizeVariant="sm"
-                label="Small"
-                initialValue=""
-                onChange={() => {}}
+            <TextField sizeVariant="sm" label="Small" defaultValue="" />
+            <TextField sizeVariant="md" label="Medium" defaultValue="" />
+            <TextField sizeVariant="lg" label="Large" defaultValue="" />
+        </div>
+    ),
+}
+
+export const WithAdornments: Story = {
+    render: () => (
+        <div style={{ display: 'grid', gap: 12, maxWidth: 360 }}>
+            <TextField
+                label="Search"
+                startAdornment={
+                    <span role="img" aria-label="search">
+                        🔍
+                    </span>
+                }
+                defaultValue=""
             />
-            <Input
-                type="text"
-                sizeVariant="md"
-                label="Medium"
-                initialValue=""
-                onChange={() => {}}
-            />
-            <Input
-                type="text"
-                sizeVariant="lg"
-                label="Large"
-                initialValue=""
-                onChange={() => {}}
+            <TextField
+                label="Amount"
+                endAdornment={<span>EUR</span>}
+                defaultValue=""
             />
         </div>
     ),
+}
+
+export const Clearable: Story = {
+    render: () => <TextField label="Username" clearable defaultValue="john" />,
+}
+
+export const NumberStepping: Story = {
+    render: () => <NumberField label="Qty" defaultValue={1} min={0} step={1} />,
 }

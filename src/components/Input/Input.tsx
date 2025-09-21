@@ -14,19 +14,43 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         invalid,
         id: idProp,
         initialValue,
-        onChange: onValueChange,
+        onChange: onLegacyTypedChange,
+        onValueChange,
+        onDebouncedValueChange,
+        debounceMs = 500,
         locked: lockedProp,
         focussed: focussedProp,
         sizeVariant = 'md',
+        startAdornment,
+        endAdornment,
+        clearable,
+        onClear,
+        value: controlledValue,
+        defaultValue: defaultValueProp,
         ...rest
     } = props
     const [locked, setLocked] = useState(lockedProp ?? false)
     const [focussed, setFocussed] = useState((focussedProp && locked) || false)
     const [value, setValue] = useInputEffect({
         type,
-        initialValue,
-        onChange: onValueChange as any,
+        // seed from explicit initialValue first; else if uncontrolled, seed from defaultValue
+        initialValue:
+            initialValue ??
+            (controlledValue === undefined
+                ? (defaultValueProp as any)
+                : undefined),
+        onLegacyTypedChange: onLegacyTypedChange as any,
+        onValueChange,
+        onDebouncedValueChange,
+        debounceMs,
     })
+
+    // Sync controlled value if provided
+    React.useEffect(() => {
+        if (controlledValue !== undefined) {
+            setValue(controlledValue as any)
+        }
+    }, [controlledValue])
 
     // ids for a11y wiring
     const generatedIdRef = useRef(`input-${uniqueId()}`)
@@ -40,6 +64,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const next = event.target.value
+        // Emit raw string immediately for wrappers/consumers
+        onValueChange?.(next)
         switch (type) {
             case 'number': {
                 if (next === '') {
@@ -81,8 +107,32 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         else if (ref && 'current' in (ref as any)) (ref as any).current = node
     }
 
+    const handleClear = () => {
+        // clear internal and notify
+        setValue('')
+        onValueChange?.('')
+        onDebouncedValueChange?.('')
+        onLegacyTypedChange && type === 'text' && onLegacyTypedChange('')
+        onClear?.()
+        // refocus input for usability
+        innerRef.current?.focus()
+    }
+
+    const showClear =
+        !!clearable &&
+        ((typeof value === 'string' && value.length > 0) ||
+            (typeof value === 'number' && !Number.isNaN(value)))
+
     return (
         <div className={classes}>
+            {startAdornment && (
+                <div
+                    className="field__adornment field__adornment--start"
+                    aria-hidden
+                >
+                    {startAdornment}
+                </div>
+            )}
             <input
                 {...rest}
                 id={id}
@@ -108,6 +158,21 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                     {label}
                 </label>
             )}
+            {(endAdornment || showClear) && (
+                <div className="field__adornment field__adornment--end">
+                    {endAdornment}
+                    {showClear && (
+                        <button
+                            type="button"
+                            className="field__clear"
+                            aria-label="Clear input"
+                            onClick={handleClear}
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
+            )}
             {helperText && (
                 <div id={helperId} className="field__helper">
                     {helperText}
@@ -127,20 +192,35 @@ Input.displayName = 'Input'
 type UseInputEffectParams = {
     type: 'text' | 'number'
     initialValue?: string | number
-    onChange: (value: string | number) => void
+    onLegacyTypedChange?: (value: string | number) => void
+    onValueChange?: (value: string | number) => void
+    onDebouncedValueChange?: (value: string | number) => void
+    debounceMs: number
 }
 
 const useInputEffect = (props: UseInputEffectParams) => {
     const [value, setValue] = useState(props.initialValue ?? '')
+    // Debounced callbacks (legacy typed and debounced value)
     useDebounceEffect(
         () => {
-            if (props.type === 'number' && typeof value === 'number') {
-                props.onChange(value)
-            } else if (props.type === 'text' && typeof value === 'string') {
-                props.onChange(value)
+            // legacy typed onChange
+            if (props.onLegacyTypedChange) {
+                if (props.type === 'number' && typeof value === 'number') {
+                    props.onLegacyTypedChange(value)
+                } else if (props.type === 'text' && typeof value === 'string') {
+                    props.onLegacyTypedChange(value)
+                }
+            }
+            // debounced value change
+            if (props.onDebouncedValueChange) {
+                if (props.type === 'number' && typeof value === 'number') {
+                    props.onDebouncedValueChange(value)
+                } else if (props.type === 'text' && typeof value === 'string') {
+                    props.onDebouncedValueChange(value)
+                }
             }
         },
-        500,
+        props.debounceMs,
         [value]
     )
 
