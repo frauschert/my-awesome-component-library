@@ -5,6 +5,7 @@ import React, {
     useCallback,
     useState,
     useEffect,
+    JSX,
 } from 'react'
 
 type SetStateAction<S> = S | ((prevState: S) => S)
