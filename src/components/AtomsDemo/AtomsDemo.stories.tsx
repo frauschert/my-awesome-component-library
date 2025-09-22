@@ -14,8 +14,8 @@ const objectAtom = atom({ a: 1, b: 2 })
 
 function Counter() {
     const [count, setCount] = useAtom(counterAtom)
-    const inc = () => setCount(count + 1)
-    const dec = () => setCount(count - 1)
+    const inc = () => setCount((c) => c + 1)
+    const dec = () => setCount((c) => c - 1)
     return (
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <button onClick={dec}>-</button>
@@ -47,11 +47,11 @@ function SelectorDemo() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <RenderCounter label="Selector" />
             <div>a: {a}</div>
-            <button onClick={() => set({ ...objectAtom.get(), a: a + 1 })}>
+            <button onClick={() => set((prev) => ({ ...prev, a: a + 1 }))}>
                 inc a
             </button>
             <button
-                onClick={() => set({ ...objectAtom.get(), b: Math.random() })}
+                onClick={() => set((prev) => ({ ...prev, b: Math.random() }))}
             >
                 change b only
             </button>

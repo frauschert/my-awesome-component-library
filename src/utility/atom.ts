@@ -8,7 +8,7 @@ export interface ReadOnlyAtom<AtomType> {
 }
 
 export interface WritableAtom<AtomType> extends ReadOnlyAtom<AtomType> {
-    set: (newValue: AtomType) => void
+    set: (next: AtomType | ((prev: AtomType) => AtomType)) => void
 }
 
 type AtomGetter<AtomType> = (get: <T>(a: ReadOnlyAtom<T>) => T) => AtomType
@@ -186,7 +186,11 @@ export function atom<AtomType>(
         }) as unknown as ReadOnlyAtom<AtomType>
     }
     return Object.assign({}, base, {
-        set: (newValue: AtomType) => {
+        set: (next: AtomType | ((prev: AtomType) => AtomType)) => {
+            const newValue =
+                typeof next === 'function'
+                    ? (next as (prev: AtomType) => AtomType)(value)
+                    : next
             value = newValue
             subscribers.forEach((cb) => cb(value))
         },

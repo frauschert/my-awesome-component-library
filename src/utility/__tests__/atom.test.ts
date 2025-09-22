@@ -19,7 +19,7 @@ describe('atom', () => {
     it('derived atom: computes from dependencies and updates', () => {
         const a = atom(2)
         const b = atom(3)
-        const sum = atom((get) => get(a) + get(b))
+        const sum = atom<number>((get) => get(a) + get(b))
         let observed = 0
         sum.subscribe((v) => {
             observed = v
@@ -36,15 +36,17 @@ describe('atom', () => {
 
     it('throws if trying to set a derived atom', () => {
         const a = atom(1)
-        const double = atom((get) => get(a) * 2)
-        expect(() => double.set(10)).toThrow('Cannot set value of derived atom')
+        const double = atom<number>((get) => get(a) * 2)
+        expect(() => (double as any).set(10)).toThrow(
+            'Cannot set value of derived atom'
+        )
     })
 
     it('unsubscribes from dependencies when recomputed', () => {
         const a = atom(1)
         const b = atom(2)
         const useA = atom(true)
-        const dynamic = atom((get) => (get(useA) ? get(a) : get(b)))
+        const dynamic = atom<number>((get) => (get(useA) ? get(a) : get(b)))
         let observed = 0
         dynamic.subscribe((v) => {
             observed = v
@@ -61,9 +63,19 @@ describe('atom', () => {
         expect(observed).toBe(7)
     })
 
+    it('supports functional set for writable atoms', () => {
+        const a = atom(0)
+        let last = -1
+        a.subscribe((v) => (last = v))
+        a.set((x) => x + 1)
+        a.set((x) => x + 2)
+        expect(a.get()).toBe(3)
+        expect(last).toBe(3)
+    })
+
     it('coalesces multiple updates into one recompute tick', async () => {
         const a = atom(0)
-        const b = atom((get) => get(a) * 2)
+        const b = atom<number>((get) => get(a) * 2)
         let notifications = 0
         b.subscribe(() => {
             notifications++
@@ -81,7 +93,7 @@ describe('atom', () => {
 
     it('does not maintain dependency subscriptions without subscribers', () => {
         const a = atom(1)
-        const b = atom((get) => get(a) + 1)
+        const b = atom<number>((get) => get(a) + 1)
         // No subscribers yet; updating a should not notify anyone, but get should recompute on demand
         a.set(2)
         expect(b.get()).toBe(3)
