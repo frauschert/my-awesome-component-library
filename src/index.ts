@@ -8,6 +8,7 @@ import {
     useAtomValue,
     useSetAtom,
     useAtomSelector,
+    useResetAtom,
 } from './utility/hooks/useAtom'
 
 export {
@@ -19,5 +20,6 @@ export {
     useAtomValue,
     useSetAtom,
     useAtomSelector,
+    useResetAtom,
 }
 export type { ReadOnlyAtom, WritableAtom }

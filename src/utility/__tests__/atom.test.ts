@@ -73,6 +73,24 @@ describe('atom', () => {
         expect(last).toBe(3)
     })
 
+    it('supports reset for writable atoms', () => {
+        const a = atom(5)
+        let last = -1
+        a.subscribe((v) => (last = v))
+        expect(last).toBe(5)
+        a.set(10)
+        expect(a.get()).toBe(10)
+        a.reset()
+        expect(a.get()).toBe(5)
+        expect(last).toBe(5)
+    })
+
+    it('throws if trying to reset a derived atom (not in type)', () => {
+        const a = atom(1)
+        const double = atom<number>((get) => get(a) * 2)
+        expect(() => (double as any).reset()).toThrow()
+    })
+
     it('coalesces multiple updates into one recompute tick', async () => {
         const a = atom(0)
         const b = atom<number>((get) => get(a) * 2)

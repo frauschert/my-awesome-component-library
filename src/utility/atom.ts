@@ -9,6 +9,7 @@ export interface ReadOnlyAtom<AtomType> {
 
 export interface WritableAtom<AtomType> extends ReadOnlyAtom<AtomType> {
     set: (next: AtomType | ((prev: AtomType) => AtomType)) => void
+    reset: () => void
 }
 
 type AtomGetter<AtomType> = (get: <T>(a: ReadOnlyAtom<T>) => T) => AtomType
@@ -20,13 +21,17 @@ export function atom<AtomType>(
 export function atom<AtomType>(
     initialValue: AtomType | AtomGetter<AtomType>
 ): WritableAtom<AtomType> | ReadOnlyAtom<AtomType> {
-    let value: AtomType =
-        typeof initialValue === 'function' ? (undefined as any) : initialValue
+    const isDerived = typeof initialValue === 'function'
+    const initialPrimitiveValue = (
+        isDerived ? undefined : (initialValue as AtomType)
+    ) as AtomType
+    let value: AtomType = isDerived
+        ? (undefined as unknown as AtomType)
+        : (initialValue as AtomType)
 
     const subscribers = new Set<(newValue: AtomType) => void>()
     // Track current dependencies and their unsubscribe functions for derived atoms
     let dependencyMap = new Map<ReadOnlyAtom<any>, () => void>()
-    const isDerived = typeof initialValue === 'function'
     let hasActiveDeps = false
 
     // Coalesced recompute state
@@ -192,6 +197,10 @@ export function atom<AtomType>(
                     ? (next as (prev: AtomType) => AtomType)(value)
                     : next
             value = newValue
+            subscribers.forEach((cb) => cb(value))
+        },
+        reset: () => {
+            value = initialPrimitiveValue
             subscribers.forEach((cb) => cb(value))
         },
     }) as WritableAtom<AtomType>

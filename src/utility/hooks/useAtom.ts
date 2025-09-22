@@ -29,6 +29,10 @@ export function useSetAtom<AtomType>(atom: WritableAtom<AtomType>) {
     return atom.set
 }
 
+export function useResetAtom<AtomType>(atom: WritableAtom<AtomType>) {
+    return atom.reset
+}
+
 export function useAtomSelector<AtomType, Selected>(
     atom: ReadOnlyAtom<AtomType> | WritableAtom<AtomType>,
     selector: (value: AtomType) => Selected,
