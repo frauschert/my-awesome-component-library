@@ -1,5 +1,4 @@
 import { useCallback, useSyncExternalStore, useRef } from 'react'
-import { Atom } from '../atom'
 import type { ReadOnlyAtom, WritableAtom } from '../atom'
 
 export function useAtom<AtomType>(atom: WritableAtom<AtomType>) {
