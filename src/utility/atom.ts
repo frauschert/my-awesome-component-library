@@ -1,6 +1,5 @@
-export interface Atom<AtomType> {
+export interface ReadOnlyAtom<AtomType> {
     get: () => AtomType
-    set: (newValue: AtomType) => void
     subscribe: (
         callback: (newValue: AtomType) => void,
         notifyImmediately?: boolean
@@ -8,17 +7,25 @@ export interface Atom<AtomType> {
     _subscribers: () => number
 }
 
-type AtomGetter<AtomType> = (get: <T>(a: Atom<T>) => T) => AtomType
+export interface WritableAtom<AtomType> extends ReadOnlyAtom<AtomType> {
+    set: (newValue: AtomType) => void
+}
 
+type AtomGetter<AtomType> = (get: <T>(a: ReadOnlyAtom<T>) => T) => AtomType
+
+export function atom<AtomType>(initialValue: AtomType): WritableAtom<AtomType>
+export function atom<AtomType>(
+    initialValue: AtomGetter<AtomType>
+): ReadOnlyAtom<AtomType>
 export function atom<AtomType>(
     initialValue: AtomType | AtomGetter<AtomType>
-): Atom<AtomType> {
+): WritableAtom<AtomType> | ReadOnlyAtom<AtomType> {
     let value: AtomType =
         typeof initialValue === 'function' ? (undefined as any) : initialValue
 
     const subscribers = new Set<(newValue: AtomType) => void>()
     // Track current dependencies and their unsubscribe functions for derived atoms
-    let dependencyMap = new Map<Atom<any>, () => void>()
+    let dependencyMap = new Map<ReadOnlyAtom<any>, () => void>()
     const isDerived = typeof initialValue === 'function'
     let hasActiveDeps = false
 
@@ -77,8 +84,8 @@ export function atom<AtomType>(
             recomputeState.computing = true
             let changed = false
             // Track new dependencies for this computation
-            const newDependencies = new Set<Atom<any>>()
-            const get = <T>(a: Atom<T>): T => {
+            const newDependencies = new Set<ReadOnlyAtom<any>>()
+            const get = <T>(a: ReadOnlyAtom<T>): T => {
                 newDependencies.add(a)
                 return a.get()
             }
@@ -134,21 +141,17 @@ export function atom<AtomType>(
     // Initialize derived value once
     if (isDerived) computeValue(false)
 
-    return {
+    const base: ReadOnlyAtom<AtomType> = {
         get: () => {
             // For derived atoms, recompute on demand. If there are no subscribers,
             // we avoid maintaining dependency subscriptions.
             if (isDerived) computeValue(subscribers.size > 0)
             return value
         },
-        set: (newValue) => {
-            if (isDerived) {
-                throw new Error('Cannot set value of derived atom')
-            }
-            value = newValue
-            subscribers.forEach((cb) => cb(value))
-        },
-        subscribe: (callback, notifyImmediately = true) => {
+        subscribe: (
+            callback: (newValue: AtomType) => void,
+            notifyImmediately: boolean = true
+        ) => {
             subscribers.add(callback)
             const firstSubscriber = subscribers.size === 1
             if (isDerived && firstSubscriber && !hasActiveDeps) {
@@ -174,4 +177,18 @@ export function atom<AtomType>(
         },
         _subscribers: () => subscribers.size,
     }
+    if (isDerived) {
+        // Expose a throwing setter at runtime for compatibility, but omit in type
+        return Object.assign({}, base, {
+            set: (/* newValue: AtomType */) => {
+                throw new Error('Cannot set value of derived atom')
+            },
+        }) as unknown as ReadOnlyAtom<AtomType>
+    }
+    return Object.assign({}, base, {
+        set: (newValue: AtomType) => {
+            value = newValue
+            subscribers.forEach((cb) => cb(value))
+        },
+    }) as WritableAtom<AtomType>
 }
