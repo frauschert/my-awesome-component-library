@@ -41,6 +41,23 @@
     animation: fadein 200ms ease-out;
 }
 
+.toast--info {
+    border-color: #e0e7ff;
+    background-color: #f8fafc;
+}
+.toast--success {
+    border-color: #bbf7d0;
+    background-color: #f0fdf4;
+}
+.toast--warn {
+    border-color: #fde68a;
+    background-color: #fffbeb;
+}
+.toast--error {
+    border-color: #fecaca;
+    background-color: #fef2f2;
+}
+
 .toast:hover {
     transform: scale(1.02);
 }

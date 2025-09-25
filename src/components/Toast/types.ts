@@ -6,6 +6,7 @@ export type ToastItem = {
     content: ReactNode
     position?: Position
     duration?: number
+    variant?: 'info' | 'success' | 'warn' | 'error'
 }
 
 export type ToastItemWithoutId = Omit<ToastItem, 'id'>

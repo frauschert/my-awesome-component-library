@@ -6,9 +6,15 @@ type ToastProps = {
     children: ReactNode
     remove: () => void
     duration?: number
+    variant?: 'info' | 'success' | 'warn' | 'error'
 }
 
-function Toast({ children, remove, duration = -1 }: ToastProps) {
+function Toast({
+    children,
+    remove,
+    duration = -1,
+    variant = 'info',
+}: ToastProps) {
     const removeRef = useLatestRef(remove)
     const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const remainingRef = useRef<number>(duration)
@@ -52,10 +58,11 @@ function Toast({ children, remove, duration = -1 }: ToastProps) {
         }
     }
 
+    const role = variant === 'error' || variant === 'warn' ? 'alert' : 'status'
     return (
         <div
-            className={'toast'}
-            role="status"
+            className={`toast toast--${variant}`}
+            role={role}
             aria-live="polite"
             aria-atomic="true"
             onMouseEnter={pauseTimer}
