@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 function createWrapperAndAppendToBody(wrapperId: string) {
@@ -17,29 +17,24 @@ export default function Portal({
     children,
     wrapperId = 'react-portal-wrapper',
 }: PortalProps): React.ReactPortal | null {
-    const [wrapperElement, setWrapperElement] = useState<HTMLElement>()
-
-    useLayoutEffect(() => {
-        let element = document.getElementById(wrapperId)
-        let systemCreated = false
-        // if element is not found with wrapperId or wrapperId is not provided,
-        // create and append to body
+    const createdRef = useRef(false)
+    const [wrapperElement] = useState<HTMLElement>(() => {
+        let element = document.getElementById(wrapperId) as HTMLElement | null
         if (!element) {
-            systemCreated = true
+            createdRef.current = true
             element = createWrapperAndAppendToBody(wrapperId)
         }
-        setWrapperElement(element)
+        return element
+    })
 
+    // Cleanup if we created the element
+    useEffect(() => {
         return () => {
-            // delete the programatically created element
-            if (systemCreated && element?.parentNode) {
-                element.parentNode.removeChild(element)
+            if (createdRef.current && wrapperElement?.parentNode) {
+                wrapperElement.parentNode.removeChild(wrapperElement)
             }
         }
-    }, [wrapperId])
-
-    // wrapperElement state will be null on very first render.
-    if (!wrapperElement) return null
+    }, [wrapperElement])
 
     return createPortal(children, wrapperElement)
 }

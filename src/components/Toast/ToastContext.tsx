@@ -4,6 +4,8 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useLayoutEffect,
+    useRef,
 } from 'react'
 import { classNames } from '../../utility/classnames'
 import { createSubscribable } from '../../utility/createSubscribable'
@@ -39,7 +41,17 @@ const ToastProvider = ({
 }: ToastProviderProps) => {
     const [toasts, add, remove] = useToasts()
 
-    useEffect(() => subscribe(add), [add])
+    // Subscribe immediately to avoid dropping early notifications
+    const unsubRef = useRef<null | (() => void)>(null)
+    if (!unsubRef.current) {
+        unsubRef.current = subscribe(add)
+    }
+    useEffect(() => {
+        return () => {
+            unsubRef.current?.()
+            unsubRef.current = null
+        }
+    }, [add])
 
     // Allow Escape to dismiss the most recent toast (across positions)
     useEffect(() => {
