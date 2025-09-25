@@ -72,5 +72,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .toast { transition: none; animation: none; }
+    .toast {
+        transition: none;
+        animation: none;
+    }
 }
