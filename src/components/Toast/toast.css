@@ -44,20 +44,20 @@
 /* If your build supports SCSS, prefer importing variables; otherwise
    these CSS variables can be provided by a precompiled stylesheet. */
 .toast--info {
-    border-color: var(--toast-info-border, #dbeafe);
-    background-color: var(--toast-info-bg, #f8fafc);
+    border-color: var(--toast-info-border, #2563eb);
+    background-color: var(--toast-info-bg, #dbeafe);
 }
 .toast--success {
-    border-color: var(--toast-success-border, #dcfce7);
-    background-color: var(--toast-success-bg, #f0fdf4);
+    border-color: var(--toast-success-border, #16a34a);
+    background-color: var(--toast-success-bg, #dcfce7);
 }
 .toast--warn {
-    border-color: var(--toast-warn-border, #fef3c7);
-    background-color: var(--toast-warn-bg, #fffbeb);
+    border-color: var(--toast-warn-border, #d97706);
+    background-color: var(--toast-warn-bg, #fef3c7);
 }
 .toast--error {
-    border-color: var(--toast-error-border, #fee2e2);
-    background-color: var(--toast-error-bg, #fef2f2);
+    border-color: var(--toast-error-border, #dc2626);
+    background-color: var(--toast-error-bg, #fee2e2);
 }
 
 .toast:hover {
