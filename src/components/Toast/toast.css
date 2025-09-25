@@ -1,5 +1,8 @@
+/* Wrapper positions */
 .toasts-wrapper {
-    position: absolute;
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none; /* allow clicks to pass except on toast */
 }
 
 .bottom-right {
@@ -18,46 +21,28 @@
 }
 
 .top-left {
-    top: 1em;
-    left: 1em;
+    top: 1rem;
+    left: 1rem;
 }
 
+/* Toast */
 .toast {
     border: 2px solid transparent;
     background-color: #fafafa;
     border-radius: 0.5rem;
     max-width: 480px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    margin-top: 1rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin-top: 0.75rem;
     display: flex;
     position: relative;
     cursor: pointer;
-    animation: fadein 0.5s, fadeout 0.5s;
-}
-
-/* Animations to fade the snackbar in and out */
-@keyframes fadein {
-    from {
-        bottom: 0px;
-        opacity: 0;
-    }
-    to {
-        bottom: 20px;
-        opacity: 1;
-    }
-}
-
-@keyframes fadeout {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
+    pointer-events: auto;
+    transition: transform 120ms ease;
+    animation: fadein 200ms ease-out;
 }
 
 .toast:hover {
-    transform: scale(1.1);
+    transform: scale(1.02);
 }
 
 .toast__text {
@@ -72,4 +57,20 @@
     margin-top: 0.2rem;
     margin-right: 0.2rem;
     cursor: pointer;
+}
+
+/* Animations */
+@keyframes fadein {
+    from {
+        transform: translateY(6px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast { transition: none; animation: none; }
 }
