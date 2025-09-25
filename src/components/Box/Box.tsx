@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, JSX } from 'react'
 
 // Source: https://github.com/emotion-js/emotion/blob/master/packages/styled-base/types/helper.d.ts
 // A more precise version of just React.ComponentPropsWithoutRef on its own
@@ -54,26 +54,28 @@ type BoxProps<T extends React.ElementType> = PolymorphicComponentPropsWithRef<
     { children?: React.ReactNode }
 >
 
-type BoxComponent = React.FC & {
+type BoxComponent = {
     <T extends React.ElementType = 'div'>(
         props: BoxProps<T>
     ): React.ReactElement | null
 }
 
-const Box: BoxComponent = forwardRef(
-    <T extends React.ElementType = 'div'>(
-        { as, children, ...rest }: BoxProps<T>,
-        ref?: PolymorphicRef<T>
-    ) => {
-        const Element = as || 'div'
-        return (
-            <Element {...rest} ref={ref}>
-                {children}
-            </Element>
-        )
-    }
-)
+const BoxInner = <T extends React.ElementType = 'div'>(
+    { as, children, ...rest }: BoxProps<T>,
+    ref?: PolymorphicRef<T>
+) => {
+    const Element = as || 'div'
+    return (
+        <Element {...rest} ref={ref}>
+            {children}
+        </Element>
+    )
+}
 
-Box.displayName = 'Box'
+// Wrap in non-generic forwardRef and cast to the callable BoxComponent signature
+const _Box = forwardRef(BoxInner as any) as unknown as BoxComponent
+const Box = _Box
+;(Box as any).displayName = 'Box'
 
+export default Box
 export { Box }

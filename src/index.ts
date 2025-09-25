@@ -1,4 +1,5 @@
 import Button from './components/Button'
+import Box from './components/Box'
 import Table from './components/Table'
 import { ContextMenuProvider } from './components/ContextMenu'
 import type { ReadOnlyAtom, WritableAtom } from './utility/atom'
@@ -13,6 +14,7 @@ import {
 
 export {
     Button,
+    Box,
     Table,
     ContextMenuProvider,
     atom,
