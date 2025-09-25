@@ -23,16 +23,36 @@ type ToastContextState = {
 type ToastProviderProps = {
     children: ReactNode
     position: Position
+    maxVisible?: number
+    dismissOnEscape?: boolean
 }
 
 const ToastContext = createContext<ToastContextState | null>(null)
 
 const { subscribe, publish: notify } = createSubscribable<ToastItemWithoutId>()
 
-const ToastProvider = ({ children, position }: ToastProviderProps) => {
+const ToastProvider = ({
+    children,
+    position,
+    maxVisible,
+    dismissOnEscape = true,
+}: ToastProviderProps) => {
     const [toasts, add, remove] = useToasts()
 
     useEffect(() => subscribe(add), [add])
+
+    // Allow Escape to dismiss the most recent toast (across positions)
+    useEffect(() => {
+        if (!dismissOnEscape) return
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                const last = toasts[toasts.length - 1]
+                if (last) remove(last.id)
+            }
+        }
+        window.addEventListener('keydown', onKeyDown)
+        return () => window.removeEventListener('keydown', onKeyDown)
+    }, [dismissOnEscape, toasts, remove])
 
     const providerValue = useMemo(() => {
         return { add, remove }
@@ -45,22 +65,32 @@ const ToastProvider = ({ children, position }: ToastProviderProps) => {
                 <Portal wrapperId="toast-wrapper">
                     {Array.from(
                         groupBy(toasts, (item) => item.position ?? position)
-                    ).map(([itemPos, items]) => (
-                        <div
-                            key={itemPos}
-                            className={classNames('toasts-wrapper', itemPos)}
-                        >
-                            {items.map((item) => (
-                                <Toast
-                                    key={item.id}
-                                    remove={() => remove(item.id)}
-                                    duration={item.duration}
-                                >
-                                    {item.content}
-                                </Toast>
-                            ))}
-                        </div>
-                    ))}
+                    ).map(([itemPos, items]) => {
+                        const visible =
+                            typeof maxVisible === 'number' && maxVisible > 0
+                                ? items.slice(-maxVisible)
+                                : items
+                        return (
+                            <div
+                                key={itemPos}
+                                className={classNames(
+                                    'toasts-wrapper',
+                                    itemPos
+                                )}
+                            >
+                                {visible.map((item) => (
+                                    <Toast
+                                        key={item.id}
+                                        remove={() => remove(item.id)}
+                                        duration={item.duration}
+                                        variant={item.variant}
+                                    >
+                                        {item.content}
+                                    </Toast>
+                                ))}
+                            </div>
+                        )
+                    })}
                 </Portal>
             </>
         </ToastContext.Provider>
