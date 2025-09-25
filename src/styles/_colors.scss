@@ -9,6 +9,26 @@ $theme-colors: (
         'light': #ff8100,
         'dark': #e47f17,
     ),
+    'info': (
+        'base': #2563eb,
+        'light': #dbeafe,
+        'dark': #1d4ed8,
+    ),
+    'success': (
+        'base': #16a34a,
+        'light': #dcfce7,
+        'dark': #166534,
+    ),
+    'warn': (
+        'base': #d97706,
+        'light': #fef3c7,
+        'dark': #92400e,
+    ),
+    'error': (
+        'base': #dc2626,
+        'light': #fee2e2,
+        'dark': #991b1b,
+    ),
     'foreground': (
         'base': #393939,
         'light': #6e6e6e,

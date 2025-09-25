@@ -41,21 +41,23 @@
     animation: fadein 200ms ease-out;
 }
 
+/* If your build supports SCSS, prefer importing variables; otherwise
+   these CSS variables can be provided by a precompiled stylesheet. */
 .toast--info {
-    border-color: #e0e7ff;
-    background-color: #f8fafc;
+    border-color: var(--toast-info-border, #dbeafe);
+    background-color: var(--toast-info-bg, #f8fafc);
 }
 .toast--success {
-    border-color: #bbf7d0;
-    background-color: #f0fdf4;
+    border-color: var(--toast-success-border, #dcfce7);
+    background-color: var(--toast-success-bg, #f0fdf4);
 }
 .toast--warn {
-    border-color: #fde68a;
-    background-color: #fffbeb;
+    border-color: var(--toast-warn-border, #fef3c7);
+    background-color: var(--toast-warn-bg, #fffbeb);
 }
 .toast--error {
-    border-color: #fecaca;
-    background-color: #fef2f2;
+    border-color: var(--toast-error-border, #fee2e2);
+    background-color: var(--toast-error-bg, #fef2f2);
 }
 
 .toast:hover {

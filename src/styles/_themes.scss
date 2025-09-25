@@ -52,3 +52,26 @@ $themes: (
 @function themed($key) {
     @return map-get($theme-map, $key);
 }
+
+/* Toast variant CSS variables (light defaults). Adjust per theme as needed. */
+:root {
+    --toast-info-bg: #{theme-color('info', 'light')};
+    --toast-info-border: #{theme-color('info', 'light')};
+    --toast-success-bg: #{theme-color('success', 'light')};
+    --toast-success-border: #{theme-color('success', 'light')};
+    --toast-warn-bg: #{theme-color('warn', 'light')};
+    --toast-warn-border: #{theme-color('warn', 'light')};
+    --toast-error-bg: #{theme-color('error', 'light')};
+    --toast-error-border: #{theme-color('error', 'light')};
+}
+
+.theme--dark {
+    --toast-info-bg: #{theme-color('info', 'dark')};
+    --toast-info-border: #{theme-color('info', 'dark')};
+    --toast-success-bg: #{theme-color('success', 'dark')};
+    --toast-success-border: #{theme-color('success', 'dark')};
+    --toast-warn-bg: #{theme-color('warn', 'dark')};
+    --toast-warn-border: #{theme-color('warn', 'dark')};
+    --toast-error-bg: #{theme-color('error', 'dark')};
+    --toast-error-border: #{theme-color('error', 'dark')};
+}
