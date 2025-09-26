@@ -46,6 +46,7 @@ const meta: Meta<typeof Button> = {
     argTypes: {
         variant: {
             control: { type: 'select' },
+            // Exclude 'circle' from the global control to avoid invalid prop combos (circle forbids left/right icons & label)
             options: ['primary', 'secondary', 'danger', 'link'],
         },
         size: {
@@ -96,7 +97,7 @@ export const Link: Story = {
 }
 
 export const Sizes: Story = {
-    render: (args) => (
+    render: (args: ButtonProps) => (
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <Button {...args} size="small">
                 Small
@@ -141,23 +142,30 @@ export const IconOnlyAccessible: Story = {
     parameters: {
         docs: {
             description: {
-                story: 'Icon-only buttons must include an accessible name via aria-label or title.',
+                story: 'Circle (icon-only) variant. Always provide an accessible name via aria-label. The circle variant ignores left/right icon props; supply the icon as children.',
             },
             source: {
-                code: `<Button aria-label="Download" leftIcon={<span aria-hidden>⬇️</span>} />`,
+                code: `<Button variant="circle" aria-label="Download">⬇️</Button>`,
             },
         },
     },
     args: {
+        variant: 'circle' as any, // cast so Storybook control doesn\'t try to coerce
         'aria-label': 'Download',
-        leftIcon: <span aria-hidden>⬇️</span>,
-        variant: 'primary',
-        children: undefined,
+        children: '⬇️',
+        size: 'medium',
+    },
+    argTypes: {
+        // Lock variant for this story
+        variant: { control: false },
+        leftIcon: { control: false },
+        rightIcon: { control: false },
+        label: { control: false },
     },
 }
 
 export const FullWidth: Story = {
-    render: (args) => (
+    render: (args: ButtonProps) => (
         <div style={{ width: 360, border: '1px dashed #ddd', padding: 12 }}>
             <Button {...args}>Full width button</Button>
         </div>
@@ -175,7 +183,7 @@ export const Themed: Story = {
             },
         },
     },
-    render: (args) => {
+    render: (args: ButtonProps) => {
         const Row = ({
             title,
             size,
@@ -320,7 +328,7 @@ export const SubmitAndReset: Story = {
         }
         return <Demo />
     },
-    play: async ({ canvasElement }) => {
+    play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
         const canvas = within(canvasElement)
         await userEvent.click(canvas.getByTestId('submit-btn'))
         await expect(canvas.getByTestId('form-status')).toHaveTextContent(
@@ -337,7 +345,7 @@ export const KeyboardFocus: Story = {
     args: {
         children: 'Focusable',
     },
-    play: async ({ canvasElement }) => {
+    play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
         const canvas = within(canvasElement)
         await userEvent.tab()
         await expect(
@@ -361,7 +369,7 @@ export const InteractiveState: Story = {
         }
         return <ReactDemo />
     },
-    play: async ({ canvasElement }) => {
+    play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
         const canvas = within(canvasElement)
         const btn = canvas.getByTestId('counter-btn')
         await userEvent.click(btn)
@@ -390,9 +398,33 @@ export const DisabledDoesNotClick: Story = {
         }
         return <Demo />
     },
-    play: async ({ canvasElement }) => {
+    play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
         const canvas = within(canvasElement)
         await userEvent.click(canvas.getByTestId('disabled-btn'))
         await expect(canvas.getByTestId('status')).toHaveTextContent('idle')
     },
+}
+
+export const CircleSizes: Story = {
+    parameters: {
+        docs: {
+            description: {
+                story: 'Circle variant across size tokens. Each button has an aria-label for accessibility.',
+            },
+        },
+    },
+    render: () => (
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <Button variant="circle" size="small" aria-label="Close small">
+                ×
+            </Button>
+            <Button variant="circle" size="medium" aria-label="Close medium">
+                ×
+            </Button>
+            <Button variant="circle" size="large" aria-label="Close large">
+                ×
+            </Button>
+        </div>
+    ),
+    argTypes: { variant: { control: false }, size: { control: false } },
 }

@@ -76,13 +76,54 @@
     }
 }
 
+/* Circle icon button variant (for icon-only controls like toast close) */
+.button--circle {
+    /* Allow size override via CSS var; defaults set by size class below */
+    --btn-circle-size: 28px;
+    width: var(--btn-circle-size);
+    height: var(--btn-circle-size);
+    min-width: var(--btn-circle-size);
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background: transparent;
+    color: inherit;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px inset;
+}
+.button--circle:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.06);
+}
+.button--circle:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+/* Circle sizes mapped to button size classes */
+.button--circle.button--small {
+    --btn-circle-size: 24px;
+}
+.button--circle.button--medium {
+    --btn-circle-size: 28px;
+}
+.button--circle.button--large {
+    --btn-circle-size: 32px;
+}
+
+/* Override size padding so circle keeps 1:1 ratio */
+.button--circle.button--small,
+.button--circle.button--medium,
+.button--circle.button--large {
+    padding: 0 !important; /* size classes add padding; suppress for circle */
+    line-height: 1;
+}
+
 .button--small {
     font-size: 12px;
-    padding: 10px 16px;
+    padding: 8px 16px;
 }
 .button--medium {
     font-size: 14px;
-    padding: 11px 20px;
+    padding: 10px 20px;
 }
 .button--large {
     font-size: 16px;

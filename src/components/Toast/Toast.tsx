@@ -1,6 +1,7 @@
 import React, { useEffect, ReactNode, useRef } from 'react'
 import { useLatestRef } from '../../utility/hooks/useLatestRef'
 import './toast.css'
+import Button from '../Button'
 
 type ToastProps = {
     children: ReactNode
@@ -73,13 +74,14 @@ function Toast({
         >
             <div className="toast__text">{children}</div>
             <div>
-                <button
-                    onClick={removeRef.current}
-                    className="toast__close-btn"
+                <Button
+                    variant="circle"
                     aria-label="Dismiss notification"
+                    title="Dismiss"
+                    onClick={removeRef.current}
                 >
-                    x
-                </button>
+                    ×
+                </Button>
             </div>
         </div>
     )
