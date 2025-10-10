@@ -11,6 +11,7 @@ import {
     useAtomSelector,
     useResetAtom,
 } from './utility/hooks/useAtom'
+import { memoize } from './utility/memoize'
 
 export {
     Button,
@@ -23,5 +24,6 @@ export {
     useSetAtom,
     useAtomSelector,
     useResetAtom,
+    memoize,
 }
 export type { ReadOnlyAtom, WritableAtom }

@@ -27,6 +27,58 @@ See `src/utility/__tests__/curry.test.ts` for grouped-argument, zero-arity, defa
 
 ---
 
+# Utility: memoize
+
+Creates a memoized version of a function that caches results based on arguments.
+
+## API
+
+```ts
+memoize<Args, Result>(fn: (...args: Args) => Result)
+```
+
+Returns a memoized function with cache control methods:
+
+-   `cache.get(args)` - Get cached value
+-   `cache.set(args, value)` - Manually set cache value
+-   `cache.has(args)` - Check if args are cached
+-   `cache.delete(args)` - Remove specific cached entry
+-   `cache.clear()` - Clear all cache entries
+-   `cache.size()` - Get number of cached entries
+
+## Usage
+
+```ts
+const expensive = (a: number, b: number) => {
+    console.log('Computing...')
+    return a * b
+}
+
+const memoized = memoize(expensive)
+memoized(5, 10) // logs "Computing...", returns 50
+memoized(5, 10) // returns cached 50 (no log)
+memoized(5, 11) // logs "Computing...", returns 55
+
+// Cache control
+memoized.cache.clear() // Clear all
+memoized.cache.delete([5, 10]) // Clear specific
+memoized.cache.has([5, 10]) // Check if cached
+```
+
+## Behavior and limitations
+
+-   Uses `JSON.stringify` for cache keys, so arguments must be serializable
+-   Functions, symbols, and circular references cannot be cached
+-   `undefined` in arguments is treated as `null` (JSON limitation)
+-   Errors are not cached; function is re-executed on each call
+-   Object property order doesn't affect caching (same JSON string)
+
+## Tests
+
+See `src/utility/__tests__/memoize.test.ts` for comprehensive tests covering primitives, objects, arrays, cache control, and edge cases.
+
+---
+
 # Utility: scan
 
 Applies a reducer over an array, returning the intermediate accumulator values (one per input element).
