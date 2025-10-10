@@ -101,15 +101,28 @@ export function createContext<Store extends Record<string, unknown>>(
             throw new Error('Store not found')
         }
 
+        // Keep selector ref stable to avoid re-subscriptions on selector change
+        const selectorRef = useRef(selector)
+        selectorRef.current = selector
+
         const [state, setState] = useState(() =>
-            selector ? selector(initialState) : initialState
+            selectorRef.current
+                ? selectorRef.current(initialState)
+                : initialState
         )
 
         useEffect(() => {
-            return store.subscribe(() =>
-                setState(selector ? selector(store.get()) : store.get())
-            )
-        })
+            // Always use latest selector via ref
+            const updateState = () => {
+                const newValue = selectorRef.current
+                    ? selectorRef.current(store.get())
+                    : store.get()
+                setState(newValue)
+            }
+
+            // Subscribe once per store instance
+            return store.subscribe(updateState)
+        }, [store]) // Only re-subscribe if store changes
 
         return [state, store.set] as const
     }

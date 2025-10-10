@@ -80,7 +80,9 @@
         "build": "rollup -c",
         "prettier": "prettier --write .",
         "test": "jest",
-        "coverage": "jest --coverage"
+        "coverage": "jest --coverage",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix"
     },
     "publishConfig": {
         "registry": "https://npm.pkg.github.com"
