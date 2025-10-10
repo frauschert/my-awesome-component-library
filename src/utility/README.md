@@ -79,6 +79,76 @@ See `src/utility/__tests__/memoize.test.ts` for comprehensive tests covering pri
 
 ---
 
+# Utility: throttle
+
+Creates a throttled version of a function that only executes at most once per specified interval.
+
+## API
+
+```ts
+throttle<Args, Result>(
+    fn: (...args: Args) => Result,
+    wait: number,
+    options?: { leading?: boolean; trailing?: boolean }
+)
+```
+
+Returns a throttled function with `cancel()` method.
+
+Options:
+
+-   `leading` (default: `true`) - Execute on the leading edge (first call)
+-   `trailing` (default: `false`) - Execute on the trailing edge (after wait period with latest args)
+
+## Usage
+
+```ts
+// Basic throttle - executes immediately, ignores subsequent calls for 1s
+const handleScroll = throttle(() => {
+    console.log('Scroll position:', window.scrollY)
+}, 1000)
+
+window.addEventListener('scroll', handleScroll)
+
+// With trailing execution - first call executes immediately,
+// last call within period executes after wait time
+const saveData = throttle(
+    (data: string) => {
+        api.save(data)
+    },
+    2000,
+    { trailing: true }
+)
+
+saveData('1') // Executes immediately
+saveData('2') // Throttled
+saveData('3') // Throttled, but will execute after 2s with '3'
+
+// Cancel pending trailing execution
+handleScroll.cancel()
+```
+
+## Behavior and limitations
+
+-   First call with `leading: true` executes immediately
+-   Subsequent calls within the wait period are throttled
+-   With `trailing: true`, the last call's arguments are used for the trailing execution
+-   Trailing execution is cancelled if `cancel()` is called
+-   Returns last execution's result when throttled
+-   Returns `undefined` if `leading: false` and no execution yet
+
+## Common use cases
+
+-   Scroll/resize event handlers (`leading: true`)
+-   Auto-save with latest data (`leading: true, trailing: true`)
+-   Rate-limiting API calls
+
+## Tests
+
+See `src/utility/__tests__/throttle.test.ts` for comprehensive tests covering leading/trailing behavior, cancellation, and edge cases.
+
+---
+
 # Utility: scan
 
 Applies a reducer over an array, returning the intermediate accumulator values (one per input element).
