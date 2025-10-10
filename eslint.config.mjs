@@ -83,6 +83,8 @@ export default [
             'no-debugger': 'warn',
             'prefer-const': 'warn',
             'no-var': 'error',
+            'no-redeclare': 'off', // Conflicts with TypeScript function overloads
+            '@typescript-eslint/no-redeclare': 'off', // Allow TypeScript overloads
         },
         settings: {
             react: {
