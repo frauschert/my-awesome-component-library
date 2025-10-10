@@ -31,7 +31,7 @@ export function atom<AtomType>(
 
     const subscribers = new Set<(newValue: AtomType) => void>()
     // Track current dependencies and their unsubscribe functions for derived atoms
-    let dependencyMap = new Map<ReadOnlyAtom<any>, () => void>()
+    const dependencyMap = new Map<ReadOnlyAtom<any>, () => void>()
     let hasActiveDeps = false
 
     // Coalesced recompute state
