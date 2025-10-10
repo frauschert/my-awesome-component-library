@@ -5,7 +5,7 @@ export function useFetch<T = unknown>(
     request: RequestInfo,
     init?: RequestInit
 ) {
-    const abortControllerRef = useRef<AbortController>()
+    const abortControllerRef = useRef<AbortController>(undefined)
 
     useEffect(() => {
         abortControllerRef.current = new AbortController()
