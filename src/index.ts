@@ -23,6 +23,7 @@ import { flatten } from './utility/flatten'
 import { mergeDeep } from './utility/mergeDeep'
 import { times } from './utility/times'
 import { delay } from './utility/delay'
+import { toggle } from './utility/toggle'
 
 export {
     Button,
@@ -47,5 +48,6 @@ export {
     mergeDeep,
     times,
     delay,
+    toggle,
 }
 export type { ReadOnlyAtom, WritableAtom }

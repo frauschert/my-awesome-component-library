@@ -944,3 +944,85 @@ Behavior:
 
 -   Derived atoms coalesce multiple dependency updates into a single notification per tick.
 -   Derived atoms subscribe to dependencies only when they have subscribers (lazy).
+
+---
+
+# Utility: toggle
+
+Creates a function that alternates between two values on each call.
+
+## API
+
+```ts
+toggle<A, B>(a: A, b: B): () => A | B
+```
+
+## Usage
+
+```ts
+const t = toggle('a', 'b')
+t() // 'a'
+t() // 'b'
+t() // 'a'
+t() // 'b'
+```
+
+```ts
+// Toggle theme
+const toggleTheme = toggle('light', 'dark')
+const theme1 = toggleTheme() // 'light'
+const theme2 = toggleTheme() // 'dark'
+const theme3 = toggleTheme() // 'light'
+```
+
+```ts
+// Toggle boolean state
+const toggleEnabled = toggle(false, true)
+let enabled = toggleEnabled() // false
+enabled = toggleEnabled() // true
+enabled = toggleEnabled() // false
+```
+
+```ts
+// Toggle between objects
+const devConfig = { env: 'development', debug: true }
+const prodConfig = { env: 'production', debug: false }
+const toggleConfig = toggle(devConfig, prodConfig)
+
+const config1 = toggleConfig() // devConfig
+const config2 = toggleConfig() // prodConfig
+```
+
+```ts
+// Toggle sort order
+const toggleSort = toggle('asc', 'desc')
+const sortOrder = [1, 2, 3, 4].map(() => toggleSort())
+// ['asc', 'desc', 'asc', 'desc']
+```
+
+## Behavior and limitations
+
+-   First call always returns the first value (`a`)
+-   Subsequent calls alternate between `a` and `b`
+-   Each toggle instance maintains independent state
+-   Works with any types including primitives, objects, arrays, functions
+-   Returns union type `A | B` for full type safety
+-   State is preserved across all calls to the same toggle instance
+-   No way to reset state - create a new toggle instance if needed
+
+## Common use cases
+
+-   Theme switching (light/dark mode)
+-   Sort order toggling (asc/desc)
+-   View mode switching (grid/list)
+-   Play/pause state
+-   Visibility toggling (visible/hidden)
+-   Icon switching
+-   Language switching
+-   Config switching
+-   Animation class cycling
+-   Pagination direction
+
+## Tests
+
+See `src/utility/__tests__/toggle.test.ts` for comprehensive tests covering basic functionality, data types, independence, edge cases, practical use cases, composition, type inference, and performance.
