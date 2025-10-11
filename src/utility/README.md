@@ -71,6 +71,71 @@ See `src/utility/__tests__/chunk.test.ts` for comprehensive tests covering edge 
 
 ---
 
+# Utility: partition
+
+Splits an array into two arrays based on a predicate function.
+
+## API
+
+```ts
+partition<T>(
+    array: readonly T[],
+    predicate: (value: T, index: number, array: readonly T[]) => boolean
+): [T[], T[]]
+```
+
+Returns a tuple `[pass, fail]` where:
+
+-   `pass` - Elements that satisfy the predicate
+-   `fail` - Elements that don't satisfy the predicate
+
+## Usage
+
+```ts
+// Separate even and odd numbers
+partition([1, 2, 3, 4, 5], (x) => x % 2 === 0)
+// [[2, 4], [1, 3, 5]]
+
+// Separate by string prefix
+partition(['apple', 'banana', 'avocado', 'cherry'], (s) => s.startsWith('a'))
+// [['apple', 'avocado'], ['banana', 'cherry']]
+
+// Separate active/inactive users
+const users = [
+    { name: 'Alice', active: true },
+    { name: 'Bob', active: false },
+    { name: 'Charlie', active: true },
+]
+const [activeUsers, inactiveUsers] = partition(users, (u) => u.active)
+// activeUsers: [{ name: 'Alice', ... }, { name: 'Charlie', ... }]
+// inactiveUsers: [{ name: 'Bob', ... }]
+
+// Use index in predicate
+partition(['a', 'b', 'c', 'd'], (_, i) => i % 2 === 0)
+// [['a', 'c'], ['b', 'd']]
+```
+
+## Behavior and limitations
+
+-   Predicate receives value, index, and array (like Array.filter)
+-   Preserves order within each result array
+-   Does not mutate the original array
+-   Preserves element references
+-   More efficient than running filter twice
+
+## Common use cases
+
+-   Separating valid/invalid data
+-   Splitting active/inactive records
+-   Categorizing by type or property
+-   Conditional batch processing
+
+## Tests
+
+See `src/utility/__tests__/partition.test.ts` for comprehensive tests covering predicates with indices, type guards, and edge cases.
+
+---
+
 # Utility: memoize
 
 Creates a memoized version of a function that caches results based on arguments.
