@@ -319,6 +319,85 @@ See `src/utility/__tests__/mergeDeep.test.ts` for 47 comprehensive tests coverin
 
 ---
 
+# Utility: times
+
+Executes a function n times and returns an array of the results. The function receives the current iteration index (0-based) as an argument.
+
+## API
+
+```ts
+times<T>(n: number, fn: (index: number) => T): T[]
+```
+
+## Usage
+
+```ts
+times(5, (i) => i * 2)
+// [0, 2, 4, 6, 8]
+
+times(3, (i) => `item-${i}`)
+// ['item-0', 'item-1', 'item-2']
+
+times(0, (i) => i)
+// []
+
+// Generate array of objects
+times(3, (i) => ({ id: i, name: `User ${i}` }))
+// [
+//   { id: 0, name: 'User 0' },
+//   { id: 1, name: 'User 1' },
+//   { id: 2, name: 'User 2' }
+// ]
+
+// Create test data
+times(5, (i) => ({
+    id: i + 1,
+    title: `Post ${i + 1}`,
+    published: true,
+}))
+
+// Generate repeated elements
+times(10, () => 'x').join('')
+// 'xxxxxxxxxx'
+
+// Create pagination numbers
+times(5, (i) => i + 1)
+// [1, 2, 3, 4, 5]
+
+// Generate matrix
+times(3, (row) => times(3, (col) => row * 3 + col))
+// [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+```
+
+## Behavior and limitations
+
+-   Function receives the current index (0 to n-1) as its argument
+-   Returns an array containing all function results
+-   n must be a non-negative integer
+-   Throws error if n is negative, NaN, Infinity, or not an integer
+-   Uses a simple for loop (no recursion, safe for large n)
+-   Function is called sequentially, not in parallel
+-   If function throws during execution, the error propagates immediately
+
+## Common use cases
+
+-   Generate test data or mock API responses
+-   Create arrays of placeholder/skeleton elements for loading states
+-   Build pagination page numbers
+-   Generate repeated strings or patterns
+-   Create arrays of React keys
+-   Initialize arrays with computed values
+-   Generate coordinates or grid positions
+-   Create arrays of promises for batch operations
+-   Build matrices or nested arrays
+-   Render repeated components in loops
+
+## Tests
+
+See `src/utility/__tests__/times.test.ts` for 41 comprehensive tests covering basic functionality, return types, edge cases, practical use cases, and performance.
+
+---
+
 # Utility: range
 
 Creates an array of numbers from start to end (inclusive), optionally with a step.
