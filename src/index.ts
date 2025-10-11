@@ -16,6 +16,7 @@ import { throttle } from './utility/throttle'
 import { chunk } from './utility/chunk'
 import { partition } from './utility/partition'
 import { pipe } from './utility/pipe'
+import { range } from './utility/range'
 
 export {
     Button,
@@ -33,5 +34,6 @@ export {
     chunk,
     partition,
     pipe,
+    range,
 }
 export type { ReadOnlyAtom, WritableAtom }

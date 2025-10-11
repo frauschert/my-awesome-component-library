@@ -27,6 +27,63 @@ See `src/utility/__tests__/curry.test.ts` for grouped-argument, zero-arity, defa
 
 ---
 
+# Utility: range
+
+Creates an array of numbers from start to end (inclusive), optionally with a step.
+
+## API
+
+```ts
+range(start: number, end: number, step?: number): number[]
+```
+
+## Usage
+
+```ts
+range(1, 5)
+// [1, 2, 3, 4, 5]
+
+range(0, 10, 2)
+// [0, 2, 4, 6, 8, 10]
+
+range(5, 1)
+// [5, 4, 3, 2, 1] (auto-detects descending)
+
+range(5, 1, -2)
+// [5, 3, 1]
+
+range(-3, 3)
+// [-3, -2, -1, 0, 1, 2, 3]
+
+// Common use cases
+range(1, 100).map((i) => fetchPage(i)) // Fetch pages 1-100
+range(0, 9).map((i) => <Item key={i} />) // Render 10 items
+range(1, 12).map((m) => getMonthData(m)) // Process all months
+```
+
+## Behavior and limitations
+
+-   End value is inclusive (unlike some implementations that are exclusive)
+-   Auto-detects direction: step defaults to 1 for ascending, -1 for descending
+-   Supports fractional steps (e.g., 0.5, 0.1)
+-   Throws error if step is zero
+-   Throws error if step direction conflicts with start/end (e.g., positive step with start > end)
+-   May not land exactly on end if step doesn't divide evenly
+
+## Common use cases
+
+-   Generating pagination numbers
+-   Creating test data arrays
+-   Iterating over numeric sequences
+-   Rendering repeated components
+-   Countdown timers
+
+## Tests
+
+See `src/utility/__tests__/range.test.ts` for comprehensive tests covering ascending/descending ranges, custom steps, edge cases, and floating point handling.
+
+---
+
 # Utility: chunk
 
 Splits an array into smaller arrays (chunks) of a specified size.
