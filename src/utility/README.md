@@ -172,6 +172,74 @@ See `src/utility/__tests__/mapValues.test.ts` for 34 comprehensive tests coverin
 
 ---
 
+# Utility: flatten
+
+Flattens a nested array structure by a specified depth.
+
+## API
+
+```ts
+flatten<T>(array: readonly T[], depth?: number): T[]
+```
+
+## Usage
+
+```ts
+flatten([1, [2, 3], [4, [5]]])
+// [1, 2, 3, 4, [5]] (default depth is 1)
+
+flatten([1, [2, [3, [4]]]], 2)
+// [1, 2, 3, [4]]
+
+flatten([1, [2, [3, [4]]]], Infinity)
+// [1, 2, 3, 4] (completely flat)
+
+flatten([1, 2, 3])
+// [1, 2, 3] (no change if not nested)
+
+// Flatten simple nested arrays
+flatten([
+    [1, 2],
+    [3, 4],
+    [5, 6],
+])
+// [1, 2, 3, 4, 5, 6]
+
+// Control depth
+flatten([1, [2, [3, [4, [5]]]]], 3)
+// [1, 2, 3, 4, [5]]
+
+// Don't flatten with depth 0
+flatten([1, [2, [3]]], 0)
+// [1, [2, [3]]] (no change)
+```
+
+## Behavior and limitations
+
+-   Default depth is 1 (flattens one level)
+-   Use `Infinity` as depth to flatten completely
+-   Depth of 0 or negative values returns a copy without flattening
+-   Uses recursive approach with reduce
+-   Does not mutate the original array
+-   Preserves order of elements
+-   Works with any data types (primitives, objects, functions, etc.)
+-   Empty nested arrays are removed when flattened
+
+## Common use cases
+
+-   Combining paginated API results into a single array
+-   Merging grouped or categorized data
+-   Processing nested task or menu structures
+-   Flattening array chunks back into a single array
+-   Simplifying deeply nested data structures
+-   Preparing nested data for rendering or iteration
+
+## Tests
+
+See `src/utility/__tests__/flatten.test.ts` for 38 comprehensive tests covering depth control, data types, immutability, and practical use cases.
+
+---
+
 # Utility: range
 
 Creates an array of numbers from start to end (inclusive), optionally with a step.

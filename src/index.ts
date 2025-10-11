@@ -19,6 +19,7 @@ import { pipe } from './utility/pipe'
 import { range } from './utility/range'
 import { isEmpty } from './utility/isEmpty'
 import { mapValues } from './utility/mapValues'
+import { flatten } from './utility/flatten'
 
 export {
     Button,
@@ -39,5 +40,6 @@ export {
     range,
     isEmpty,
     mapValues,
+    flatten,
 }
 export type { ReadOnlyAtom, WritableAtom }
