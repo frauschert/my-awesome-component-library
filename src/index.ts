@@ -17,6 +17,7 @@ import { chunk } from './utility/chunk'
 import { partition } from './utility/partition'
 import { pipe } from './utility/pipe'
 import { range } from './utility/range'
+import { isEmpty } from './utility/isEmpty'
 
 export {
     Button,
@@ -35,5 +36,6 @@ export {
     partition,
     pipe,
     range,
+    isEmpty,
 }
 export type { ReadOnlyAtom, WritableAtom }

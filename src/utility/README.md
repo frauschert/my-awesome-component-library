@@ -27,6 +27,82 @@ See `src/utility/__tests__/curry.test.ts` for grouped-argument, zero-arity, defa
 
 ---
 
+# Utility: isEmpty
+
+Checks if a value is empty. Works with arrays, objects, strings, Maps, Sets, null, and undefined.
+
+## API
+
+```ts
+isEmpty(value: unknown): boolean
+```
+
+## Usage
+
+```ts
+isEmpty([])
+// true
+
+isEmpty({})
+// true
+
+isEmpty('')
+// true
+
+isEmpty(null)
+// true
+
+isEmpty(undefined)
+// true
+
+isEmpty(new Map())
+// true
+
+isEmpty(new Set())
+// true
+
+isEmpty([1, 2, 3])
+// false
+
+isEmpty({ a: 1 })
+// false
+
+isEmpty('hello')
+// false
+
+isEmpty(0)
+// false (number zero is not considered empty)
+
+isEmpty(false)
+// false (boolean false is not considered empty)
+```
+
+## Behavior and limitations
+
+-   Arrays: empty if length is 0
+-   Objects: empty if no enumerable own properties (uses `Object.keys()`)
+-   Strings: empty if length is 0 (whitespace-only strings are NOT empty)
+-   Maps/Sets: empty if size is 0
+-   null/undefined: always empty
+-   Built-in objects (Date, RegExp, Error, Promise): never empty
+-   Numbers, booleans, functions, symbols: never empty
+-   Objects with only non-enumerable properties are considered empty
+-   Objects with prototype properties but no own properties are considered empty
+
+## Common use cases
+
+-   Validating form inputs (empty string check)
+-   Checking if API responses have data
+-   Conditional rendering based on array/object content
+-   Guard clauses to handle null/undefined
+-   Validating required fields
+
+## Tests
+
+See `src/utility/__tests__/isEmpty.test.ts` for 46 comprehensive tests covering all data types and edge cases.
+
+---
+
 # Utility: range
 
 Creates an array of numbers from start to end (inclusive), optionally with a step.
