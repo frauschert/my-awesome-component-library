@@ -240,6 +240,85 @@ See `src/utility/__tests__/flatten.test.ts` for 38 comprehensive tests covering 
 
 ---
 
+# Utility: mergeDeep
+
+Deep merges multiple objects into a new object. Later objects take precedence over earlier ones. Arrays are replaced, not merged.
+
+## API
+
+```ts
+mergeDeep<T extends Record<string, unknown>>(
+    ...objects: Array<Record<string, unknown> | null | undefined>
+): T
+```
+
+## Usage
+
+```ts
+mergeDeep({ a: 1, b: 2 }, { b: 3, c: 4 })
+// { a: 1, b: 3, c: 4 }
+
+mergeDeep({ a: { x: 1, y: 2 } }, { a: { y: 3, z: 4 } })
+// { a: { x: 1, y: 3, z: 4 } } (deep merge)
+
+mergeDeep({ arr: [1, 2] }, { arr: [3, 4] })
+// { arr: [3, 4] } (arrays are replaced, not merged)
+
+mergeDeep({ a: 1 }, { b: 2 }, { c: 3 })
+// { a: 1, b: 2, c: 3 } (multiple objects)
+
+// Merge configuration with defaults
+const defaults = {
+    api: { url: '/api', timeout: 5000 },
+    features: { auth: true, analytics: false },
+}
+const userConfig = {
+    api: { timeout: 10000 },
+    features: { analytics: true },
+}
+mergeDeep(defaults, userConfig)
+// {
+//   api: { url: '/api', timeout: 10000 },
+//   features: { auth: true, analytics: true }
+// }
+
+// Null and undefined handling
+mergeDeep({ a: 1 }, { a: null })
+// { a: null } (null replaces value)
+
+mergeDeep({ a: 1 }, null, { b: 2 })
+// { a: 1, b: 2 } (null arguments are skipped)
+```
+
+## Behavior and limitations
+
+-   Deep merges plain objects recursively
+-   Arrays are replaced entirely, not merged element-by-element
+-   Later objects take precedence over earlier ones
+-   Null and undefined values replace existing values
+-   Null or undefined arguments are skipped
+-   Only merges plain objects (excludes Date, RegExp, Map, Set, etc.)
+-   Special objects (Date, RegExp, Error, etc.) are replaced, not merged
+-   Does not mutate input objects - returns new object
+-   Only processes own enumerable properties
+-   Does not merge inherited or non-enumerable properties
+
+## Common use cases
+
+-   Merging configuration objects with defaults
+-   Combining user settings with system defaults
+-   Updating nested state immutably
+-   Merging API responses with cached data
+-   Building complex objects from multiple sources
+-   Applying partial updates to form data
+-   Creating configuration overrides
+
+## Tests
+
+See `src/utility/__tests__/mergeDeep.test.ts` for 47 comprehensive tests covering nested merging, arrays, null handling, immutability, and practical use cases.
+
+---
+
 # Utility: range
 
 Creates an array of numbers from start to end (inclusive), optionally with a step.

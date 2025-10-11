@@ -20,6 +20,7 @@ import { range } from './utility/range'
 import { isEmpty } from './utility/isEmpty'
 import { mapValues } from './utility/mapValues'
 import { flatten } from './utility/flatten'
+import { mergeDeep } from './utility/mergeDeep'
 
 export {
     Button,
@@ -41,5 +42,6 @@ export {
     isEmpty,
     mapValues,
     flatten,
+    mergeDeep,
 }
 export type { ReadOnlyAtom, WritableAtom }
