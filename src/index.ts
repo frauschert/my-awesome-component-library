@@ -13,6 +13,7 @@ import {
 } from './utility/hooks/useAtom'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
+import { chunk } from './utility/chunk'
 
 export {
     Button,
@@ -27,5 +28,6 @@ export {
     useResetAtom,
     memoize,
     throttle,
+    chunk,
 }
 export type { ReadOnlyAtom, WritableAtom }

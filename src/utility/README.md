@@ -27,6 +27,50 @@ See `src/utility/__tests__/curry.test.ts` for grouped-argument, zero-arity, defa
 
 ---
 
+# Utility: chunk
+
+Splits an array into smaller arrays (chunks) of a specified size.
+
+## API
+
+```ts
+chunk<T>(array: readonly T[], size: number): T[][]
+```
+
+## Usage
+
+```ts
+chunk([1, 2, 3, 4, 5], 2)
+// [[1, 2], [3, 4], [5]]
+
+chunk(['a', 'b', 'c', 'd'], 2)
+// [['a', 'b'], ['c', 'd']]
+
+chunk([1, 2, 3, 4, 5, 6], 3)
+// [[1, 2, 3], [4, 5, 6]]
+
+// Common use cases
+const items = Array.from({ length: 100 }, (_, i) => i)
+const pages = chunk(items, 10) // Pagination: 10 pages of 10 items
+
+const gridItems = ['a', 'b', 'c', 'd', 'e', 'f']
+const rows = chunk(gridItems, 3) // Grid layout: 2 rows of 3 columns
+```
+
+## Behavior and limitations
+
+-   Last chunk may contain fewer elements if array length is not evenly divisible
+-   Size must be a positive integer (throws error otherwise)
+-   Returns empty array for empty input
+-   Does not mutate the original array
+-   Preserves element references
+
+## Tests
+
+See `src/utility/__tests__/chunk.test.ts` for comprehensive tests covering edge cases, error handling, and various data types.
+
+---
+
 # Utility: memoize
 
 Creates a memoized version of a function that caches results based on arguments.
