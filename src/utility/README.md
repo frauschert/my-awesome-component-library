@@ -136,6 +136,78 @@ See `src/utility/__tests__/partition.test.ts` for comprehensive tests covering p
 
 ---
 
+# Utility: pipe
+
+Performs left-to-right function composition.
+
+## API
+
+```ts
+pipe<A, B>(f1: (...args: A) => B): (...args: A) => B
+pipe<A, B, C>(f1: (...args: A) => B, f2: (x: B) => C): (...args: A) => C
+// ... up to 8 functions
+```
+
+## Usage
+
+```ts
+const addOne = (x: number) => x + 1
+const double = (x: number) => x * 2
+const square = (x: number) => x * x
+
+const transform = pipe(addOne, double, square)
+transform(3) // ((3 + 1) * 2) ^ 2 = 64
+
+// More readable than nested calls:
+// square(double(addOne(3)))
+```
+
+```ts
+// String processing pipeline
+const process = pipe(
+    (s: string) => s.trim(),
+    (s) => s.toLowerCase(),
+    (s) => s.replace(/\s+/g, '-')
+)
+process('  Hello World  ') // 'hello-world'
+```
+
+```ts
+// Data transformation pipeline
+const users = [
+    { name: 'Alice', age: 30 },
+    { name: 'Bob', age: 25 },
+]
+
+const getAdultNames = pipe(
+    (users: typeof users) => users.filter((u) => u.age >= 18),
+    (users) => users.map((u) => u.name),
+    (names) => names.sort()
+)
+getAdultNames(users) // ['Alice', 'Bob']
+```
+
+## Behavior and limitations
+
+-   First function can accept multiple arguments
+-   Subsequent functions receive single argument (result of previous function)
+-   Executes functions left-to-right (opposite of `compose`)
+-   Supports up to 8 functions with full type inference
+-   More functions supported but lose type inference
+
+## Common use cases
+
+-   Data transformation pipelines
+-   String processing
+-   Functional programming workflows
+-   Making nested function calls more readable
+
+## Tests
+
+See `src/utility/__tests__/pipe.test.ts` for comprehensive tests covering multiple functions, type transformations, and async patterns.
+
+---
+
 # Utility: memoize
 
 Creates a memoized version of a function that caches results based on arguments.

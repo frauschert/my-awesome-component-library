@@ -15,6 +15,7 @@ import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
 import { chunk } from './utility/chunk'
 import { partition } from './utility/partition'
+import { pipe } from './utility/pipe'
 
 export {
     Button,
@@ -31,5 +32,6 @@ export {
     throttle,
     chunk,
     partition,
+    pipe,
 }
 export type { ReadOnlyAtom, WritableAtom }
