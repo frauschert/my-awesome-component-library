@@ -398,6 +398,112 @@ See `src/utility/__tests__/times.test.ts` for 41 comprehensive tests covering ba
 
 ---
 
+# Utility: delay
+
+Creates a promise that resolves after a specified delay (in milliseconds). Optionally resolves with a provided value.
+
+## API
+
+```ts
+delay<T = void>(ms: number, value?: T): Promise<T>
+```
+
+## Usage
+
+```ts
+// Basic delay
+await delay(1000) // Wait 1 second
+
+// Delay with a return value
+const result = await delay(1000, 'done')
+// result === 'done'
+
+// Delay in async operations
+async function fetchData() {
+    await delay(500) // Simulate API latency
+    return { data: 'loaded' }
+}
+
+// Sequential delays
+await delay(100)
+console.log('first')
+await delay(100)
+console.log('second')
+
+// Chained delays
+delay(100, 'a')
+    .then((v) => delay(100, v + 'b'))
+    .then((v) => console.log(v)) // 'ab'
+
+// Timeout pattern
+const timeout = delay(5000, 'timeout')
+const operation = fetchData()
+const result = await Promise.race([operation, timeout])
+
+// Debounced/throttled operations
+async function processWithDelay(item) {
+    await delay(100)
+    return process(item)
+}
+
+// Animation timing
+for (let i = 0; i < 10; i++) {
+    updateFrame(i)
+    await delay(16) // ~60fps
+}
+
+// Retry with delay
+async function retryOperation() {
+    try {
+        return await apiCall()
+    } catch {
+        await delay(1000)
+        return await apiCall()
+    }
+}
+
+// Concurrent delays with Promise.all
+await Promise.all([delay(100, 1), delay(100, 2), delay(100, 3)])
+// All resolve after 100ms (not 300ms)
+
+// Type inference
+const num = await delay(100, 42) // num: number
+const str = await delay(100, 'hello') // str: string
+const none = await delay(100) // none: void
+```
+
+## Behavior and limitations
+
+-   Uses `setTimeout` internally for the delay
+-   ms must be non-negative and finite (throws error otherwise)
+-   Supports fractional milliseconds (e.g., 16.67 for precise timing)
+-   Zero delay (delay(0)) schedules callback on next event loop tick
+-   Returns a Promise that resolves after the specified time
+-   Generic type parameter T infers from the value argument
+-   When called without a value, returns Promise<void>
+-   Delays are not cancelable once created (use AbortController pattern if needed)
+-   Not suitable for precise real-time operations (browser timer resolution varies)
+-   Multiple concurrent delays run independently
+
+## Common use cases
+
+-   Simulating API latency in tests or demos
+-   Adding delays between operations (rate limiting, throttling)
+-   Implementing retry logic with exponential backoff
+-   Creating timeouts with Promise.race
+-   Animating UI changes with frame delays
+-   Debouncing user actions
+-   Pausing execution in async workflows
+-   Staggering concurrent operations
+-   Testing asynchronous code with Jest fake timers
+-   Building simple polling mechanisms
+
+## Tests
+
+See `src/utility/__tests__/delay.test.ts` for 32 comprehensive tests covering basic functionality, return values, error handling, timing precision, concurrent delays, chaining, and type inference.
+
+---
+
 # Utility: range
 
 Creates an array of numbers from start to end (inclusive), optionally with a step.

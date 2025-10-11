@@ -22,6 +22,7 @@ import { mapValues } from './utility/mapValues'
 import { flatten } from './utility/flatten'
 import { mergeDeep } from './utility/mergeDeep'
 import { times } from './utility/times'
+import { delay } from './utility/delay'
 
 export {
     Button,
@@ -45,5 +46,6 @@ export {
     flatten,
     mergeDeep,
     times,
+    delay,
 }
 export type { ReadOnlyAtom, WritableAtom }
