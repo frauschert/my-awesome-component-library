@@ -18,6 +18,7 @@ import { partition } from './utility/partition'
 import { pipe } from './utility/pipe'
 import { range } from './utility/range'
 import { isEmpty } from './utility/isEmpty'
+import { mapValues } from './utility/mapValues'
 
 export {
     Button,
@@ -37,5 +38,6 @@ export {
     pipe,
     range,
     isEmpty,
+    mapValues,
 }
 export type { ReadOnlyAtom, WritableAtom }

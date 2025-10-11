@@ -103,6 +103,75 @@ See `src/utility/__tests__/isEmpty.test.ts` for 46 comprehensive tests covering 
 
 ---
 
+# Utility: mapValues
+
+Creates a new object with the same keys as the input object, but with values transformed by a mapper function.
+
+## API
+
+```ts
+mapValues<T extends Record<string, unknown>, U>(
+    obj: T,
+    mapper: (value: T[keyof T], key: keyof T, object: T) => U
+): Record<keyof T, U>
+```
+
+## Usage
+
+```ts
+mapValues({ a: 1, b: 2, c: 3 }, (v) => v * 2)
+// { a: 2, b: 4, c: 6 }
+
+mapValues({ name: 'john', city: 'paris' }, (v) => v.toUpperCase())
+// { name: 'JOHN', city: 'PARIS' }
+
+mapValues({ a: 1, b: 2 }, (v, key) => `${key}:${v}`)
+// { a: 'a:1', b: 'b:2' }
+
+// Type transformations
+const user = { name: 'Alice', age: 25 }
+mapValues(user, (v) => String(v).length)
+// { name: 5, age: 2 }
+
+// Extract nested properties
+const users = {
+    user1: { name: 'Alice', age: 25 },
+    user2: { name: 'Bob', age: 30 },
+}
+mapValues(users, (user) => user.name)
+// { user1: 'Alice', user2: 'Bob' }
+
+// Apply defaults
+const settings = { volume: 0, brightness: undefined }
+mapValues(settings, (v) => v ?? 100)
+// { volume: 0, brightness: 100 }
+```
+
+## Behavior and limitations
+
+-   Only processes own enumerable properties (uses `for...in` with `hasOwnProperty`)
+-   Does not process inherited or non-enumerable properties
+-   Returns a new object (does not mutate the original)
+-   Mapper receives three arguments: value, key, and the original object
+-   Key types are preserved in the result type
+-   Works with any value types (primitives, objects, arrays, functions, etc.)
+
+## Common use cases
+
+-   Transform all values in a configuration object
+-   Extract specific properties from nested objects
+-   Apply default values to optional properties
+-   Convert data types (strings to numbers, etc.)
+-   Normalize or format data for APIs
+-   Compute derived values (prices with tax, distances in different units)
+-   Build lookup tables or indices
+
+## Tests
+
+See `src/utility/__tests__/mapValues.test.ts` for 34 comprehensive tests covering transformations, type changes, immutability, and edge cases.
+
+---
+
 # Utility: range
 
 Creates an array of numbers from start to end (inclusive), optionally with a step.
