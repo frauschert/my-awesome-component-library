@@ -8,11 +8,12 @@ Custom React hooks for common use cases in the component library.
 -   [useOnScreen](#useonscreen)
 -   [useEventListener](#useeventlistener)
 -   [useSize](#usesize)
+-   [useOnClickOutside](#useonclickoutside)
+-   [useTimeout](#usetimeout)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
 -   [useSessionStorage](#usesessionstorage)
--   [useOnClickOutside](#useonclickoutside)
 
 ---
 
@@ -951,6 +952,273 @@ function ContextMenu() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useOnClickOutside.test.tsx` for comprehensive tests covering basic functionality, multiple refs, nested elements, handler updates without re-subscribing, cleanup, null ref handling, practical use cases (dropdowns, modals, tooltips, search boxes), and edge cases.
+
+---
+
+## useTimeout
+
+Manages a timeout with the ability to start, clear, reset, and check if it's active. Unlike native `setTimeout`, this hook:
+
+-   Does NOT start automatically (must call `start()` or `reset()`)
+-   Always uses the latest callback without re-subscribing
+-   Automatically cleans up on unmount
+-   Provides status checking with `isActive()`
+
+### API
+
+```ts
+useTimeout(
+  callback: () => void,
+  delay: number
+): {
+  start: () => void
+  clear: () => void
+  reset: () => void
+  isActive: () => boolean
+}
+```
+
+### Parameters
+
+-   **callback**: Function to be called after the delay
+    -   Always uses the latest version without re-subscribing
+    -   Captures current state/props when timeout fires
+-   **delay**: Delay in milliseconds before the callback executes
+
+### Returns
+
+Object with four methods:
+
+-   **start()**: Starts the timeout (clears any existing timeout first)
+-   **clear()**: Cancels the timeout if active
+-   **reset()**: Clears and restarts the timeout (alias for `clear()` then `start()`)
+-   **isActive()**: Returns `true` if timeout is currently active, `false` otherwise
+
+### Usage
+
+```tsx
+import { useTimeout } from './utility/hooks'
+import { useState } from 'react'
+
+// Basic usage - manual start
+function Notification() {
+    const [show, setShow] = useState(false)
+    const timeout = useTimeout(() => setShow(false), 3000)
+
+    const showNotification = () => {
+        setShow(true)
+        timeout.start() // Start timeout manually
+    }
+
+    return (
+        <div>
+            <button onClick={showNotification}>Show</button>
+            {show && <div>This will hide in 3 seconds</div>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Auto-save with debounce
+function Editor() {
+    const [content, setContent] = useState('')
+    const [saved, setSaved] = useState(true)
+
+    const saveTimeout = useTimeout(() => {
+        // Save to server
+        saveToServer(content)
+        setSaved(true)
+    }, 2000)
+
+    const handleChange = (e) => {
+        setContent(e.target.value)
+        setSaved(false)
+        saveTimeout.reset() // Reset timer on each keystroke
+    }
+
+    return (
+        <div>
+            <textarea value={content} onChange={handleChange} />
+            <span>{saved ? 'Saved' : 'Saving...'}</span>
+        </div>
+    )
+}
+```
+
+```tsx
+// Delayed action with cancellation
+function DeleteButton({ onDelete, item }) {
+    const [deleting, setDeleting] = useState(false)
+
+    const deleteTimeout = useTimeout(() => {
+        onDelete(item)
+        setDeleting(false)
+    }, 5000)
+
+    const handleDelete = () => {
+        setDeleting(true)
+        deleteTimeout.start()
+    }
+
+    const handleUndo = () => {
+        deleteTimeout.clear()
+        setDeleting(false)
+    }
+
+    return (
+        <div>
+            {deleting ? (
+                <div>
+                    Deleting in 5 seconds...
+                    <button onClick={handleUndo}>Undo</button>
+                </div>
+            ) : (
+                <button onClick={handleDelete}>Delete</button>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Checking if timeout is active
+function Timer() {
+    const [count, setCount] = useState(0)
+    const timeout = useTimeout(() => setCount((c) => c + 1), 1000)
+
+    const start = () => {
+        if (!timeout.isActive()) {
+            timeout.start()
+        }
+    }
+
+    const stop = () => {
+        timeout.clear()
+    }
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={start} disabled={timeout.isActive()}>
+                Start
+            </button>
+            <button onClick={stop} disabled={!timeout.isActive()}>
+                Stop
+            </button>
+            <p>Status: {timeout.isActive() ? 'Running' : 'Stopped'}</p>
+        </div>
+    )
+}
+```
+
+```tsx
+// Toast notification system
+function ToastManager() {
+    const [toasts, setToasts] = useState([])
+    const timeout = useTimeout(() => {
+        setToasts((prev) => prev.slice(1))
+    }, 3000)
+
+    const addToast = (message) => {
+        setToasts((prev) => [...prev, message])
+        timeout.reset() // Reset for each new toast
+    }
+
+    return (
+        <div>
+            <button onClick={() => addToast('New notification')}>
+                Add Toast
+            </button>
+            <div>
+                {toasts.map((toast, i) => (
+                    <div key={i}>{toast}</div>
+                ))}
+            </div>
+        </div>
+    )
+}
+```
+
+```tsx
+// Search with debounced API call
+function SearchBox() {
+    const [query, setQuery] = useState('')
+    const [results, setResults] = useState([])
+    const [searching, setSearching] = useState(false)
+
+    const searchTimeout = useTimeout(async () => {
+        if (query.trim()) {
+            const data = await searchAPI(query)
+            setResults(data)
+        }
+        setSearching(false)
+    }, 500)
+
+    const handleSearch = (e) => {
+        const value = e.target.value
+        setQuery(value)
+
+        if (value.trim()) {
+            setSearching(true)
+            searchTimeout.reset()
+        } else {
+            searchTimeout.clear()
+            setResults([])
+            setSearching(false)
+        }
+    }
+
+    return (
+        <div>
+            <input
+                value={query}
+                onChange={handleSearch}
+                placeholder="Search..."
+            />
+            {searching && <div>Searching...</div>}
+            <ul>
+                {results.map((result) => (
+                    <li key={result.id}>{result.name}</li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+```
+
+### Behavior and limitations
+
+-   **Does NOT start automatically** - You must call `start()` or `reset()` to begin the timeout
+-   Callback always uses the latest version without re-subscribing (prevents stale closures)
+-   Automatically cleans up timeout on unmount to prevent memory leaks
+-   `start()` clears any existing timeout before starting a new one
+-   `clear()` can be called safely even when no timeout is active
+-   `reset()` is equivalent to calling `clear()` then `start()`
+-   `isActive()` reflects current timeout state immediately
+-   Timeout is cleared but not restarted when `delay` changes between renders
+-   Callback fires only once per `start()`/`reset()` call
+-   Uses `window.setTimeout` and `window.clearTimeout` internally
+
+### Common use cases
+
+-   Auto-save functionality (debounced saves)
+-   Delayed notifications and toasts
+-   Search input debouncing
+-   Undo/delete confirmations with delay
+-   Polling with delay between requests
+-   UI animations and transitions
+-   Session timeout warnings
+-   Rate limiting user actions
+-   Delayed form validation
+-   Auto-hide messages
+-   Game timers and countdowns
+-   Delayed loading states
+-   Throttled scroll handlers
+
+### Tests
+
+See `src/utility/hooks/__tests__/useTimeout.test.ts` for comprehensive tests covering basic functionality, clear/reset/start operations, isActive status, callback updates without re-subscribing, cleanup on unmount, edge cases (zero delay, very long delays, rapid calls), and practical use cases (auto-save, debounced actions, delayed notifications).
 
 ---
 

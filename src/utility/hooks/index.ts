@@ -6,6 +6,7 @@ import useKeyPress from './useKeyPress'
 import useOnScreen from './useOnScreen'
 import useEventListener from './useEventListener'
 import useSize from './useSize'
+import useTimeout from './useTimeout'
 
 export {
     useDebounce,
@@ -17,6 +18,7 @@ export {
     useOnScreen,
     useEventListener,
     useSize,
+    useTimeout,
 }
 
 export default {
@@ -29,4 +31,5 @@ export default {
     useOnScreen,
     useEventListener,
     useSize,
+    useTimeout,
 }
