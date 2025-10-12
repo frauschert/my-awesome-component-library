@@ -408,9 +408,9 @@ function ConditionalListener({ enabled }) {
 ### Behavior and limitations
 
 -   Handler automatically uses latest version without re-subscribing (prevents stale closures)
--   Options are also tracked to avoid unnecessary re-subscriptions when passing objects
 -   Event listener is automatically removed on unmount
--   Listener is re-attached when `element` or `type` changes
+-   Listener is re-attached when `element`, `type`, or `options` changes
+-   When passing options as an object, avoid creating new objects on each render (use `useMemo` or define outside component) to prevent unnecessary re-subscriptions
 -   Works with Window, Document, HTMLElements, and React refs
 -   Full TypeScript support with correct event types for each element/event combination
 -   Does not attach listener when element is `null` or `undefined`
