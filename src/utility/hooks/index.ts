@@ -4,6 +4,7 @@ import { useLocalStorage, useSessionStorage } from './useStorage'
 import useOnClickOutside from './useOnClickOutside'
 import useKeyPress from './useKeyPress'
 import useOnScreen from './useOnScreen'
+import useEventListener from './useEventListener'
 
 export {
     useDebounce,
@@ -13,6 +14,7 @@ export {
     useOnClickOutside,
     useKeyPress,
     useOnScreen,
+    useEventListener,
 }
 
 export default {
@@ -23,4 +25,5 @@ export default {
     useOnClickOutside,
     useKeyPress,
     useOnScreen,
+    useEventListener,
 }

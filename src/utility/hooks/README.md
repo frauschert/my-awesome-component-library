@@ -6,6 +6,7 @@ Custom React hooks for common use cases in the component library.
 
 -   [useKeyPress](#usekeypress)
 -   [useOnScreen](#useonscreen)
+-   [useEventListener](#useeventlistener)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -278,6 +279,160 @@ function VideoPlayer({ src }) {
 ### Tests
 
 See `src/utility/hooks/__tests__/useOnScreen.test.tsx` for comprehensive tests covering basic functionality, rootMargin options, ref handling, cleanup, practical use cases, edge cases, and performance scenarios.
+
+---
+
+## useEventListener
+
+Attaches an event listener to a DOM element with automatic cleanup and proper TypeScript typing.
+
+### API
+
+```ts
+useEventListener(
+  element: Window | Document | HTMLElement | RefObject<HTMLElement> | null | undefined,
+  type: string,
+  handler: (event: Event) => void,
+  options?: boolean | AddEventListenerOptions
+): void
+```
+
+### Parameters
+
+-   **element**: The target to attach the event listener to
+    -   `Window` - Browser window object
+    -   `Document` - Document object
+    -   `HTMLElement` - Any HTML element
+    -   `RefObject<HTMLElement>` - React ref object
+    -   `null` or `undefined` - Listener won't attach (useful for conditional listeners)
+-   **type**: The event type (e.g., `'click'`, `'scroll'`, `'keydown'`)
+-   **handler**: Event handler function (automatically uses latest version without re-subscribing)
+-   **options** (optional): Event listener options
+    -   Boolean `true` for capture phase
+    -   Object with `capture`, `once`, `passive` properties
+
+### Usage
+
+```tsx
+import { useEventListener } from './utility/hooks'
+import { useRef } from 'react'
+
+// Window events (resize, scroll)
+function ResponsiveLayout() {
+    const [width, setWidth] = useState(window.innerWidth)
+
+    useEventListener(window, 'resize', () => {
+        setWidth(window.innerWidth)
+    })
+
+    return <div>Window width: {width}px</div>
+}
+```
+
+```tsx
+// Document events (keyboard shortcuts)
+function KeyboardShortcuts() {
+    useEventListener(document, 'keydown', (e) => {
+        if (e.metaKey && e.key === 'k') {
+            e.preventDefault()
+            openSearch()
+        }
+    })
+
+    return <div>Press Cmd+K to search</div>
+}
+```
+
+```tsx
+// Element events with ref
+function ClickableCard() {
+    const cardRef = useRef<HTMLDivElement>(null)
+    const [clicks, setClicks] = useState(0)
+
+    useEventListener(cardRef, 'click', () => {
+        setClicks((c) => c + 1)
+    })
+
+    return <div ref={cardRef}>Clicked {clicks} times</div>
+}
+```
+
+```tsx
+// Event listener options
+function PassiveScrollListener() {
+    const listRef = useRef<HTMLDivElement>(null)
+
+    useEventListener(
+        listRef,
+        'touchstart',
+        (e) => {
+            console.log('Touch started')
+        },
+        { passive: true } // Improves scroll performance
+    )
+
+    return <div ref={listRef}>Scrollable content</div>
+}
+```
+
+```tsx
+// One-time event listener
+function LoadOnce() {
+    useEventListener(
+        window,
+        'load',
+        () => {
+            console.log('Page loaded')
+        },
+        { once: true }
+    )
+
+    return <div>Loading...</div>
+}
+```
+
+```tsx
+// Conditional event listener
+function ConditionalListener({ enabled }) {
+    const elementRef = useRef<HTMLDivElement>(null)
+
+    // Only attaches when enabled is true
+    useEventListener(enabled ? elementRef : null, 'click', () =>
+        console.log('Clicked')
+    )
+
+    return <div ref={elementRef}>Click me</div>
+}
+```
+
+### Behavior and limitations
+
+-   Handler automatically uses latest version without re-subscribing (prevents stale closures)
+-   Options are also tracked to avoid unnecessary re-subscriptions when passing objects
+-   Event listener is automatically removed on unmount
+-   Listener is re-attached when `element` or `type` changes
+-   Works with Window, Document, HTMLElements, and React refs
+-   Full TypeScript support with correct event types for each element/event combination
+-   Does not attach listener when element is `null` or `undefined`
+-   Cleanup is guaranteed even if element changes or component unmounts
+
+### Common use cases
+
+-   Window resize/scroll handlers
+-   Document keyboard shortcuts
+-   Click outside detection
+-   Custom keyboard navigation
+-   Mouse tracking and interactions
+-   Touch/pointer events
+-   Form input events
+-   Media events (video/audio)
+-   Custom events
+-   Drag and drop
+-   WebSocket/server-sent events wrapper
+
+### Tests
+
+See `src/utility/hooks/__tests__/useEventListener.test.tsx` for comprehensive tests covering basic functionality, event types, listener options, null handling, cleanup, handler updates, practical use cases, edge cases, and TypeScript type safety.
 
 ---
 

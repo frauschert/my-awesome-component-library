@@ -63,21 +63,26 @@ function useEventListener<
     options?: boolean | AddEventListenerOptions | undefined
 ) {
     const handlerRef = useRef(handler)
+    const optionsRef = useRef(options)
 
     useEffect(() => {
         handlerRef.current = handler
     }, [handler])
 
     useEffect(() => {
+        optionsRef.current = options
+    }, [options])
+
+    useEffect(() => {
         const eventTarget = isRefObject(element) ? element.current : element
         if (!eventTarget) return
 
         const listener = (event: Event) => handlerRef.current(event)
-        eventTarget.addEventListener(type, listener, options)
+        eventTarget.addEventListener(type, listener, optionsRef.current)
         return () => {
-            eventTarget.removeEventListener(type, listener, options)
+            eventTarget.removeEventListener(type, listener, optionsRef.current)
         }
-    }, [element, type, options])
+    }, [element, type])
 }
 
 export default useEventListener
