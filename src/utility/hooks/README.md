@@ -747,22 +747,33 @@ function FormWizard() {
 
 ## useOnClickOutside
 
-Detects clicks outside of a referenced element.
+Detects clicks or touches outside of one or more referenced elements.
 
 ### API
 
 ```ts
 useOnClickOutside(
-  ref: RefObject<HTMLElement>,
+  refs: RefObject<HTMLElement | null>[] | RefObject<HTMLElement | null>,
   handler: (event: MouseEvent | TouchEvent) => void
 ): void
 ```
+
+### Parameters
+
+-   **refs**: A single ref or array of refs pointing to elements to monitor
+    -   `RefObject<HTMLElement | null>` - Single element to monitor
+    -   `RefObject<HTMLElement | null>[]` - Array of elements to monitor
+-   **handler**: Callback function invoked when clicking/touching outside the element(s)
+    -   Receives the original `MouseEvent` or `TouchEvent`
+    -   Always uses the latest version without re-subscribing (prevents stale closures)
 
 ### Usage
 
 ```tsx
 import { useOnClickOutside } from './utility/hooks'
+import { useRef, useState } from 'react'
 
+// Basic dropdown
 function Dropdown() {
     const [isOpen, setIsOpen] = useState(false)
     const dropdownRef = useRef<HTMLDivElement>(null)
@@ -774,18 +785,172 @@ function Dropdown() {
     return (
         <div ref={dropdownRef}>
             <button onClick={() => setIsOpen(!isOpen)}>Toggle</button>
-            {isOpen && <div>Dropdown content</div>}
+            {isOpen && (
+                <ul>
+                    <li>Item 1</li>
+                    <li>Item 2</li>
+                    <li>Item 3</li>
+                </ul>
+            )}
         </div>
     )
 }
 ```
 
-### Behavior
+```tsx
+// Modal with backdrop
+function Modal({ onClose, children }) {
+    const modalRef = useRef<HTMLDivElement>(null)
 
--   Triggers handler when clicking outside the referenced element
--   Supports both mouse and touch events
--   Automatically cleans up event listeners
--   Common for dropdowns, modals, popovers
+    useOnClickOutside(modalRef, onClose)
+
+    return (
+        <div className="backdrop">
+            <div ref={modalRef} className="modal">
+                {children}
+            </div>
+        </div>
+    )
+}
+```
+
+```tsx
+// Multiple refs (trigger + dropdown)
+function SearchBox() {
+    const [showSuggestions, setShowSuggestions] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const suggestionsRef = useRef<HTMLDivElement>(null)
+
+    // Close when clicking outside both input and suggestions
+    useOnClickOutside([inputRef, suggestionsRef], () => {
+        setShowSuggestions(false)
+    })
+
+    return (
+        <div>
+            <input
+                ref={inputRef}
+                onFocus={() => setShowSuggestions(true)}
+                placeholder="Search..."
+            />
+            {showSuggestions && (
+                <div ref={suggestionsRef} className="suggestions">
+                    <div>Suggestion 1</div>
+                    <div>Suggestion 2</div>
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Accessing event details
+function Popover() {
+    const [position, setPosition] = useState({ x: 0, y: 0 })
+    const popoverRef = useRef<HTMLDivElement>(null)
+
+    useOnClickOutside(popoverRef, (event) => {
+        console.log('Clicked at:', event.clientX, event.clientY)
+        // Close popover...
+    })
+
+    return <div ref={popoverRef}>Popover content</div>
+}
+```
+
+```tsx
+// Tooltip with close on outside click
+function Tooltip({ children, content }) {
+    const [isVisible, setIsVisible] = useState(false)
+    const tooltipRef = useRef<HTMLDivElement>(null)
+
+    useOnClickOutside(tooltipRef, () => {
+        setIsVisible(false)
+    })
+
+    return (
+        <div>
+            <button onClick={() => setIsVisible(!isVisible)}>{children}</button>
+            {isVisible && (
+                <div ref={tooltipRef} className="tooltip">
+                    {content}
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Context menu
+function ContextMenu() {
+    const [menuPosition, setMenuPosition] = useState<{
+        x: number
+        y: number
+    } | null>(null)
+    const menuRef = useRef<HTMLDivElement>(null)
+
+    useOnClickOutside(menuRef, () => {
+        setMenuPosition(null)
+    })
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault()
+        setMenuPosition({ x: e.clientX, y: e.clientY })
+    }
+
+    return (
+        <div onContextMenu={handleContextMenu}>
+            Right-click me
+            {menuPosition && (
+                <div
+                    ref={menuRef}
+                    style={{
+                        position: 'fixed',
+                        left: menuPosition.x,
+                        top: menuPosition.y,
+                    }}
+                >
+                    <button>Action 1</button>
+                    <button>Action 2</button>
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+### Behavior and limitations
+
+-   Listens to both `mousedown` and `touchstart` events on the document
+-   Handler automatically uses the latest version without re-subscribing (prevents stale closures and unnecessary re-renders)
+-   Event listeners are automatically cleaned up on unmount
+-   Works with nested children—clicking any descendant of the ref'd element counts as "inside"
+-   When using multiple refs, clicking inside ANY of them prevents the handler from firing
+-   Handler receives the original event object for access to coordinates, target, etc.
+-   Does not fire when `refs` parameter is `undefined` or `null`
+-   Handles refs with `null` current values gracefully
+-   Uses `mousedown`/`touchstart` instead of `click` to detect events before they bubble
+
+### Common use cases
+
+-   Dropdown menus and select boxes
+-   Modal dialogs and overlays
+-   Popovers and tooltips
+-   Context menus
+-   Search boxes with autocomplete suggestions
+-   Date pickers and time pickers
+-   Color pickers
+-   Comboboxes and multiselects
+-   Sidebar navigation (mobile)
+-   Notification dismissal
+-   Inline editors
+-   Floating action buttons with menus
+
+### Tests
+
+See `src/utility/hooks/__tests__/useOnClickOutside.test.tsx` for comprehensive tests covering basic functionality, multiple refs, nested elements, handler updates without re-subscribing, cleanup, null ref handling, practical use cases (dropdowns, modals, tooltips, search boxes), and edge cases.
 
 ---
 
