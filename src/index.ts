@@ -24,6 +24,17 @@ import { mergeDeep } from './utility/mergeDeep'
 import { times } from './utility/times'
 import { delay } from './utility/delay'
 import { toggle } from './utility/toggle'
+import type { Lens } from './utility/lens'
+import {
+    createLens,
+    prop,
+    index,
+    path,
+    composeLens,
+    view,
+    set,
+    over,
+} from './utility/lens'
 
 export {
     Button,
@@ -49,5 +60,13 @@ export {
     times,
     delay,
     toggle,
+    createLens,
+    prop,
+    index,
+    path,
+    composeLens,
+    view,
+    set,
+    over,
 }
-export type { ReadOnlyAtom, WritableAtom }
+export type { ReadOnlyAtom, WritableAtom, Lens }

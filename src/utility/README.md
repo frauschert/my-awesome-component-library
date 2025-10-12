@@ -99,7 +99,267 @@ isEmpty(false)
 
 ## Tests
 
-See `src/utility/__tests__/isEmpty.test.ts` for 46 comprehensive tests covering all data types and edge cases.
+## Tests
+
+See `src/utility/__tests__/toggle.test.ts` for comprehensive tests covering basic functionality, data types, independence, edge cases, practical use cases, composition, type inference, and performance.
+
+---
+
+# Utility: lens
+
+Functional lens library for composable, immutable data transformations. Lenses provide a way to focus on a specific part of a data structure and update it immutably.
+
+## API
+
+```ts
+// Core lens operations
+createLens<A, B>(
+    get: (a: A) => B,
+    set: (a: A, value: B) => A
+): Lens<A, B>
+
+composeLens<T1, T2, T3>(
+    first: Lens<T1, T2>,
+    second: Lens<T2, T3>
+): Lens<T1, T3>
+
+// Helper functions for creating lenses
+prop<T, K extends keyof T>(key: K): Lens<T, T[K]>
+index<T>(idx: number): Lens<T[], T | undefined>
+path<T, K1, K2, K3>(...keys): Lens<T, nested>
+
+// Operations on lenses
+view<A, B>(lens: Lens<A, B>, obj: A): B
+set<A, B>(lens: Lens<A, B>, obj: A, value: B): A
+over<A, B>(lens: Lens<A, B>, obj: A, fn: (value: B) => B): A
+```
+
+## Usage
+
+### Creating lenses with `prop`
+
+```ts
+interface Person {
+    name: string
+    age: number
+}
+
+const nameLens = prop<Person, 'name'>('name')
+const person = { name: 'Alice', age: 30 }
+
+// Get value
+view(nameLens, person) // 'Alice'
+nameLens.get(person) // 'Alice'
+
+// Set value immutably
+const updated = set(nameLens, person, 'Bob')
+// { name: 'Bob', age: 30 }
+// person is unchanged
+```
+
+### Nested paths with `path`
+
+```ts
+interface Person {
+    name: string
+    address: {
+        street: string
+        city: string
+    }
+}
+
+const person = {
+    name: 'Alice',
+    address: { street: '123 Main St', city: 'New York' },
+}
+
+// Two-level path
+const cityLens = path<Person, 'address', 'city'>('address', 'city')
+view(cityLens, person) // 'New York'
+
+// Set nested value immutably
+const updated = set(cityLens, person, 'Boston')
+// { name: 'Alice', address: { street: '123 Main St', city: 'Boston' } }
+// Both person and person.address are unchanged (new objects created)
+```
+
+### Array lenses with `index`
+
+```ts
+const numbers = [1, 2, 3, 4, 5]
+const secondLens = index<number>(1)
+
+view(secondLens, numbers) // 2
+set(secondLens, numbers, 10) // [1, 10, 3, 4, 5]
+```
+
+### Transforming values with `over`
+
+```ts
+const ageLens = prop<Person, 'age'>('age')
+const person = { name: 'Alice', age: 30 }
+
+// Increment age
+const older = over(ageLens, person, (age) => age + 1)
+// { name: 'Alice', age: 31 }
+
+// Transform string
+const nameLens = prop<Person, 'name'>('name')
+const uppercase = over(nameLens, person, (name) => name.toUpperCase())
+// { name: 'ALICE', age: 30 }
+```
+
+### Composing lenses
+
+```ts
+interface Person {
+    profile: {
+        settings: {
+            theme: string
+        }
+    }
+}
+
+const profileLens = prop<Person, 'profile'>('profile')
+const settingsLens = prop<Profile, 'settings'>('settings')
+const themeLens = prop<Settings, 'theme'>('theme')
+
+// Compose step by step
+const userThemeLens = composeLens(
+    composeLens(profileLens, settingsLens),
+    themeLens
+)
+
+// Or use path helper for nested properties
+const userThemeLens = path<Person, 'profile', 'settings', 'theme'>(
+    'profile',
+    'settings',
+    'theme'
+)
+```
+
+### React state updates
+
+```ts
+const [user, setUser] = useState({
+    name: 'Alice',
+    address: { city: 'New York', zip: '10001' },
+})
+
+const cityLens = path<User, 'address', 'city'>('address', 'city')
+
+// Update nested state immutably
+const updateCity = (newCity: string) => {
+    setUser((prev) => set(cityLens, prev, newCity))
+}
+
+// Or transform existing value
+const uppercaseCity = () => {
+    setUser((prev) => over(cityLens, prev, (city) => city.toUpperCase()))
+}
+```
+
+### Form field updates
+
+```ts
+interface FormData {
+    user: {
+        profile: {
+            email: string
+            phone: string
+        }
+    }
+}
+
+const emailLens = path<FormData, 'user', 'profile', 'email'>(
+    'user',
+    'profile',
+    'email'
+)
+
+const [formData, setFormData] = useState<FormData>({
+    user: { profile: { email: '', phone: '' } },
+})
+
+const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => set(emailLens, prev, e.target.value))
+}
+```
+
+### Data normalization
+
+```ts
+interface Company {
+    employees: Array<{ id: number; salary: number }>
+}
+
+const company = {
+    employees: [
+        { id: 1, salary: 50000 },
+        { id: 2, salary: 60000 },
+    ],
+}
+
+// Update a specific employee's salary
+const firstEmployeeSalary = composeLens(
+    prop<Company, 'employees'>('employees'),
+    composeLens(index<Employee>(0), prop<Employee, 'salary'>('salary'))
+)
+
+const updated = set(firstEmployeeSalary, company, 55000)
+// All objects along the path are new, deeply immutable
+```
+
+## Behavior and limitations
+
+-   All lens operations create new objects/arrays - never mutate originals
+-   `prop` and `path` use object spreading for immutability (`{ ...obj, key: value }`)
+-   `index` uses array spreading for immutability (`[...arr.slice(0, i), value, ...arr.slice(i+1)]`)
+-   `path` supports up to 3 levels with full type safety (overloaded signatures)
+-   For deeper nesting, use `path(...keys)` with `any` type or compose manually
+-   Lenses preserve type safety through generics
+-   `index` returns `T | undefined` since arrays may be shorter than expected
+-   Composed lenses maintain full type information through the chain
+-   Setting through a lens creates new intermediate objects along the entire path
+-   `over` allows functional transformations while maintaining immutability
+
+## Common use cases
+
+-   Updating deeply nested React state immutably
+-   Form field updates without mutation
+-   Data normalization and denormalization
+-   Composable data transformations
+-   Redux-style immutable state updates
+-   Type-safe nested object updates
+-   Functional programming patterns in TypeScript
+-   Building reusable data accessors
+-   Avoiding manual object spreading chains
+
+## Type safety
+
+-   `prop<T, K>()` enforces `K extends keyof T` - only valid keys allowed
+-   `path()` uses overloaded signatures for 1-3 level paths with full inference
+-   Return types are precisely inferred: `Lens<Person, string>` for name lens
+-   Composed lenses maintain type chain: `Lens<A, B>` + `Lens<B, C>` = `Lens<A, C>`
+-   TypeScript catches invalid key paths at compile time
+
+## Tests
+
+See `src/utility/__tests__/lens.test.ts` for 42 comprehensive tests covering:
+
+-   `createLens` - custom getter/setter functions (3 tests)
+-   `prop` - object property lenses with immutability (4 tests)
+-   `index` - array element lenses with bounds checking (5 tests)
+-   `path` - nested property paths up to 3 levels (4 tests)
+-   `composeLens` - manual lens composition (2 tests)
+-   `view` - reading values through lenses (3 tests)
+-   `set` - setting values immutably through lenses (4 tests)
+-   `over` - transforming values through lenses (5 tests)
+-   Immutability guarantees - verifying no mutations (4 tests)
+-   Practical use cases - React state, forms, data normalization (4 tests)
+-   Edge cases - undefined, empty arrays, shared references (3 tests)
+
+````
 
 ---
 
@@ -1026,3 +1286,4 @@ const sortOrder = [1, 2, 3, 4].map(() => toggleSort())
 ## Tests
 
 See `src/utility/__tests__/toggle.test.ts` for comprehensive tests covering basic functionality, data types, independence, edge cases, practical use cases, composition, type inference, and performance.
+````
