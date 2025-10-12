@@ -99,12 +99,22 @@ export const useLocalStorage = <T>(
     key: string,
     defaultValue: T,
     options?: StorageOptions<T>
-) => useStorage(key, defaultValue, localStorage, options)
+) => {
+    if (typeof window === 'undefined' || !window.localStorage) {
+        throw new Error('localStorage is not available in this environment')
+    }
+    return useStorage(key, defaultValue, window.localStorage, options)
+}
 
 export const useSessionStorage = <T>(
     key: string,
     defaultValue: T,
     options?: StorageOptions<T>
-) => useStorage(key, defaultValue, sessionStorage, options)
+) => {
+    if (typeof window === 'undefined' || !window.sessionStorage) {
+        throw new Error('sessionStorage is not available in this environment')
+    }
+    return useStorage(key, defaultValue, window.sessionStorage, options)
+}
 
 export default useLocalStorage
