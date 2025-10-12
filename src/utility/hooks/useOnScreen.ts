@@ -14,7 +14,10 @@ export default function useOnScreen(
             { rootMargin }
         )
         observer.observe(target)
-        return () => observer.unobserve(target)
+        return () => {
+            observer.unobserve(target)
+            observer.disconnect()
+        }
     }, [ref, rootMargin])
 
     return isVisible

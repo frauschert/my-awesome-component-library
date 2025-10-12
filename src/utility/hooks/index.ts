@@ -3,6 +3,7 @@ import * as usePrevious from './usePrevious'
 import { useLocalStorage, useSessionStorage } from './useStorage'
 import useOnClickOutside from './useOnClickOutside'
 import useKeyPress from './useKeyPress'
+import useOnScreen from './useOnScreen'
 
 export {
     useDebounce,
@@ -11,6 +12,7 @@ export {
     useSessionStorage,
     useOnClickOutside,
     useKeyPress,
+    useOnScreen,
 }
 
 export default {
@@ -20,4 +22,5 @@ export default {
     useSessionStorage,
     useOnClickOutside,
     useKeyPress,
+    useOnScreen,
 }

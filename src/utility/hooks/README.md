@@ -5,6 +5,7 @@ Custom React hooks for common use cases in the component library.
 ## Table of Contents
 
 -   [useKeyPress](#usekeypress)
+-   [useOnScreen](#useonscreen)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -153,6 +154,130 @@ function GameCanvas() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useKeyPress.test.tsx` for comprehensive tests covering basic functionality, multiple keys, special keys, custom targets, dynamic changes, practical use cases, cleanup, and edge cases.
+
+---
+
+## useOnScreen
+
+Detects when an element enters or leaves the viewport using the IntersectionObserver API.
+
+### API
+
+```ts
+useOnScreen(
+  ref: RefObject<HTMLElement>,
+  rootMargin?: string
+): boolean
+```
+
+### Parameters
+
+-   **ref**: A React ref object pointing to the element to observe
+-   **rootMargin** (optional): Margin around the root element for early/late detection (default: `'0px'`)
+    -   Accepts CSS margin values: `'0px'`, `'100px'`, `'-50px'`, `'50px 0px'`, etc.
+    -   Positive values trigger earlier, negative values trigger later
+
+### Returns
+
+`boolean` - `true` when the element is visible in the viewport, `false` otherwise
+
+### Usage
+
+```tsx
+import { useOnScreen } from './utility/hooks'
+import { useRef } from 'react'
+
+// Lazy loading images
+function LazyImage({ src, alt }) {
+    const imgRef = useRef<HTMLImageElement>(null)
+    const isVisible = useOnScreen(imgRef, '200px') // Load 200px before visible
+
+    return (
+        <img ref={imgRef} src={isVisible ? src : 'placeholder.jpg'} alt={alt} />
+    )
+}
+```
+
+```tsx
+// Scroll animations
+function AnimatedSection({ children }) {
+    const sectionRef = useRef<HTMLDivElement>(null)
+    const isVisible = useOnScreen(sectionRef)
+
+    return (
+        <div ref={sectionRef} className={isVisible ? 'fade-in' : 'fade-out'}>
+            {children}
+        </div>
+    )
+}
+```
+
+```tsx
+// Infinite scroll
+function InfiniteList({ items, onLoadMore }) {
+    const sentinelRef = useRef<HTMLDivElement>(null)
+    const isVisible = useOnScreen(sentinelRef, '500px') // Trigger 500px early
+
+    useEffect(() => {
+        if (isVisible) {
+            onLoadMore()
+        }
+    }, [isVisible, onLoadMore])
+
+    return (
+        <div>
+            {items.map((item) => (
+                <Item key={item.id} {...item} />
+            ))}
+            <div ref={sentinelRef} />
+        </div>
+    )
+}
+```
+
+```tsx
+// Video autoplay
+function VideoPlayer({ src }) {
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const isVisible = useOnScreen(videoRef)
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (isVisible) {
+                videoRef.current.play()
+            } else {
+                videoRef.current.pause()
+            }
+        }
+    }, [isVisible])
+
+    return <video ref={videoRef} src={src} />
+}
+```
+
+### Behavior and limitations
+
+-   Uses native IntersectionObserver API (not supported in older browsers)
+-   Returns `false` initially until first intersection check
+-   Observer is created only when `ref.current` is not null
+-   Automatically cleans up observer on unmount or when `rootMargin` changes
+-   Changing `ref.current` after mount won't create a new observer (depends on `ref` object)
+-   Performance-efficient—uses browser's native intersection detection
+
+### Common use cases
+
+-   Lazy loading images and components
+-   Scroll animations and reveals
+-   Infinite scroll triggers
+-   Analytics tracking (impression tracking)
+-   Video/audio autoplay on viewport entry
+-   Progressive content loading
+-   Skeleton placeholders
+-   Performance optimization
+
+### Tests
+
+See `src/utility/hooks/__tests__/useOnScreen.test.tsx` for comprehensive tests covering basic functionality, rootMargin options, ref handling, cleanup, practical use cases, edge cases, and performance scenarios.
 
 ---
 
