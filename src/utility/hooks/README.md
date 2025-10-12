@@ -7,6 +7,7 @@ Custom React hooks for common use cases in the component library.
 -   [useKeyPress](#usekeypress)
 -   [useOnScreen](#useonscreen)
 -   [useEventListener](#useeventlistener)
+-   [useSize](#usesize)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -433,6 +434,192 @@ function ConditionalListener({ enabled }) {
 ### Tests
 
 See `src/utility/hooks/__tests__/useEventListener.test.tsx` for comprehensive tests covering basic functionality, event types, listener options, null handling, cleanup, handler updates, practical use cases, edge cases, and TypeScript type safety.
+
+---
+
+## useSize
+
+Tracks the size (width and height) of a DOM element using the ResizeObserver API.
+
+### API
+
+```ts
+useSize(
+  ref: RefObject<HTMLElement>
+): { width: number; height: number } | undefined
+```
+
+### Parameters
+
+-   **ref**: A React ref object pointing to the element to measure
+
+### Returns
+
+`{ width: number; height: number } | undefined` - The current dimensions of the element, or `undefined` if the element is not mounted
+
+### Usage
+
+```tsx
+import { useSize } from './utility/hooks'
+import { useRef } from 'react'
+
+// Basic size tracking
+function ResizableBox() {
+    const boxRef = useRef<HTMLDivElement>(null)
+    const size = useSize(boxRef)
+
+    return (
+        <div
+            ref={boxRef}
+            style={{ resize: 'both', overflow: 'auto', border: '1px solid' }}
+        >
+            {size ? (
+                <p>
+                    Size: {size.width}px × {size.height}px
+                </p>
+            ) : (
+                <p>Measuring...</p>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Responsive component based on container size
+function ResponsiveCard() {
+    const cardRef = useRef<HTMLDivElement>(null)
+    const size = useSize(cardRef)
+
+    const isSmall = size && size.width < 300
+    const isMedium = size && size.width >= 300 && size.width < 600
+    const isLarge = size && size.width >= 600
+
+    return (
+        <div ref={cardRef} className="card">
+            {isSmall && <SmallLayout />}
+            {isMedium && <MediumLayout />}
+            {isLarge && <LargeLayout />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Canvas sizing
+function DynamicCanvas() {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const size = useSize(containerRef)
+
+    return (
+        <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+            {size && (
+                <canvas
+                    width={size.width}
+                    height={size.height}
+                    style={{ display: 'block' }}
+                />
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Aspect ratio calculations
+function AspectRatioDisplay() {
+    const boxRef = useRef<HTMLDivElement>(null)
+    const size = useSize(boxRef)
+
+    const aspectRatio =
+        size && size.height > 0 ? (size.width / size.height).toFixed(2) : 'N/A'
+
+    return (
+        <div ref={boxRef} style={{ width: '100%', height: '400px' }}>
+            <p>Aspect Ratio: {aspectRatio}</p>
+        </div>
+    )
+}
+```
+
+```tsx
+// Conditional rendering based on size
+function AdaptiveGrid() {
+    const gridRef = useRef<HTMLDivElement>(null)
+    const size = useSize(gridRef)
+
+    const columns = size ? (size.width < 600 ? 1 : size.width < 900 ? 2 : 3) : 1
+
+    return (
+        <div
+            ref={gridRef}
+            style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${columns}, 1fr)`,
+                gap: '1rem',
+            }}
+        >
+            {items.map((item) => (
+                <GridItem key={item.id} {...item} />
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Image scaling
+function ScaledImage({ src, alt }) {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const size = useSize(containerRef)
+
+    return (
+        <div ref={containerRef} style={{ width: '100%' }}>
+            {size && (
+                <img
+                    src={src}
+                    alt={alt}
+                    style={{
+                        width: size.width,
+                        height: size.height,
+                        objectFit: 'cover',
+                    }}
+                />
+            )}
+        </div>
+    )
+}
+```
+
+### Behavior and limitations
+
+-   Uses native ResizeObserver API (not supported in older browsers)
+-   Returns `undefined` initially until element is mounted and measured
+-   Size updates are debounced (100ms) to prevent excessive re-renders during rapid resizing
+-   Falls back gracefully when ResizeObserver is not available (returns initial size only)
+-   Automatically measures initial size on mount using `getBoundingClientRect`
+-   Observer is only created when `ref.current` is not null
+-   Automatically cleans up observer on unmount
+-   Cancels pending debounced updates on unmount to prevent memory leaks
+-   Reports fractional pixel values (e.g., 123.456)
+-   Effect re-runs when the ref object itself changes (not when `ref.current` changes)
+
+### Common use cases
+
+-   Container query implementations (responsive components based on container size)
+-   Canvas sizing (matching canvas dimensions to container)
+-   Aspect ratio calculations and constraints
+-   Conditional rendering based on available space
+-   Text scaling and truncation
+-   Responsive layouts without media queries
+-   Image gallery layouts
+-   Dashboard widgets that adapt to panel size
+-   Virtual scrolling with dynamic item sizes
+-   Chart and visualization sizing
+
+### Tests
+
+See `src/utility/hooks/__tests__/useSize.test.tsx` for comprehensive tests covering basic functionality, resize updates, debouncing behavior, cleanup, null ref handling, ResizeObserver support detection, practical use cases (responsive containers, aspect ratios, canvas sizing), and edge cases (zero dimensions, very large dimensions, negative dimensions).
 
 ---
 

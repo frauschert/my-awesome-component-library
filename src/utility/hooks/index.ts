@@ -5,6 +5,7 @@ import useOnClickOutside from './useOnClickOutside'
 import useKeyPress from './useKeyPress'
 import useOnScreen from './useOnScreen'
 import useEventListener from './useEventListener'
+import useSize from './useSize'
 
 export {
     useDebounce,
@@ -15,6 +16,7 @@ export {
     useKeyPress,
     useOnScreen,
     useEventListener,
+    useSize,
 }
 
 export default {
@@ -26,4 +28,5 @@ export default {
     useKeyPress,
     useOnScreen,
     useEventListener,
+    useSize,
 }
