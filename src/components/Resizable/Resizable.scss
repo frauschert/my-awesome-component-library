@@ -1,0 +1,224 @@
+@import '../../styles/variables';
+
+.resizable {
+    position: relative;
+    box-sizing: border-box;
+
+    &__content {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    &__handle {
+        position: absolute;
+        z-index: 10;
+        user-select: none;
+        touch-action: none;
+        transition: background-color 0.2s ease, opacity 0.2s ease;
+
+        // Edge handles
+        &--top,
+        &--bottom {
+            width: 100%;
+            height: 6px;
+            left: 0;
+            cursor: ns-resize;
+        }
+
+        &--top {
+            top: -3px;
+        }
+
+        &--bottom {
+            bottom: -3px;
+        }
+
+        &--left,
+        &--right {
+            height: 100%;
+            width: 6px;
+            top: 0;
+            cursor: ew-resize;
+        }
+
+        &--left {
+            left: -3px;
+        }
+
+        &--right {
+            right: -3px;
+        }
+
+        // Corner handles
+        &--topLeft,
+        &--topRight,
+        &--bottomLeft,
+        &--bottomRight {
+            width: 12px;
+            height: 12px;
+        }
+
+        &--topLeft {
+            top: -6px;
+            left: -6px;
+            cursor: nwse-resize;
+        }
+
+        &--topRight {
+            top: -6px;
+            right: -6px;
+            cursor: nesw-resize;
+        }
+
+        &--bottomLeft {
+            bottom: -6px;
+            left: -6px;
+            cursor: nesw-resize;
+        }
+
+        &--bottomRight {
+            bottom: -6px;
+            right: -6px;
+            cursor: nwse-resize;
+        }
+
+        // Visual indicator
+        &::before {
+            content: '';
+            position: absolute;
+            background-color: rgba(0, 123, 255, 0.3);
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        // Edge handle indicators
+        &--top::before,
+        &--bottom::before {
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+        }
+
+        &--top::before {
+            top: 1px;
+        }
+
+        &--bottom::before {
+            bottom: 1px;
+        }
+
+        &--left::before,
+        &--right::before {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 40px;
+        }
+
+        &--left::before {
+            left: 1px;
+        }
+
+        &--right::before {
+            right: 1px;
+        }
+
+        // Corner handle indicators
+        &--topLeft::before,
+        &--topRight::before,
+        &--bottomLeft::before,
+        &--bottomRight::before {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        &--topLeft::before {
+            top: 2px;
+            left: 2px;
+        }
+
+        &--topRight::before {
+            top: 2px;
+            right: 2px;
+        }
+
+        &--bottomLeft::before {
+            bottom: 2px;
+            left: 2px;
+        }
+
+        &--bottomRight::before {
+            bottom: 2px;
+            right: 2px;
+        }
+
+        // Show handles on hover
+        &:hover::before {
+            opacity: 1;
+            background-color: rgba(0, 123, 255, 0.6);
+        }
+
+        &:active::before {
+            opacity: 1;
+            background-color: rgba(0, 123, 255, 0.8);
+        }
+    }
+
+    // Show all handles when resizing
+    &--resizing {
+        .resizable__handle::before {
+            opacity: 1;
+        }
+    }
+
+    // Only show handles on hover
+    &--hover-handles:not(&--resizing) {
+        .resizable__handle::before {
+            opacity: 0;
+        }
+
+        &:hover .resizable__handle::before {
+            opacity: 0.5;
+        }
+
+        .resizable__handle:hover::before {
+            opacity: 1;
+        }
+    }
+
+    // Disabled state
+    &--disabled {
+        .resizable__handle {
+            display: none;
+        }
+    }
+
+    // Prevent text selection during resize
+    &--resizing,
+    &--resizing * {
+        user-select: none !important;
+    }
+
+    // Reduced motion support
+    @media (prefers-reduced-motion: reduce) {
+        .resizable__handle,
+        .resizable__handle::before {
+            transition: none;
+        }
+    }
+}
+
+// Focus styles for accessibility
+.resizable__handle:focus-visible {
+    outline: 2px solid rgba(0, 123, 255, 0.8);
+    outline-offset: 2px;
+
+    &::before {
+        opacity: 1;
+        background-color: rgba(0, 123, 255, 0.8);
+    }
+}
