@@ -1,0 +1,66 @@
+@import '../../styles/colors';
+
+$skeleton-bg: theme-color('background', 'dark');
+$skeleton-shimmer-color: rgba(255, 255, 255, 0.5);
+$skeleton-animation-duration: 1.5s;
+
+.skeleton {
+    display: inline-block;
+    background-color: $skeleton-bg;
+    overflow: hidden;
+    position: relative;
+
+    // Respect user's motion preferences
+    @media (prefers-reduced-motion: reduce) {
+        &::before {
+            animation: none !important;
+        }
+    }
+}
+
+// Variant-specific defaults
+.skeleton--text {
+    height: 1em;
+    margin-bottom: 0.5em;
+    transform: scale(1, 0.6);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.skeleton--circular {
+    border-radius: 50%;
+}
+
+.skeleton--rectangular {
+    // No additional styles needed
+}
+
+// Shimmer animation
+.skeleton--animate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        $skeleton-shimmer-color 50%,
+        transparent 100%
+    );
+    animation: skeleton-shimmer $skeleton-animation-duration ease-in-out
+        infinite;
+    transform: translateX(-100%);
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
