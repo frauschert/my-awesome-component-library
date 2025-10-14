@@ -1,0 +1,356 @@
+@import '../../styles/variables';
+@import '../../styles/themes';
+
+.range-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+
+    &__label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary, #1f2937);
+        margin-bottom: 4px;
+    }
+
+    &__container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    &__min-label,
+    &__max-label {
+        font-size: 12px;
+        color: var(--text-secondary, #6b7280);
+        font-weight: 500;
+        min-width: 32px;
+        text-align: center;
+        user-select: none;
+    }
+
+    &__slider-container {
+        position: relative;
+        flex: 1;
+        height: 32px;
+        display: flex;
+        align-items: center;
+    }
+
+    &__slider {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        outline: none;
+        z-index: 2;
+        cursor: pointer;
+
+        // Remove default track
+        &::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: var(--range-track-bg, #e5e7eb);
+            border-radius: 3px;
+        }
+
+        &::-moz-range-track {
+            width: 100%;
+            height: 6px;
+            background: var(--range-track-bg, #e5e7eb);
+            border-radius: 3px;
+        }
+
+        // Thumb styling
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--range-thumb-color, #3b82f6);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            margin-top: -7px;
+        }
+
+        &::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--range-thumb-color, #3b82f6);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        // Hover state
+        &:hover::-webkit-slider-thumb {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        &:hover::-moz-range-thumb {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        // Active state
+        &:active::-webkit-slider-thumb {
+            transform: scale(1.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        &:active::-moz-range-thumb {
+            transform: scale(1.05);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        // Focus state
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible::-webkit-slider-thumb {
+            box-shadow: 0 0 0 3px
+                var(--range-thumb-focus, rgba(59, 130, 246, 0.3));
+        }
+
+        &:focus-visible::-moz-range-thumb {
+            box-shadow: 0 0 0 3px
+                var(--range-thumb-focus, rgba(59, 130, 246, 0.3));
+        }
+    }
+
+    &__track {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 6px;
+        background: var(--range-thumb-color, #3b82f6);
+        border-radius: 3px 0 0 3px;
+        pointer-events: none;
+        z-index: 1;
+        transition: width 0.1s ease;
+    }
+
+    &__tooltip {
+        position: absolute;
+        top: -36px;
+        left: 0;
+        transform: translateX(-50%);
+        background: var(--tooltip-bg, #1f2937);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 10;
+        animation: tooltip-fade-in 0.2s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: var(--tooltip-bg, #1f2937);
+        }
+    }
+
+    &__number {
+        width: 80px;
+        padding: 6px 8px;
+        border: 1px solid var(--input-border, #d1d5db);
+        border-radius: 6px;
+        font-size: 14px;
+        text-align: center;
+        outline: none;
+        transition: all 0.2s ease;
+
+        &:hover {
+            border-color: var(--input-border-hover, #9ca3af);
+        }
+
+        &:focus {
+            border-color: var(--range-thumb-color, #3b82f6);
+            box-shadow: 0 0 0 3px
+                var(--range-thumb-focus, rgba(59, 130, 246, 0.1));
+        }
+
+        // Remove number input arrows in WebKit
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        // Firefox
+        &[type='number'] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+    }
+
+    // Size variants
+    &--sm {
+        .range-input__slider {
+            height: 4px;
+
+            &::-webkit-slider-runnable-track {
+                height: 4px;
+            }
+
+            &::-moz-range-track {
+                height: 4px;
+            }
+
+            &::-webkit-slider-thumb {
+                width: 16px;
+                height: 16px;
+                margin-top: -6px;
+            }
+
+            &::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        .range-input__track {
+            height: 4px;
+        }
+
+        .range-input__number {
+            width: 60px;
+            padding: 4px 6px;
+            font-size: 12px;
+        }
+    }
+
+    &--lg {
+        .range-input__slider {
+            height: 8px;
+
+            &::-webkit-slider-runnable-track {
+                height: 8px;
+            }
+
+            &::-moz-range-track {
+                height: 8px;
+            }
+
+            &::-webkit-slider-thumb {
+                width: 24px;
+                height: 24px;
+                margin-top: -8px;
+            }
+
+            &::-moz-range-thumb {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        .range-input__track {
+            height: 8px;
+        }
+
+        .range-input__number {
+            width: 100px;
+            padding: 8px 10px;
+            font-size: 16px;
+        }
+    }
+
+    // Color variants
+    &--primary {
+        --range-thumb-color: #3b82f6;
+        --range-thumb-focus: rgba(59, 130, 246, 0.3);
+    }
+
+    &--secondary {
+        --range-thumb-color: #6b7280;
+        --range-thumb-focus: rgba(107, 114, 128, 0.3);
+    }
+
+    &--success {
+        --range-thumb-color: #10b981;
+        --range-thumb-focus: rgba(16, 185, 129, 0.3);
+    }
+
+    &--error {
+        --range-thumb-color: #ef4444;
+        --range-thumb-focus: rgba(239, 68, 68, 0.3);
+    }
+
+    &--warning {
+        --range-thumb-color: #f59e0b;
+        --range-thumb-focus: rgba(245, 158, 11, 0.3);
+    }
+
+    // Disabled state
+    &--disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+
+        .range-input__slider {
+            cursor: not-allowed;
+        }
+
+        .range-input__number {
+            background: var(--input-disabled-bg, #f3f4f6);
+            cursor: not-allowed;
+        }
+    }
+}
+
+@keyframes tooltip-fade-in {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .range-input {
+        &__slider {
+            &::-webkit-slider-thumb {
+                transition: none;
+            }
+
+            &::-moz-range-thumb {
+                transition: none;
+            }
+        }
+
+        &__track {
+            transition: none;
+        }
+
+        &__tooltip {
+            animation: none;
+        }
+
+        &__number {
+            transition: none;
+        }
+    }
+}

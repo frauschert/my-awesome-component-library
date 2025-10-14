@@ -2,6 +2,8 @@ import Button from './components/Button'
 import Box from './components/Box'
 import Table from './components/Table'
 import { ContextMenuProvider } from './components/ContextMenu'
+import RangeInput from './components/RangeInput'
+import type { RangeInputProps } from './components/RangeInput'
 import {
     SpinCoin,
     Ellipsis,
@@ -65,6 +67,7 @@ export {
     Box,
     Table,
     ContextMenuProvider,
+    RangeInput,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -100,6 +103,7 @@ export {
 export type {
     ReadOnlyAtom,
     WritableAtom,
+    RangeInputProps,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
