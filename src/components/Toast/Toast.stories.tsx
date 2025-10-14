@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { StoryObj, Meta } from '@storybook/react'
+import { StoryObj, Meta } from '@storybook/react-vite'
 import { ToastProvider, ToastProviderProps, notify } from './'
 import Button from '../Button'
 

@@ -1,5 +1,5 @@
 import React, { createRef } from 'react'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import Box from './'
 
 const meta: Meta<typeof Box> = {

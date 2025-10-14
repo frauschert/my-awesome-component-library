@@ -4,11 +4,10 @@ import { mergeConfig } from 'vite'
 const config: StorybookConfig = {
     // Required
     framework: '@storybook/react-vite',
+
     stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-    addons: ['@storybook/addon-essentials'],
-    docs: {
-        autodocs: true,
-    },
+    addons: ['@storybook/addon-docs'],
+
     async viteFinal(config) {
         return mergeConfig(config, {
             plugins: [
@@ -30,7 +29,7 @@ const config: StorybookConfig = {
                 },
             ],
         })
-    },
+    }
 }
 
 export default config

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import FileUpload, { FileUploadProps } from './FileUpload'
 
 const meta: Meta<typeof FileUpload> = {

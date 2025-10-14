@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { StoryObj, Meta } from '@storybook/react'
+import type { StoryObj, Meta } from '@storybook/react-vite'
 import { LoadingBoundary } from './LoadingBoundary'
 import { useSpinner } from '../hooks/useSpinner'
 import SpinCoin from '../SpinCoin'

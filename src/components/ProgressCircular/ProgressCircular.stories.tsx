@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import ProgressCircular from './ProgressCircular'
 
 const meta: Meta<typeof ProgressCircular> = {

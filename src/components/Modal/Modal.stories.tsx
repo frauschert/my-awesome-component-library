@@ -1,6 +1,6 @@
 import React from 'react'
-import { StoryObj, Meta } from '@storybook/react'
-import { userEvent, within, expect } from '@storybook/test'
+import { StoryObj, Meta } from '@storybook/react-vite'
+import { userEvent, within, expect } from 'storybook/test'
 import Modal from './Modal'
 
 const meta: Meta<typeof Modal> = {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StoryObj, Meta } from '@storybook/react'
+import { StoryObj, Meta } from '@storybook/react-vite'
 import { Resizable } from './Resizable'
 
 const meta: Meta<typeof Resizable> = {

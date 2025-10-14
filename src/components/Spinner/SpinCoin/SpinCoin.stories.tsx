@@ -1,4 +1,4 @@
-import type { StoryObj, Meta } from '@storybook/react'
+import type { StoryObj, Meta } from '@storybook/react-vite'
 import SpinCoin from './SpinCoin'
 import hex from '../../../utility/hex'
 
