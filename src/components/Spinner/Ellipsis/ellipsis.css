@@ -2,19 +2,26 @@
     display: inline-block;
     position: relative;
 }
+
+/* Each dot is positioned absolutely within the container */
 .ellipsis div {
     position: absolute;
-    top: 41.25%;
-    width: 16.25%;
+    top: 41.25%; /* Vertically center the dots */
+    width: 16.25%; /* Dot size relative to container */
     height: 16.25%;
     border-radius: 50%;
-    background: #fff;
+    background: #fff; /* Fallback color, overridden by inline style */
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    will-change: transform;
 }
+
+/* First dot: scales in from left */
 .ellipsis div:nth-child(1) {
     left: 10%;
     animation: ellipsis1 0.6s infinite;
 }
+
+/* Second and third dots: translate horizontally */
 .ellipsis div:nth-child(2) {
     left: 10%;
     animation: ellipsis2 0.6s infinite;
@@ -23,10 +30,50 @@
     left: 40%;
     animation: ellipsis2 0.6s infinite;
 }
+
+/* Fourth dot: scales out on right */
 .ellipsis div:nth-child(4) {
     left: 70%;
     animation: ellipsis3 0.6s infinite;
 }
+
+/* Screen reader only text */
+.ellipsis .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .ellipsis div {
+        animation: none;
+        will-change: opacity;
+    }
+
+    .ellipsis div:nth-child(1) {
+        opacity: 0.3;
+    }
+
+    .ellipsis div:nth-child(2) {
+        opacity: 0.5;
+    }
+
+    .ellipsis div:nth-child(3) {
+        opacity: 0.7;
+    }
+
+    .ellipsis div:nth-child(4) {
+        opacity: 1;
+    }
+}
+
 @keyframes ellipsis1 {
     0% {
         transform: scale(0);
@@ -35,6 +82,7 @@
         transform: scale(1);
     }
 }
+
 @keyframes ellipsis3 {
     0% {
         transform: scale(1);
@@ -43,11 +91,12 @@
         transform: scale(0);
     }
 }
+
 @keyframes ellipsis2 {
     0% {
         transform: translate(0, 0);
     }
     100% {
-        transform: translate(184.61%, 0);
+        transform: translate(184.61%, 0); /* Move right by ~30% of container */
     }
 }

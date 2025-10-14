@@ -2,6 +2,19 @@ import Button from './components/Button'
 import Box from './components/Box'
 import Table from './components/Table'
 import { ContextMenuProvider } from './components/ContextMenu'
+import {
+    SpinCoin,
+    Ellipsis,
+    LoadingBoundary,
+    useSpinner,
+} from './components/Spinner'
+import type {
+    SpinnerProps,
+    SpinnerSize,
+    SpinnerVariant,
+    LoadingBoundaryProps,
+    UseSpinnerReturn,
+} from './components/Spinner'
 import type { ReadOnlyAtom, WritableAtom } from './utility/atom'
 import { atom } from './utility/atom'
 import {
@@ -52,6 +65,10 @@ export {
     Box,
     Table,
     ContextMenuProvider,
+    SpinCoin,
+    Ellipsis,
+    LoadingBoundary,
+    useSpinner,
     atom,
     useAtom,
     useAtomValue,
@@ -83,6 +100,11 @@ export {
 export type {
     ReadOnlyAtom,
     WritableAtom,
+    SpinnerProps,
+    SpinnerSize,
+    SpinnerVariant,
+    LoadingBoundaryProps,
+    UseSpinnerReturn,
     Lens,
     RowDefinitionType,
     ColumnDefinitionType,
