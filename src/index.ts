@@ -35,6 +35,17 @@ import {
     set,
     over,
 } from './utility/lens'
+import type {
+    RowDefinitionType,
+    ColumnDefinitionType,
+    SortConfig,
+    PaginationConfig,
+    TableProps,
+    SelectionMode,
+    RowAction,
+    BulkAction,
+    CellRenderer,
+} from './components/Table/types'
 
 export {
     Button,
@@ -69,4 +80,17 @@ export {
     set,
     over,
 }
-export type { ReadOnlyAtom, WritableAtom, Lens }
+export type {
+    ReadOnlyAtom,
+    WritableAtom,
+    Lens,
+    RowDefinitionType,
+    ColumnDefinitionType,
+    SortConfig,
+    PaginationConfig,
+    TableProps,
+    SelectionMode,
+    RowAction,
+    BulkAction,
+    CellRenderer,
+}

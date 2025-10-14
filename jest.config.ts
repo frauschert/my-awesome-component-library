@@ -6,6 +6,7 @@ const config: Config = {
     moduleNameMapper: {
         '@components(.*)': '<rootDir>/src/components$1', // might want?
         '\\.(css|less|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
+        '\\.(svg)$': '<rootDir>/__mocks__/svgMock.js',
     },
     moduleDirectories: ['<rootDir>/node_modules', '<rootDir>/src'],
     setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'], // this is the KEY

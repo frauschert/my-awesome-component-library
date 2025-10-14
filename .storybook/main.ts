@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+import { mergeConfig } from 'vite'
 
 const config: StorybookConfig = {
     // Required
@@ -7,6 +8,28 @@ const config: StorybookConfig = {
     addons: ['@storybook/addon-essentials'],
     docs: {
         autodocs: true,
+    },
+    async viteFinal(config) {
+        return mergeConfig(config, {
+            plugins: [
+                {
+                    name: 'svg-react-component',
+                    transform(code, id) {
+                        if (id.endsWith('.svg')) {
+                            return {
+                                code: `
+                                    import React from 'react';
+                                    export default React.forwardRef((props, ref) => 
+                                        React.createElement('svg', { ...props, ref, 'data-testid': 'svg-mock' })
+                                    );
+                                `,
+                                map: null,
+                            }
+                        }
+                    },
+                },
+            ],
+        })
     },
 }
 
