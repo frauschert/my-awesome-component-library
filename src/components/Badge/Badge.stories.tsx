@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import Badge from './Badge'
+import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 const meta: Meta<typeof Badge> = {
     title: 'Components/Badge',
@@ -29,6 +30,14 @@ const meta: Meta<typeof Badge> = {
             control: 'boolean',
         },
     },
+    decorators: [
+        (Story) => (
+            <ThemeProvider>
+                <Story />
+                <ThemeSwitcher />
+            </ThemeProvider>
+        ),
+    ],
 }
 
 export default meta

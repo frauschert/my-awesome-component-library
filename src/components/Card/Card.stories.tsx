@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Card from './Card'
 import Button from '../Button'
 import Badge from '../Badge'
+import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 const meta: Meta<typeof Card> = {
     title: 'Components/Card',
@@ -21,6 +22,14 @@ const meta: Meta<typeof Card> = {
             control: 'boolean',
         },
     },
+    decorators: [
+        (Story) => (
+            <ThemeProvider>
+                <Story />
+                <ThemeSwitcher />
+            </ThemeProvider>
+        ),
+    ],
 }
 
 export default meta

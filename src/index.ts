@@ -20,6 +20,8 @@ import type {
     CardBodyProps,
     CardFooterProps,
 } from './components/Card'
+import Tabs from './components/Tabs'
+import type { TabsProps, TabItem, TabVariant } from './components/Tabs'
 import Toolbar from './components/Toolbar'
 import type {
     ToolbarProps,
@@ -100,6 +102,7 @@ export {
     Accordion,
     Badge,
     Card,
+    Tabs,
     Toolbar,
     Tooltip,
     ContextMenuProvider,
@@ -169,6 +172,9 @@ export type {
     CardHeaderProps,
     CardBodyProps,
     CardFooterProps,
+    TabsProps,
+    TabItem,
+    TabVariant,
     ToolbarProps,
     ToolbarVariant,
     ToolbarSize,
