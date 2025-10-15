@@ -9,6 +9,8 @@ import type {
     AccordionVariant,
     AccordionSize,
 } from './components/Accordion'
+import Badge from './components/Badge'
+import type { BadgeProps, BadgeVariant, BadgeSize } from './components/Badge'
 import Toolbar from './components/Toolbar'
 import type {
     ToolbarProps,
@@ -87,6 +89,7 @@ export {
     Box,
     Table,
     Accordion,
+    Badge,
     Toolbar,
     Tooltip,
     ContextMenuProvider,
@@ -147,6 +150,9 @@ export type {
     AccordionMode,
     AccordionVariant,
     AccordionSize,
+    BadgeProps,
+    BadgeVariant,
+    BadgeSize,
     ToolbarProps,
     ToolbarVariant,
     ToolbarSize,

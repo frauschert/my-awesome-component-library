@@ -1,0 +1,166 @@
+@import '../../styles/variables';
+@import '../../styles/themes';
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    transition: background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out, color 0.15s ease-in-out,
+        transform 0.15s ease-in-out;
+
+    // Size variants
+    &--sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        min-width: 1.25rem;
+        height: 1.25rem;
+
+        &.badge--dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            min-width: 0.5rem;
+            padding: 0;
+        }
+    }
+
+    &--md {
+        padding: 0.375rem 0.625rem;
+        font-size: 0.875rem;
+        min-width: 1.5rem;
+        height: 1.5rem;
+
+        &.badge--dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            min-width: 0.625rem;
+            padding: 0;
+        }
+    }
+
+    &--lg {
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        min-width: 1.75rem;
+        height: 1.75rem;
+
+        &.badge--dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            min-width: 0.75rem;
+            padding: 0;
+        }
+    }
+
+    // Shape variants
+    &--rounded {
+        border-radius: 9999px; // Pill shape
+    }
+
+    &:not(&--rounded) {
+        border-radius: 0.25rem;
+    }
+
+    // Clickable state
+    &--clickable {
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 2px solid;
+            outline-offset: 2px;
+        }
+    }
+
+    // Variant styles with theme integration
+    @include themify() {
+        // Default variant
+        &--default {
+            background-color: themed('badgeDefaultBackground');
+            color: themed('badgeDefaultText');
+            border-color: themed('badgeDefaultBorder');
+
+            &.badge--clickable:focus-visible {
+                outline-color: themed('badgeDefaultBorder');
+            }
+        }
+
+        // Primary variant
+        &--primary {
+            background-color: themed('badgePrimaryBackground');
+            color: themed('badgePrimaryText');
+            border-color: themed('badgePrimaryBorder');
+
+            &.badge--clickable:focus-visible {
+                outline-color: themed('badgePrimaryBackground');
+            }
+        }
+
+        // Success variant
+        &--success {
+            background-color: themed('badgeSuccessBackground');
+            color: themed('badgeSuccessText');
+            border-color: themed('badgeSuccessBorder');
+
+            &.badge--clickable:focus-visible {
+                outline-color: themed('badgeSuccessBackground');
+            }
+        }
+
+        // Warning variant
+        &--warning {
+            background-color: themed('badgeWarningBackground');
+            color: themed('badgeWarningText');
+            border-color: themed('badgeWarningBorder');
+
+            &.badge--clickable:focus-visible {
+                outline-color: themed('badgeWarningBackground');
+            }
+        }
+
+        // Danger variant
+        &--danger {
+            background-color: themed('badgeDangerBackground');
+            color: themed('badgeDangerText');
+            border-color: themed('badgeDangerBorder');
+
+            &.badge--clickable:focus-visible {
+                outline-color: themed('badgeDangerBackground');
+            }
+        }
+
+        // Info variant
+        &--info {
+            background-color: themed('badgeInfoBackground');
+            color: themed('badgeInfoText');
+            border-color: themed('badgeInfoBorder');
+
+            &.badge--clickable:focus-visible {
+                outline-color: themed('badgeInfoBackground');
+            }
+        }
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .badge {
+        transition: none;
+
+        &--clickable:hover {
+            transform: none;
+        }
+    }
+}
