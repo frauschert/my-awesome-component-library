@@ -11,6 +11,15 @@ import type {
 } from './components/Accordion'
 import Badge from './components/Badge'
 import type { BadgeProps, BadgeVariant, BadgeSize } from './components/Badge'
+import Card from './components/Card'
+import type {
+    CardProps,
+    CardVariant,
+    CardPadding,
+    CardHeaderProps,
+    CardBodyProps,
+    CardFooterProps,
+} from './components/Card'
 import Toolbar from './components/Toolbar'
 import type {
     ToolbarProps,
@@ -90,6 +99,7 @@ export {
     Table,
     Accordion,
     Badge,
+    Card,
     Toolbar,
     Tooltip,
     ContextMenuProvider,
@@ -153,6 +163,12 @@ export type {
     BadgeProps,
     BadgeVariant,
     BadgeSize,
+    CardProps,
+    CardVariant,
+    CardPadding,
+    CardHeaderProps,
+    CardBodyProps,
+    CardFooterProps,
     ToolbarProps,
     ToolbarVariant,
     ToolbarSize,

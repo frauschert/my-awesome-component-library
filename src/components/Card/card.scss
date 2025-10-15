@@ -1,0 +1,246 @@
+@import '../../styles/variables';
+@import '../../styles/themes';
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+        border-color 0.2s ease-in-out;
+    word-wrap: break-word;
+    background-clip: border-box;
+
+    // Theme-based styling
+    @include themify() {
+        background-color: themed('cardBackground');
+        color: themed('textColor');
+    }
+
+    // Padding variants (when not using Header/Body/Footer)
+    &--padding-none {
+        padding: 0;
+    }
+
+    &--padding-sm {
+        padding: 0.75rem;
+    }
+
+    &--padding-md {
+        padding: 1.25rem;
+    }
+
+    &--padding-lg {
+        padding: 2rem;
+    }
+
+    // Visual variants
+    &--default {
+        border: 1px solid transparent;
+
+        @include themify() {
+            border-color: themed('borderColor');
+        }
+    }
+
+    &--outlined {
+        border: 2px solid;
+
+        @include themify() {
+            border-color: themed('primaryColor');
+        }
+    }
+
+    &--elevated {
+        border: 1px solid transparent;
+
+        @include themify() {
+            border-color: themed('borderColor');
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+    }
+
+    // Clickable state
+    &--clickable {
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-2px);
+
+            @include themify() {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12),
+                    0 8px 20px rgba(0, 0, 0, 0.08);
+            }
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 2px solid;
+            outline-offset: 2px;
+
+            @include themify() {
+                outline-color: themed('primaryColor');
+            }
+        }
+    }
+
+    // Header
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.25rem 0 1.25rem;
+        gap: 1rem;
+
+        &-content {
+            flex: 1;
+            min-width: 0; // Allow text truncation
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.4;
+
+            @include themify() {
+                color: themed('textColor');
+            }
+        }
+
+        &-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+    }
+
+    // Body
+    &__body {
+        flex: 1 1 auto;
+
+        &--padding-none {
+            padding: 0;
+        }
+
+        &--padding-sm {
+            padding: 0.75rem 1.25rem;
+        }
+
+        &--padding-md {
+            padding: 1.25rem;
+        }
+
+        &--padding-lg {
+            padding: 2rem 1.25rem;
+        }
+
+        // Default body text styling
+        @include themify() {
+            color: themed('textColor');
+        }
+
+        // Typography inside body
+        p {
+            margin: 0 0 0.75rem 0;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0 0 0.5rem 0;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // Footer
+    &__footer {
+        padding: 0 1.25rem 1.25rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        @include themify() {
+            border-top: 1px solid themed('borderColor');
+            padding-top: 1rem;
+        }
+
+        // Common pattern: buttons in footer
+        button {
+            & + button {
+                margin-left: 0.5rem;
+            }
+        }
+    }
+
+    // Image handling
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+    }
+
+    // First child image (hero image)
+    > img:first-child,
+    &__body > img:first-child {
+        border-radius: 0.5rem 0.5rem 0 0;
+        margin: -1px -1px 0 -1px; // Offset border
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .card {
+        &--padding-lg {
+            padding: 1.25rem;
+        }
+
+        &__header {
+            padding: 1rem 1rem 0 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+
+            &-content {
+                font-size: 1.125rem;
+            }
+
+            &-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        &__body {
+            &--padding-lg {
+                padding: 1.25rem 1rem;
+            }
+        }
+
+        &__footer {
+            padding: 0 1rem 1rem 1rem;
+            flex-wrap: wrap;
+        }
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        transition: none;
+
+        &--clickable:hover {
+            transform: none;
+        }
+    }
+}
