@@ -195,10 +195,12 @@ const TableRows = <T, K extends keyof T>({
                             {columnDefinitions.map((column, cellIndex) => (
                                 <td
                                     key={`cell-${row.id}-${cellIndex}`}
-                                    className={classNames('table-cell', {
-                                        [`table-cell--${column.align}`]:
-                                            column.align,
-                                    })}
+                                    className={classNames(
+                                        'table-cell',
+                                        column.align
+                                            ? `table-cell--${column.align}`
+                                            : undefined
+                                    )}
                                     role="cell"
                                 >
                                     {renderCell(row, column)}

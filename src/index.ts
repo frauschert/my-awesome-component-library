@@ -1,6 +1,14 @@
 import Button from './components/Button'
 import Box from './components/Box'
 import Table from './components/Table'
+import Accordion from './components/Accordion'
+import type {
+    AccordionProps,
+    AccordionItem,
+    AccordionMode,
+    AccordionVariant,
+    AccordionSize,
+} from './components/Accordion'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -66,6 +74,7 @@ export {
     Button,
     Box,
     Table,
+    Accordion,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -119,4 +128,9 @@ export type {
     RowAction,
     BulkAction,
     CellRenderer,
+    AccordionProps,
+    AccordionItem,
+    AccordionMode,
+    AccordionVariant,
+    AccordionSize,
 }
