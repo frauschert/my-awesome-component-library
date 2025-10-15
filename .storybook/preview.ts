@@ -1,13 +1,11 @@
 import type { Preview } from '@storybook/react-vite'
 
-// Import Lato font from Google Fonts CDN
-if (typeof document !== 'undefined') {
-    const link = document.createElement('link')
-    link.href =
-        'https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap'
-    link.rel = 'stylesheet'
-    document.head.appendChild(link)
-}
+// Import Inter font
+import '@fontsource/inter/300.css'
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/500.css'
+import '@fontsource/inter/600.css'
+import '@fontsource/inter/700.css'
 
 const preview: Preview = {
     tags: ['autodocs'],
