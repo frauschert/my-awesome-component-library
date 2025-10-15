@@ -3,6 +3,7 @@ import { Meta, StoryObj } from '@storybook/react-vite'
 import { action } from 'storybook/actions'
 import { ContextMenuProvider } from './ContextMenuProvider'
 import type { MenuEntry } from './types'
+import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 // Common story wrapper
 const StoryWrapper: React.FC<{
@@ -46,34 +47,37 @@ const meta: Meta<typeof ContextMenuProvider> = {
         },
     },
     render: (args) => (
-        <ContextMenuProvider {...args}>
-            <StoryWrapper>
-                <h1>Context Menu Demo</h1>
-                <p>
-                    <strong>Right-click anywhere</strong> to see the context
-                    menu
-                </p>
-                <p>
-                    <strong>Left-click anywhere</strong> to close the context
-                    menu
-                </p>
-                <p>
-                    <strong>Press Escape</strong> to close with keyboard
-                </p>
-                <div
-                    style={{
-                        background: 'white',
-                        padding: '40px',
-                        borderRadius: '8px',
-                        border: '2px dashed #ccc',
-                        textAlign: 'center',
-                        marginTop: '20px',
-                    }}
-                >
-                    Context menu area - Try right-clicking here!
-                </div>
-            </StoryWrapper>
-        </ContextMenuProvider>
+        <ThemeProvider>
+            <ContextMenuProvider {...args}>
+                <StoryWrapper>
+                    <h1>Context Menu Demo</h1>
+                    <p>
+                        <strong>Right-click anywhere</strong> to see the context
+                        menu
+                    </p>
+                    <p>
+                        <strong>Left-click anywhere</strong> to close the
+                        context menu
+                    </p>
+                    <p>
+                        <strong>Press Escape</strong> to close with keyboard
+                    </p>
+                    <div
+                        style={{
+                            background: 'white',
+                            padding: '40px',
+                            borderRadius: '8px',
+                            border: '2px dashed #ccc',
+                            textAlign: 'center',
+                            marginTop: '20px',
+                        }}
+                    >
+                        Context menu area - Try right-clicking here!
+                    </div>
+                </StoryWrapper>
+            </ContextMenuProvider>
+            <ThemeSwitcher />
+        </ThemeProvider>
     ),
 }
 export default meta
