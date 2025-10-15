@@ -33,6 +33,8 @@ $themes: (
         hoverBackgroundColor: #e9ecef,
         selectedBackgroundColor: #e7f3ff,
         focusRing: rgba(64, 139, 189, 0.25),
+        tooltipBackgroundColor: #333,
+        tooltipTextColor: white,
     ),
     dark: (
         fontFamily: $font-family-base,
@@ -58,6 +60,8 @@ $themes: (
         hoverBackgroundColor: #333,
         selectedBackgroundColor: #2a3f4f,
         focusRing: rgba(97, 176, 231, 0.25),
+        tooltipBackgroundColor: #f8f9fa,
+        tooltipTextColor: #222,
     ),
 );
 

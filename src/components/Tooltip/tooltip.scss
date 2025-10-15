@@ -1,0 +1,159 @@
+@import '../../styles/_themes.scss';
+@import '../../styles/_variables.scss';
+
+.tooltip {
+    position: fixed;
+    z-index: 9999;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    @include themify() {
+        background-color: themed('tooltipBackgroundColor');
+        color: themed('tooltipTextColor');
+    }
+
+    &--visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    // Animation based on placement
+    &--top,
+    &--top-start,
+    &--top-end {
+        transform: translateY(4px);
+
+        &.tooltip--visible {
+            transform: translateY(0);
+        }
+    }
+
+    &--bottom,
+    &--bottom-start,
+    &--bottom-end {
+        transform: translateY(-4px);
+
+        &.tooltip--visible {
+            transform: translateY(0);
+        }
+    }
+
+    &--left,
+    &--left-start,
+    &--left-end {
+        transform: translateX(4px);
+
+        &.tooltip--visible {
+            transform: translateX(0);
+        }
+    }
+
+    &--right,
+    &--right-start,
+    &--right-end {
+        transform: translateX(-4px);
+
+        &.tooltip--visible {
+            transform: translateX(0);
+        }
+    }
+}
+
+.tooltip__content {
+    position: relative;
+    word-wrap: break-word;
+}
+
+// Arrow
+.tooltip__arrow {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+
+    @include themify() {
+        background-color: themed('tooltipBackgroundColor');
+    }
+
+    // Top placements
+    .tooltip--top & {
+        bottom: -4px;
+        left: 50%;
+        margin-left: -4px;
+    }
+
+    .tooltip--top-start & {
+        bottom: -4px;
+        left: 12px;
+    }
+
+    .tooltip--top-end & {
+        bottom: -4px;
+        right: 12px;
+    }
+
+    // Bottom placements
+    .tooltip--bottom & {
+        top: -4px;
+        left: 50%;
+        margin-left: -4px;
+    }
+
+    .tooltip--bottom-start & {
+        top: -4px;
+        left: 12px;
+    }
+
+    .tooltip--bottom-end & {
+        top: -4px;
+        right: 12px;
+    }
+
+    // Left placements
+    .tooltip--left & {
+        right: -4px;
+        top: 50%;
+        margin-top: -4px;
+    }
+
+    .tooltip--left-start & {
+        right: -4px;
+        top: 12px;
+    }
+
+    .tooltip--left-end & {
+        right: -4px;
+        bottom: 12px;
+    }
+
+    // Right placements
+    .tooltip--right & {
+        left: -4px;
+        top: 50%;
+        margin-top: -4px;
+    }
+
+    .tooltip--right-start & {
+        left: -4px;
+        top: 12px;
+    }
+
+    .tooltip--right-end & {
+        left: -4px;
+        bottom: 12px;
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .tooltip {
+        transition: none;
+        transform: none !important;
+    }
+}

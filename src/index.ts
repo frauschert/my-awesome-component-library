@@ -15,6 +15,12 @@ import type {
     ToolbarVariant,
     ToolbarSize,
 } from './components/Toolbar'
+import Tooltip from './components/Tooltip'
+import type {
+    TooltipProps,
+    TooltipPlacement,
+    TooltipTrigger,
+} from './components/Tooltip'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -82,6 +88,7 @@ export {
     Table,
     Accordion,
     Toolbar,
+    Tooltip,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -143,4 +150,7 @@ export type {
     ToolbarProps,
     ToolbarVariant,
     ToolbarSize,
+    TooltipProps,
+    TooltipPlacement,
+    TooltipTrigger,
 }
