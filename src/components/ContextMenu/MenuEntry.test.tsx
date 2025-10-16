@@ -1,12 +1,11 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { ContextMenuEntry } from './MenuEntry'
 import { ContextMenuProvider } from './ContextMenuProvider'
 import type { MenuEntry } from './types'
 
 // Helper to render MenuEntry within ContextMenuProvider
-const renderWithProvider = (entry: MenuEntry, index: number = 0) => {
+const renderWithProvider = (entry: MenuEntry) => {
     return render(
         <ContextMenuProvider menuEntries={[entry]}>
             <div data-testid="trigger">Trigger</div>

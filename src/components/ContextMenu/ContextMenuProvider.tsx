@@ -1,5 +1,6 @@
 import './contextmenu.scss'
 import React from 'react'
+import { createPortal } from 'react-dom'
 import type { MenuEntry } from './types'
 import { ContextMenuEntry } from './MenuEntry'
 
@@ -8,6 +9,8 @@ interface ContextMenuContextProps {
     position: { top: number; left: number }
     showMenu: (e: React.MouseEvent) => void
     hideMenu: () => void
+    focusedIndex: number
+    setFocusedIndex: (index: number) => void
 }
 
 const ContextMenuContext = React.createContext<
@@ -25,12 +28,14 @@ export function ContextMenuProvider({
 }: ContextMenuProviderProps) {
     const [menuVisible, setMenuVisible] = React.useState(false)
     const [position, setPosition] = React.useState({ top: 0, left: 0 })
+    const [isPositioned, setIsPositioned] = React.useState(false)
+    const [focusedIndex, setFocusedIndex] = React.useState(0)
     const menuRef = React.useRef<HTMLUListElement>(null)
     const containerRef = React.useRef<HTMLDivElement>(null)
 
-    const adjustPosition = (x: number, y: number) => {
-        const menuWidth = 200 // Estimated menu width
-        const menuHeight = 300 // Estimated menu height
+    const adjustPosition = (x: number, y: number, rect?: DOMRect) => {
+        const menuWidth = rect?.width || 200
+        const menuHeight = rect?.height || 300
         const padding = 10
 
         const adjustedX = Math.min(x, window.innerWidth - menuWidth - padding)
@@ -46,11 +51,14 @@ export function ContextMenuProvider({
         e.preventDefault()
         // In some tests or environments, pageX/pageY may be undefined.
         // Fallback to clientX/clientY or 0 to avoid NaN styles.
-        const x = (e as any).pageX ?? (e as any).clientX ?? 0
-        const y = (e as any).pageY ?? (e as any).clientY ?? 0
-        const adjustedPosition = adjustPosition(x, y)
+        const nativeEvent = e.nativeEvent as MouseEvent
+        const x = nativeEvent.pageX ?? e.clientX ?? 0
+        const y = nativeEvent.pageY ?? e.clientY ?? 0
+
+        setPosition({ left: x, top: y })
         setMenuVisible(true)
-        setPosition(adjustedPosition)
+        setIsPositioned(false)
+        setFocusedIndex(0)
 
         // Focus menu for accessibility
         setTimeout(() => {
@@ -63,6 +71,20 @@ export function ContextMenuProvider({
     const hideMenu = () => {
         setMenuVisible(false)
     }
+
+    // Adjust position after menu renders with actual dimensions
+    React.useEffect(() => {
+        if (menuVisible && !isPositioned && menuRef.current) {
+            const rect = menuRef.current.getBoundingClientRect()
+            const adjustedPosition = adjustPosition(
+                position.left,
+                position.top,
+                rect
+            )
+            setPosition(adjustedPosition)
+            setIsPositioned(true)
+        }
+    }, [menuVisible, isPositioned, position.left, position.top])
 
     // Outside click detection
     React.useEffect(() => {
@@ -89,6 +111,11 @@ export function ContextMenuProvider({
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (!menuVisible) return
 
+        const focusableItems = menuEntries.filter(
+            (entry): entry is Extract<MenuEntry, { type: 'item' }> =>
+                entry.type === 'item' && !entry.disabled
+        )
+
         switch (e.key) {
             case 'Escape':
                 e.preventDefault()
@@ -96,27 +123,37 @@ export function ContextMenuProvider({
                 break
             case 'ArrowDown':
                 e.preventDefault()
-                // Focus next menu item logic would go here
+                setFocusedIndex((prev) =>
+                    Math.min(prev + 1, focusableItems.length - 1)
+                )
                 break
             case 'ArrowUp':
                 e.preventDefault()
-                // Focus previous menu item logic would go here
+                setFocusedIndex((prev) => Math.max(prev - 1, 0))
                 break
         }
     }
 
     return (
         <ContextMenuContext.Provider
-            value={{ menuVisible, position, showMenu, hideMenu }}
+            value={{
+                menuVisible,
+                position,
+                showMenu,
+                hideMenu,
+                focusedIndex,
+                setFocusedIndex,
+            }}
         >
             <div
                 ref={containerRef}
                 onContextMenu={showMenu}
-                onClick={hideMenu}
                 onKeyDown={handleKeyDown}
             >
                 {children}
-                {menuVisible && (
+            </div>
+            {menuVisible &&
+                createPortal(
                     <ul
                         ref={menuRef}
                         className="contextmenu"
@@ -124,20 +161,21 @@ export function ContextMenuProvider({
                         aria-label="Context menu"
                         tabIndex={-1}
                         style={{
-                            top: position.top,
-                            left: position.left,
+                            top: `${position.top}px`,
+                            left: `${position.left}px`,
+                            position: 'fixed',
                         }}
                     >
                         {menuEntries.map((menuEntry, index) => (
                             <ContextMenuEntry
-                                key={index}
+                                key={`menu-${index}-${menuEntry.type}`}
                                 {...menuEntry}
                                 index={index}
                             />
                         ))}
-                    </ul>
+                    </ul>,
+                    document.body
                 )}
-            </div>
         </ContextMenuContext.Provider>
     )
 }
