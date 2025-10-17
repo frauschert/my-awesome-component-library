@@ -2,20 +2,10 @@ import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import Checkbox from './Checkbox'
-import ThemeProvider from '../Theme/ThemeProvider'
-import ThemeSwitcher from '../Theme/ThemeSwitcher'
 
 const meta: Meta<typeof Checkbox> = {
     title: 'Components/Checkbox',
     component: Checkbox,
-    decorators: [
-        (Story) => (
-            <ThemeProvider>
-                <Story />
-                <ThemeSwitcher />
-            </ThemeProvider>
-        ),
-    ],
     parameters: {
         layout: 'centered',
     },

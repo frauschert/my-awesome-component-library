@@ -8,19 +8,15 @@ import type {
     TableProps,
     PaginationConfig,
 } from './types'
-import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 const meta: Meta<typeof Table> = {
     title: 'Components/Table',
     component: Table,
     decorators: [
         (Story) => (
-            <ThemeProvider>
-                <div style={{ padding: '2rem' }}>
-                    <ThemeSwitcher />
-                    <Story />
-                </div>
-            </ThemeProvider>
+            <div style={{ padding: '2rem' }}>
+                <Story />
+            </div>
         ),
     ],
 }

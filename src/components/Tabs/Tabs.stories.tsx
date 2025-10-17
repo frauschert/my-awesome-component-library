@@ -5,7 +5,6 @@ import Tabs from './Tabs'
 import type { TabItem } from './Tabs'
 import Card from '../Card'
 import Badge from '../Badge'
-import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 const meta: Meta<typeof Tabs> = {
     title: 'Components/Tabs',
@@ -27,14 +26,6 @@ const meta: Meta<typeof Tabs> = {
             control: 'boolean',
         },
     },
-    decorators: [
-        (Story) => (
-            <ThemeProvider>
-                <Story />
-                <ThemeSwitcher />
-            </ThemeProvider>
-        ),
-    ],
 }
 
 export default meta

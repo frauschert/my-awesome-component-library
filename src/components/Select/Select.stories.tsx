@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import Select from './Select'
 import type { SelectOption } from './Select'
-import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 const meta: Meta<typeof Select> = {
     title: 'Components/Select',
@@ -35,12 +34,9 @@ const meta: Meta<typeof Select> = {
     },
     decorators: [
         (Story) => (
-            <ThemeProvider>
-                <div style={{ padding: '2rem', minHeight: '400px' }}>
-                    <Story />
-                </div>
-                <ThemeSwitcher />
-            </ThemeProvider>
+            <div style={{ padding: '2rem', minHeight: '400px' }}>
+                <Story />
+            </div>
         ),
     ],
 }

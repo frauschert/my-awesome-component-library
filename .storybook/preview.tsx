@@ -18,14 +18,7 @@ const preview: Preview = {
                 <div style={{ padding: '1rem' }}>
                     <Story />
                 </div>
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: '1rem',
-                        right: '1rem',
-                        zIndex: 9999,
-                    }}
-                >
+                <div style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }}>
                     <ThemeSwitcher />
                 </div>
             </ThemeProvider>

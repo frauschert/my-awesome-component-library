@@ -2,7 +2,6 @@ import React from 'react'
 import { Meta, StoryObj } from '@storybook/react-vite'
 import { action } from 'storybook/actions'
 import { ContextMenuProvider } from './ContextMenuProvider'
-import type { MenuEntry } from './types'
 import { ThemeProvider, ThemeSwitcher } from '../Theme'
 
 // Common story wrapper
