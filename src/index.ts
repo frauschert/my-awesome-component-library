@@ -34,6 +34,8 @@ import type {
     TooltipPlacement,
     TooltipTrigger,
 } from './components/Tooltip'
+import Checkbox from './components/Checkbox'
+import type { CheckboxProps, CheckboxSize } from './components/Checkbox'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -105,6 +107,7 @@ export {
     Tabs,
     Toolbar,
     Tooltip,
+    Checkbox,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -181,4 +184,6 @@ export type {
     TooltipProps,
     TooltipPlacement,
     TooltipTrigger,
+    CheckboxProps,
+    CheckboxSize,
 }
