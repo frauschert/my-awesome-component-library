@@ -1,5 +1,5 @@
 @import '../../styles/colors';
-@import '../../styles/themes';
+@import '../../styles/theme-vars';
 
 // CSS Custom Properties for easy theming
 .contextmenu {
@@ -25,7 +25,7 @@
     font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: var(--contextmenu-font-size);
     font-weight: 400;
-    background: var(--contextmenu-bg);
+    background: var(--theme-card-bg);
     border-radius: var(--contextmenu-border-radius);
     padding: var(--contextmenu-padding);
     min-width: 180px;
@@ -33,31 +33,13 @@
     margin: 0;
     position: absolute;
     list-style: none;
-    box-shadow: var(--contextmenu-shadow);
-    border: 1px solid var(--contextmenu-border);
+    box-shadow: var(--theme-shadow-lg);
+    border: 1px solid var(--theme-border-color);
     opacity: 1;
     z-index: var(--contextmenu-z-index);
     transition: box-shadow var(--contextmenu-transition),
         opacity var(--contextmenu-transition);
     backdrop-filter: blur(8px);
-
-    // Theme integration
-    @include themify() {
-        --contextmenu-bg: #{themed(backgroundColor)};
-        --contextmenu-text: #{themed(textColor)};
-        --contextmenu-border: #{if(
-                themed(backgroundColor) == white,
-                #e0e0e0,
-                #404040
-            )};
-        --contextmenu-shadow: #{if(
-                themed(backgroundColor) == white,
-                0 8px 32px rgba(0, 0, 0, 0.18) comma 0 1.5px 4px
-                    rgba(0, 0, 0, 0.08),
-                0 8px 32px rgba(0, 0, 0, 0.4) comma 0 1.5px 4px
-                    rgba(0, 0, 0, 0.2)
-            )};
-    }
 }
 
 .contextmenu li {
@@ -65,7 +47,7 @@
     align-items: center;
     gap: 8px;
     padding: var(--contextmenu-item-padding);
-    color: var(--contextmenu-text);
+    color: var(--theme-text-primary);
     background: none;
     border: none;
     cursor: pointer;
@@ -79,21 +61,21 @@
 
     // Enhanced focus styles for better accessibility
     &:focus-visible {
-        outline: 2px solid var(--contextmenu-text-hover);
+        outline: 2px solid var(--theme-primary);
         outline-offset: 2px;
-        background: var(--contextmenu-item-hover-bg);
-        color: var(--contextmenu-text-hover);
+        background: var(--theme-hover-bg);
+        color: var(--theme-primary);
     }
 }
 
 .contextmenu li:not(.menu-divider):hover:not(.disabled) {
-    background: var(--contextmenu-item-hover-bg);
-    color: var(--contextmenu-text-hover);
+    background: var(--theme-hover-bg);
+    color: var(--theme-primary);
     transform: translateX(2px);
 }
 
 .contextmenu .menu-item.disabled {
-    color: var(--contextmenu-text-disabled);
+    color: var(--theme-text-secondary);
     cursor: not-allowed;
     opacity: 0.6;
 
@@ -241,18 +223,4 @@
             transform: none;
         }
     }
-}
-
-// Dark mode enhancements
-.theme--dark .contextmenu {
-    --contextmenu-bg: rgba(34, 34, 34, 0.95);
-    --contextmenu-text: #e0e0e0;
-    --contextmenu-text-hover: #64b5f6;
-    --contextmenu-text-disabled: rgba(255, 255, 255, 0.3);
-    --contextmenu-item-hover-bg: rgba(100, 181, 246, 0.1);
-    --contextmenu-divider: #404040;
-    --contextmenu-shortcut: #aaa;
-    --contextmenu-border: #404040;
-    --contextmenu-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
-        0 1.5px 4px rgba(0, 0, 0, 0.3);
 }

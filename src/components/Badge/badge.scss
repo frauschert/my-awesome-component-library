@@ -1,5 +1,5 @@
 @import '../../styles/variables';
-@import '../../styles/themes';
+@import '../../styles/theme-vars';
 
 .badge {
     display: inline-flex;
@@ -84,72 +84,64 @@
         }
     }
 
-    // Variant styles with theme integration
-    @include themify() {
-        // Default variant
-        &--default {
-            background-color: themed('badgeDefaultBackground');
-            color: themed('badgeDefaultText');
-            border-color: themed('badgeDefaultBorder');
+    // Variant styles with CSS variables
+    &--default {
+        background-color: var(--theme-badge-default-bg);
+        color: var(--theme-badge-default-text);
+        border-color: var(--theme-badge-default-border);
 
-            &.badge--clickable:focus-visible {
-                outline-color: themed('badgeDefaultBorder');
-            }
+        &.badge--clickable:focus-visible {
+            outline-color: var(--theme-badge-default-border);
         }
+    }
 
-        // Primary variant
-        &--primary {
-            background-color: themed('badgePrimaryBackground');
-            color: themed('badgePrimaryText');
-            border-color: themed('badgePrimaryBorder');
+    &--primary {
+        background-color: var(--theme-badge-primary-bg);
+        color: var(--theme-badge-primary-text);
+        border-color: var(--theme-badge-primary-border);
 
-            &.badge--clickable:focus-visible {
-                outline-color: themed('badgePrimaryBackground');
-            }
+        &.badge--clickable:focus-visible {
+            outline-color: var(--theme-badge-primary-bg);
         }
+    }
 
-        // Success variant
-        &--success {
-            background-color: themed('badgeSuccessBackground');
-            color: themed('badgeSuccessText');
-            border-color: themed('badgeSuccessBorder');
+    &--success {
+        background-color: var(--theme-badge-success-bg);
+        color: var(--theme-badge-success-text);
+        border-color: var(--theme-badge-success-border);
 
-            &.badge--clickable:focus-visible {
-                outline-color: themed('badgeSuccessBackground');
-            }
+        &.badge--clickable:focus-visible {
+            outline-color: var(--theme-badge-success-bg);
         }
+    }
 
-        // Warning variant
-        &--warning {
-            background-color: themed('badgeWarningBackground');
-            color: themed('badgeWarningText');
-            border-color: themed('badgeWarningBorder');
+    &--warning {
+        background-color: var(--theme-badge-warning-bg);
+        color: var(--theme-badge-warning-text);
+        border-color: var(--theme-badge-warning-border);
 
-            &.badge--clickable:focus-visible {
-                outline-color: themed('badgeWarningBackground');
-            }
+        &.badge--clickable:focus-visible {
+            outline-color: var(--theme-badge-warning-bg);
         }
+    }
 
-        // Danger variant
-        &--danger {
-            background-color: themed('badgeDangerBackground');
-            color: themed('badgeDangerText');
-            border-color: themed('badgeDangerBorder');
+    &--danger {
+        background-color: var(--theme-badge-danger-bg);
+        color: var(--theme-badge-danger-text);
+        border-color: var(--theme-badge-danger-border);
 
-            &.badge--clickable:focus-visible {
-                outline-color: themed('badgeDangerBackground');
-            }
+        &.badge--clickable:focus-visible {
+            outline-color: var(--theme-badge-danger-bg);
         }
+    }
 
-        // Info variant
-        &--info {
-            background-color: themed('badgeInfoBackground');
-            color: themed('badgeInfoText');
-            border-color: themed('badgeInfoBorder');
+    &--info {
+        background-color: var(--theme-badge-info-bg);
+        color: var(--theme-badge-info-text);
+        border-color: var(--theme-badge-info-border);
 
-            &.badge--clickable:focus-visible {
-                outline-color: themed('badgeInfoBackground');
-            }
+        &.badge--clickable:focus-visible {
+            outline-color: var(--theme-badge-info-bg);
         }
     }
 }

@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import './select.scss'
 import Portal from '../Portal'
-import { useTheme } from '../Theme/ThemeContext'
 
 export type SelectOption = {
     value: string
@@ -79,9 +78,6 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         const containerRef = useRef<HTMLDivElement>(null)
         const searchInputRef = useRef<HTMLInputElement>(null)
         const dropdownRef = useRef<HTMLDivElement>(null)
-
-        // Get theme from context, with selector to get just the theme value
-        const [theme] = useTheme((state) => state.theme)
 
         const isControlled = controlledValue !== undefined
         const currentValue = isControlled ? controlledValue : internalValue
@@ -321,7 +317,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                         <Portal>
                             <div
                                 ref={dropdownRef}
-                                className={`select__dropdown theme--${theme}`}
+                                className="select__dropdown"
                                 style={{
                                     position: 'absolute',
                                     top: `${dropdownPosition.top}px`,

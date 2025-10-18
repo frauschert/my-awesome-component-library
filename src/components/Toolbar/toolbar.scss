@@ -1,4 +1,4 @@
-@import '../../styles/_themes.scss';
+@import '../../styles/theme-vars';
 @import '../../styles/_variables.scss';
 
 .toolbar {
@@ -54,27 +54,21 @@
     &--default {
         border-bottom: 1px solid;
 
-        @include themify() {
-            background-color: themed('backgroundColor');
-            border-color: themed('borderColor');
-            color: themed('textColor');
-        }
+        background-color: var(--theme-bg-primary);
+            border-color: var(--theme-border-color);
+            color: var(--theme-text-primary);
     }
 
     &--elevated {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-        @include themify() {
-            background-color: themed('backgroundColor');
-            color: themed('textColor');
-        }
+        background-color: var(--theme-bg-primary);
+            color: var(--theme-text-primary);
     }
 
     &--filled {
-        @include themify() {
-            background-color: themed('backgroundColorAlt');
-            color: themed('textColor');
-        }
+        background-color: var(--theme-bg-secondary);
+            color: var(--theme-text-primary);
     }
 }
 
@@ -115,23 +109,17 @@
         font-family: inherit;
         font-size: inherit;
 
-        @include themify() {
-            color: themed('textColor');
-        }
+        color: var(--theme-text-primary);
 
         &:hover:not(:disabled) {
-            @include themify() {
-                background-color: themed('hoverBackgroundColor');
-            }
+            background-color: var(--theme-hover-bg);
         }
 
         &:focus-visible {
             outline: 2px solid;
             outline-offset: 2px;
 
-            @include themify() {
-                outline-color: themed('primaryColor');
-            }
+            outline-color: var(--theme-primary);
         }
 
         &:disabled {
@@ -154,9 +142,7 @@
         height: 24px;
         margin: 0 0.5rem;
 
-        @include themify() {
-            background-color: themed('borderColor');
-        }
+        background-color: var(--theme-border-color);
     }
 
     // Title/heading in toolbar

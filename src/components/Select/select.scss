@@ -1,5 +1,5 @@
 @import '../../styles/variables';
-@import '../../styles/themes';
+@import '../../styles/theme-vars';
 
 .select-container {
     display: flex;
@@ -23,28 +23,20 @@
 .select-label {
     font-weight: 500;
     display: block;
-
-    @include themify() {
-        color: themed('textColor');
-    }
+    color: var(--theme-text-primary);
 
     &--required::after {
         content: ' *';
-        @include themify() {
-            color: themed('dangerColor');
-        }
+        color: var(--theme-danger);
     }
 }
 
 .select {
     position: relative;
     width: 100%;
-
-    @include themify() {
-        background-color: themed('inputBackground');
-        border: 1px solid themed('borderColor');
-        color: themed('textColor');
-    }
+    background-color: var(--theme-input-bg);
+    border: 1px solid var(--theme-border-color);
+    color: var(--theme-text-primary);
 
     &--default {
         border-radius: 0.375rem;
@@ -53,10 +45,7 @@
     &--filled {
         border-radius: 0.375rem 0.375rem 0 0;
         border-bottom-width: 2px;
-
-        @include themify() {
-            background-color: themed('backgroundColorAlt');
-        }
+        background-color: var(--theme-bg-secondary);
     }
 
     &--outlined {
@@ -86,29 +75,21 @@
     }
 
     &--open {
-        @include themify() {
-            border-color: themed('primaryColor');
-            box-shadow: 0 0 0 3px themed('focusRing');
-        }
+        border-color: var(--theme-primary);
+        box-shadow: 0 0 0 3px var(--theme-focus-ring);
     }
 
     &--disabled {
         opacity: 0.6;
         cursor: not-allowed;
-        @include themify() {
-            background-color: themed('backgroundColorAlt');
-        }
+        background-color: var(--theme-bg-secondary);
     }
 
     &--error {
-        @include themify() {
-            border-color: themed('dangerColor');
-        }
+        border-color: var(--theme-danger);
 
         &.select--open {
-            @include themify() {
-                box-shadow: 0 0 0 3px rgba(themed('dangerColor'), 0.25);
-            }
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
         }
     }
 }
@@ -124,10 +105,7 @@
     cursor: pointer;
     text-align: left;
     transition: all 0.2s ease;
-
-    @include themify() {
-        color: themed('textColor');
-    }
+    color: var(--theme-text-primary);
 
     &:focus {
         outline: none;
@@ -145,9 +123,7 @@
     white-space: nowrap;
 
     &--placeholder {
-        @include themify() {
-            color: themed('textColorMuted');
-        }
+        color: var(--theme-text-secondary);
     }
 }
 
@@ -168,16 +144,11 @@
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 0.75rem;
-
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 
     &:hover {
-        @include themify() {
-            background-color: themed('hoverBackgroundColor');
-            color: themed('textColor');
-        }
+        background-color: var(--theme-hover-bg);
+        color: var(--theme-text-primary);
     }
 }
 
@@ -186,10 +157,7 @@
     align-items: center;
     font-size: 0.625rem;
     transition: transform 0.2s ease;
-
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 
     &--open {
         transform: rotate(180deg);
@@ -202,21 +170,15 @@
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     animation: selectSlideIn 0.15s ease-out;
-
-    @include themify() {
-        background-color: themed('cardBackground');
-        border: 1px solid themed('borderColor');
-    }
+    background-color: var(--theme-card-bg);
+    border: 1px solid var(--theme-border-color);
 }
 
 .select__search {
     padding: 0.5rem;
     border-bottom-width: 1px;
     border-bottom-style: solid;
-
-    @include themify() {
-        border-bottom-color: themed('borderColor');
-    }
+    border-bottom-color: var(--theme-border-color);
 }
 
 .select__search-input {
@@ -226,19 +188,14 @@
     border-width: 1px;
     border-style: solid;
     font-size: 0.875rem;
-
-    @include themify() {
-        background-color: themed('inputBackground');
-        border-color: themed('borderColor');
-        color: themed('textColor');
-    }
+    background-color: var(--theme-input-bg);
+    border-color: var(--theme-border-color);
+    color: var(--theme-text-primary);
 
     &:focus {
         outline: none;
-        @include themify() {
-            border-color: themed('primaryColor');
-            box-shadow: 0 0 0 3px themed('focusRing');
-        }
+        border-color: var(--theme-primary);
+        box-shadow: 0 0 0 3px var(--theme-focus-ring);
     }
 }
 
@@ -250,20 +207,14 @@
 .select__empty {
     padding: 1rem;
     text-align: center;
-
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 }
 
 .select__group {
     &:not(:last-child) {
         border-bottom-width: 1px;
         border-bottom-style: solid;
-
-        @include themify() {
-            border-bottom-color: themed('borderColor');
-        }
+        border-bottom-color: var(--theme-border-color);
     }
 }
 
@@ -273,11 +224,8 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-
-    @include themify() {
-        color: themed('textColorMuted');
-        background-color: themed('backgroundColorAlt');
-    }
+    color: var(--theme-text-secondary);
+    background-color: var(--theme-bg-secondary);
 }
 
 .select__option {
@@ -287,24 +235,21 @@
     padding: 0.625rem 1rem;
     cursor: pointer;
     transition: all 0.15s ease;
+    color: var(--theme-text-primary);
 
-    @include themify() {
-        color: themed('textColor');
+    &:hover:not(&--disabled):not(&--highlighted):not(&--selected) {
+        background-color: var(--theme-hover-bg);
     }
 
     &--highlighted {
-        @include themify() {
-            background-color: themed('selectedBackgroundColor');
-            color: themed('primaryColor');
-        }
+        background-color: var(--theme-selected-bg);
+        color: var(--theme-primary);
     }
 
     &--selected {
         font-weight: 500;
-        @include themify() {
-            color: themed('primaryColor');
-            background-color: themed('selectedBackgroundColor');
-        }
+        color: var(--theme-primary);
+        background-color: var(--theme-selected-bg);
     }
 
     &--disabled {
@@ -315,36 +260,6 @@
             background: none;
         }
     }
-}
-
-// Hover must be separate due to SCSS compilation with :not() and nested &
-// TEST - should show border on dropdown
-.theme--light .select__dropdown {
-    border: 3px solid red !important;
-}
-
-.theme--dark .select__dropdown {
-    border: 3px solid blue !important;
-}
-
-.theme--light .select__option:hover {
-    background-color: #408bbd !important;
-    color: white !important;
-}
-
-.theme--dark .select__option:hover {
-    background-color: #61b0e7 !important;
-    color: #222 !important;
-}
-
-.theme--light .select__option--disabled:hover,
-.theme--light .select__option--highlighted:hover,
-.theme--light .select__option--selected:hover,
-.theme--dark .select__option--disabled:hover,
-.theme--dark .select__option--highlighted:hover,
-.theme--dark .select__option--selected:hover {
-    background-color: transparent;
-    color: inherit;
 }
 
 .select__checkbox {
@@ -358,31 +273,21 @@
     justify-content: center;
     font-size: 0.75rem;
     flex-shrink: 0;
-
-    @include themify() {
-        border-color: themed('borderColor');
-        color: themed('primaryTextColor');
-    }
+    border-color: var(--theme-border-color);
+    color: var(--theme-text-on-primary);
 
     &--checked {
-        @include themify() {
-            background-color: themed('primaryColor');
-            border-color: themed('primaryColor');
-        }
+        background-color: var(--theme-primary);
+        border-color: var(--theme-primary);
     }
 }
 
 .select-helper {
     font-size: 0.875rem;
-
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 
     &--error {
-        @include themify() {
-            color: themed('dangerColor');
-        }
+        color: var(--theme-danger);
     }
 }
 

@@ -1,5 +1,5 @@
 @import '../../styles/variables';
-@import '../../styles/themes';
+@import '../../styles/theme-vars';
 
 .card {
     position: relative;
@@ -10,12 +10,8 @@
         border-color 0.2s ease-in-out;
     word-wrap: break-word;
     background-clip: border-box;
-
-    // Theme-based styling
-    @include themify() {
-        background-color: themed('cardBackground');
-        color: themed('textColor');
-    }
+    background-color: var(--theme-card-bg);
+    color: var(--theme-text-primary);
 
     // Padding variants (when not using Header/Body/Footer)
     &--padding-none {
@@ -36,29 +32,16 @@
 
     // Visual variants
     &--default {
-        border: 1px solid transparent;
-
-        @include themify() {
-            border-color: themed('borderColor');
-        }
+        border: 1px solid var(--theme-border-color);
     }
 
     &--outlined {
-        border: 2px solid;
-
-        @include themify() {
-            border-color: themed('primaryColor');
-        }
+        border: 2px solid var(--theme-primary);
     }
 
     &--elevated {
-        border: 1px solid transparent;
-
-        @include themify() {
-            border-color: themed('borderColor');
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
-                0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+        border: 1px solid var(--theme-border-color);
+        box-shadow: var(--theme-shadow-md);
     }
 
     // Clickable state
@@ -67,11 +50,7 @@
 
         &:hover {
             transform: translateY(-2px);
-
-            @include themify() {
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12),
-                    0 8px 20px rgba(0, 0, 0, 0.08);
-            }
+            box-shadow: var(--theme-shadow-lg);
         }
 
         &:active {
@@ -79,12 +58,8 @@
         }
 
         &:focus-visible {
-            outline: 2px solid;
+            outline: 2px solid var(--theme-primary);
             outline-offset: 2px;
-
-            @include themify() {
-                outline-color: themed('primaryColor');
-            }
         }
     }
 
@@ -102,10 +77,7 @@
             font-size: 1.25rem;
             font-weight: 600;
             line-height: 1.4;
-
-            @include themify() {
-                color: themed('textColor');
-            }
+            color: var(--theme-text-primary);
         }
 
         &-actions {
@@ -137,9 +109,7 @@
         }
 
         // Default body text styling
-        @include themify() {
-            color: themed('textColor');
-        }
+        color: var(--theme-text-primary);
 
         // Typography inside body
         p {
@@ -170,11 +140,8 @@
         display: flex;
         align-items: center;
         gap: 0.75rem;
-
-        @include themify() {
-            border-top: 1px solid themed('borderColor');
-            padding-top: 1rem;
-        }
+        border-top: 1px solid var(--theme-border-color);
+        padding-top: 1rem;
 
         // Common pattern: buttons in footer
         button {

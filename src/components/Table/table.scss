@@ -1,4 +1,4 @@
-@import '../../styles/_themes.scss';
+@import '../../styles/theme-vars';
 @import '../../styles/_variables.scss';
 
 // Table Container
@@ -6,10 +6,8 @@
     position: relative;
     width: 100%;
 
-    @include themify() {
-        background-color: themed('backgroundColor');
-        color: themed('textColor');
-    }
+    background-color: var(--theme-bg-primary);
+        color: var(--theme-text-primary);
 
     &--loading {
         pointer-events: none;
@@ -27,10 +25,8 @@
             top: 0;
             z-index: 10;
 
-            @include themify() {
-                background-color: themed('backgroundColor');
-                box-shadow: 0 2px 4px themed('shadowColor');
-            }
+            background-color: var(--theme-bg-primary);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     }
 }
@@ -44,10 +40,8 @@
     padding: 1rem;
     flex-wrap: wrap;
 
-    @include themify() {
-        background-color: themed('backgroundColor');
-        border-bottom: 1px solid themed('borderColor');
-    }
+    background-color: var(--theme-bg-primary);
+        border-bottom: 1px solid var(--theme-border-color);
 }
 
 .table-search {
@@ -62,25 +56,19 @@
         border-radius: 4px;
         transition: all 0.2s ease;
 
-        @include themify() {
-            background-color: themed('inputBackground');
-            color: themed('textColor');
-            border: 1px solid themed('borderColor');
-        }
+        background-color: var(--theme-input-bg);
+            color: var(--theme-text-primary);
+            border: 1px solid var(--theme-border-color);
 
         &:focus {
             outline: none;
 
-            @include themify() {
-                border-color: themed('primaryColor');
-                box-shadow: 0 0 0 3px themed('focusRing');
-            }
+            border-color: var(--theme-primary);
+                box-shadow: 0 0 0 3px var(--theme-focus-ring);
         }
 
         &::placeholder {
-            @include themify() {
-                color: themed('textColorMuted');
-            }
+            color: var(--theme-text-secondary);
         }
     }
 }
@@ -94,9 +82,7 @@
         font-size: 0.875rem;
         font-weight: 500;
 
-        @include themify() {
-            color: themed('textColorMuted');
-        }
+        color: var(--theme-text-secondary);
     }
 
     &__button {
@@ -111,15 +97,11 @@
         cursor: pointer;
         transition: all 0.2s ease;
 
-        @include themify() {
-            background-color: themed('primaryColor');
-            color: themed('primaryTextColor');
-        }
+        background-color: var(--theme-primary);
+            color: var(--theme-text-on-primary);
 
         &:hover:not(:disabled) {
-            @include themify() {
-                background-color: themed('primaryColorDark');
-            }
+            background-color: var(--theme-primary-dark);
         }
 
         &:disabled {
@@ -144,9 +126,7 @@
     padding: 3rem 1rem;
     text-align: center;
 
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 }
 
 .table-loading {
@@ -160,18 +140,14 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
 
-        @include themify() {
-            border-top-color: themed('primaryColor');
-            border-right-color: themed('primaryColor');
-        }
+        border-top-color: var(--theme-primary);
+            border-right-color: var(--theme-primary);
     }
 }
 
 .table-error {
-    @include themify() {
-        color: themed('dangerColor');
-        background-color: themed('dangerBackgroundColor');
-    }
+    color: var(--theme-danger);
+        background-color: var(--theme-danger-bg);
 }
 
 @keyframes spin {
@@ -185,9 +161,7 @@
     overflow-x: auto;
     border-radius: 4px;
 
-    @include themify() {
-        border: 1px solid themed('borderColor');
-    }
+    border: 1px solid var(--theme-border-color);
 }
 
 // Table
@@ -196,16 +170,12 @@
     border-collapse: collapse;
     font-size: 0.875rem;
 
-    @include themify() {
-        background-color: themed('backgroundColor');
-        color: themed('textColor');
-    }
+    background-color: var(--theme-bg-primary);
+        color: var(--theme-text-primary);
 
     &--bordered {
         .table-cell {
-            @include themify() {
-                border: 1px solid themed('borderColor');
-            }
+            border: 1px solid var(--theme-border-color);
         }
     }
 
@@ -218,27 +188,21 @@
 
     &--striped {
         .table-row:nth-of-type(even):not(.table-row--expanded-content) {
-            @include themify() {
-                background-color: themed('backgroundColorAlt');
-            }
+            background-color: var(--theme-bg-secondary);
         }
     }
 
     &--hoverable {
         .table-row--hoverable:hover {
-            @include themify() {
-                background-color: themed('hoverBackgroundColor');
-            }
+            background-color: var(--theme-hover-bg);
         }
     }
 }
 
 // Table Header
 .table-header {
-    @include themify() {
-        background-color: themed('headerBackgroundColor');
-        border-bottom: 2px solid themed('borderColor');
-    }
+    background-color: var(--theme-header-bg);
+        border-bottom: 2px solid var(--theme-border-color);
 
     &__cell {
         padding: 0.75rem 1rem;
@@ -247,33 +211,25 @@
         white-space: nowrap;
         user-select: none;
 
-        @include themify() {
-            color: themed('textColor');
-        }
+        color: var(--theme-text-primary);
 
         &--sortable {
             cursor: pointer;
             transition: background-color 0.2s ease;
 
             &:hover {
-                @include themify() {
-                    background-color: themed('hoverBackgroundColor');
-                }
+                background-color: var(--theme-hover-bg);
             }
 
             &:focus {
                 outline: none;
 
-                @include themify() {
-                    box-shadow: inset 0 0 0 2px themed('focusRing');
-                }
+                box-shadow: inset 0 0 0 2px var(--theme-focus-ring);
             }
         }
 
         &--sorted {
-            @include themify() {
-                color: themed('primaryColor');
-            }
+            color: var(--theme-primary);
         }
 
         &--select,
@@ -310,9 +266,7 @@
     }
 
     &__sort-icon {
-        @include themify() {
-            color: themed('primaryColor');
-        }
+        color: var(--theme-primary);
     }
 
     &__sort-placeholder {
@@ -329,23 +283,17 @@
 
 // Table Body
 .table-body {
-    @include themify() {
-        background-color: themed('backgroundColor');
-    }
+    background-color: var(--theme-bg-primary);
 }
 
 // Table Row
 .table-row {
     transition: background-color 0.15s ease;
 
-    @include themify() {
-        border-bottom: 1px solid themed('borderColor');
-    }
+    border-bottom: 1px solid var(--theme-border-color);
 
     &--selected {
-        @include themify() {
-            background-color: themed('selectedBackgroundColor');
-        }
+        background-color: var(--theme-selected-bg);
     }
 
     &--disabled {
@@ -358,10 +306,8 @@
     }
 
     &--expanded-content {
-        @include themify() {
-            background-color: themed('backgroundColorAlt');
+        background-color: var(--theme-bg-secondary);
             border-top: none;
-        }
     }
 
     &__checkbox {
@@ -395,9 +341,7 @@
         text-align: center;
         padding: 3rem 1rem;
 
-        @include themify() {
-            color: themed('textColorMuted');
-        }
+        color: var(--theme-text-secondary);
     }
 
     &--expanded {
@@ -405,9 +349,7 @@
     }
 
     &__empty {
-        @include themify() {
-            color: themed('textColorMuted');
-        }
+        color: var(--theme-text-secondary);
     }
 
     &__boolean {
@@ -433,9 +375,7 @@
     border-radius: 4px;
     transition: all 0.2s ease;
 
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 
     svg {
         transition: transform 0.2s ease;
@@ -446,27 +386,21 @@
     }
 
     &:hover {
-        @include themify() {
-            background-color: themed('hoverBackgroundColor');
-            color: themed('textColor');
-        }
+        background-color: var(--theme-hover-bg);
+            color: var(--theme-text-primary);
     }
 
     &:focus {
         outline: none;
 
-        @include themify() {
-            box-shadow: 0 0 0 2px themed('focusRing');
-        }
+        box-shadow: 0 0 0 2px var(--theme-focus-ring);
     }
 }
 
 .table-expanded-content {
     padding: 1rem;
 
-    @include themify() {
-        background-color: themed('backgroundColorAlt');
-    }
+    background-color: var(--theme-bg-secondary);
 }
 
 // Row Actions
@@ -490,15 +424,11 @@
         font-size: 0.875rem;
         transition: all 0.2s ease;
 
-        @include themify() {
-            color: themed('textColorMuted');
-        }
+        color: var(--theme-text-secondary);
 
         &:hover:not(:disabled) {
-            @include themify() {
-                background-color: themed('hoverBackgroundColor');
-                color: themed('textColor');
-            }
+            background-color: var(--theme-hover-bg);
+                color: var(--theme-text-primary);
         }
 
         &:disabled {
@@ -509,9 +439,7 @@
         &:focus {
             outline: none;
 
-            @include themify() {
-                box-shadow: 0 0 0 2px themed('focusRing');
-            }
+            box-shadow: 0 0 0 2px var(--theme-focus-ring);
         }
     }
 
@@ -530,17 +458,13 @@
     padding: 1rem;
     flex-wrap: wrap;
 
-    @include themify() {
-        background-color: themed('backgroundColor');
-        border-top: 1px solid themed('borderColor');
-    }
+    background-color: var(--theme-bg-primary);
+        border-top: 1px solid var(--theme-border-color);
 
     &__info {
         font-size: 0.875rem;
 
-        @include themify() {
-            color: themed('textColorMuted');
-        }
+        color: var(--theme-text-secondary);
     }
 
     &__controls {
@@ -559,17 +483,13 @@
         cursor: pointer;
         transition: all 0.2s ease;
 
-        @include themify() {
-            background-color: themed('backgroundColor');
-            color: themed('textColor');
-            border: 1px solid themed('borderColor');
-        }
+        background-color: var(--theme-bg-primary);
+            color: var(--theme-text-primary);
+            border: 1px solid var(--theme-border-color);
 
         &:hover:not(:disabled) {
-            @include themify() {
-                background-color: themed('hoverBackgroundColor');
-                border-color: themed('primaryColor');
-            }
+            background-color: var(--theme-hover-bg);
+                border-color: var(--theme-primary);
         }
 
         &:disabled {
@@ -578,19 +498,15 @@
         }
 
         &--active {
-            @include themify() {
-                background-color: themed('primaryColor');
-                color: themed('primaryTextColor');
-                border-color: themed('primaryColor');
-            }
+            background-color: var(--theme-primary);
+                color: var(--theme-text-on-primary);
+                border-color: var(--theme-primary);
         }
 
         &:focus {
             outline: none;
 
-            @include themify() {
-                box-shadow: 0 0 0 2px themed('focusRing');
-            }
+            box-shadow: 0 0 0 2px var(--theme-focus-ring);
         }
     }
 
@@ -601,9 +517,7 @@
         font-size: 0.875rem;
 
         label {
-            @include themify() {
-                color: themed('textColorMuted');
-            }
+            color: var(--theme-text-secondary);
         }
     }
 
@@ -613,19 +527,15 @@
         border-radius: 4px;
         cursor: pointer;
 
-        @include themify() {
-            background-color: themed('inputBackground');
-            color: themed('textColor');
-            border: 1px solid themed('borderColor');
-        }
+        background-color: var(--theme-input-bg);
+            color: var(--theme-text-primary);
+            border: 1px solid var(--theme-border-color);
 
         &:focus {
             outline: none;
 
-            @include themify() {
-                border-color: themed('primaryColor');
-                box-shadow: 0 0 0 2px themed('focusRing');
-            }
+            border-color: var(--theme-primary);
+                box-shadow: 0 0 0 2px var(--theme-focus-ring);
         }
     }
 }

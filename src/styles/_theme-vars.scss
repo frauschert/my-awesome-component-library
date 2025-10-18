@@ -1,0 +1,151 @@
+// CSS Custom Properties for Theming
+// Define theme variables that work everywhere, including Portals
+
+:root {
+    // Light theme (default)
+    --theme-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        sans-serif;
+
+    // Backgrounds
+    --theme-bg-primary: #ffffff;
+    --theme-bg-secondary: #f8f9fa;
+    --theme-bg-tertiary: #e9ecef;
+
+    // Text colors
+    --theme-text-primary: #408bbd;
+    --theme-text-secondary: #6c757d;
+    --theme-text-muted: #999999;
+    --theme-text-on-primary: #ffffff;
+
+    // Brand colors
+    --theme-primary: #408bbd;
+    --theme-primary-dark: #306a94;
+    --theme-primary-light: #61b0e7;
+
+    // Semantic colors
+    --theme-danger: #dc3545;
+    --theme-danger-bg: #f8d7da;
+    --theme-success: #28a745;
+    --theme-warning: #ffc107;
+    --theme-info: #17a2b8;
+
+    // Borders
+    --theme-border-color: #dee2e6;
+    --theme-border-radius: 0.375rem;
+
+    // Interactive states
+    --theme-hover-bg: #e9ecef;
+    --theme-selected-bg: #e7f3ff;
+    --theme-focus-ring: rgba(64, 139, 189, 0.25);
+
+    // Shadows
+    --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --theme-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --theme-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    // Input
+    --theme-input-bg: #ffffff;
+    --theme-input-border: #dee2e6;
+
+    // Card
+    --theme-card-bg: #ffffff;
+
+    // Tooltips
+    --theme-tooltip-bg: #333333;
+    --theme-tooltip-text: #ffffff;
+
+    // Badges
+    --theme-badge-default-bg: #e9ecef;
+    --theme-badge-default-text: #495057;
+    --theme-badge-default-border: #dee2e6;
+    --theme-badge-primary-bg: #408bbd;
+    --theme-badge-primary-text: #ffffff;
+    --theme-badge-primary-border: #408bbd;
+    --theme-badge-success-bg: #28a745;
+    --theme-badge-success-text: #ffffff;
+    --theme-badge-success-border: #28a745;
+    --theme-badge-warning-bg: #ffc107;
+    --theme-badge-warning-text: #212529;
+    --theme-badge-warning-border: #ffc107;
+    --theme-badge-danger-bg: #dc3545;
+    --theme-badge-danger-text: #ffffff;
+    --theme-badge-danger-border: #dc3545;
+    --theme-badge-info-bg: #17a2b8;
+    --theme-badge-info-text: #ffffff;
+    --theme-badge-info-border: #17a2b8;
+}
+
+// Dark theme
+.theme--dark {
+    // Backgrounds
+    --theme-bg-primary: #222222;
+    --theme-bg-secondary: #2a2a2a;
+    --theme-bg-tertiary: #333333;
+
+    // Text colors
+    --theme-text-primary: #dddddd;
+    --theme-text-secondary: #999999;
+    --theme-text-muted: #666666;
+    --theme-text-on-primary: #222222;
+
+    // Brand colors
+    --theme-primary: #61b0e7;
+    --theme-primary-dark: #408bbd;
+    --theme-primary-light: #82c4f0;
+
+    // Semantic colors
+    --theme-danger: #ff6b6b;
+    --theme-danger-bg: #4a2c2c;
+    --theme-success: #51cf66;
+    --theme-warning: #ffd43b;
+    --theme-info: #22b8cf;
+
+    // Borders
+    --theme-border-color: #444444;
+
+    // Interactive states
+    --theme-hover-bg: #333333;
+    --theme-selected-bg: #2a3f4f;
+    --theme-focus-ring: rgba(97, 176, 231, 0.25);
+
+    // Shadows
+    --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --theme-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --theme-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+
+    // Input
+    --theme-input-bg: #333333;
+    --theme-input-border: #444444;
+
+    // Card
+    --theme-card-bg: #2a2a2a;
+
+    // Tooltips
+    --theme-tooltip-bg: #f8f9fa;
+    --theme-tooltip-text: #222222;
+
+    // Badges
+    --theme-badge-default-bg: #495057;
+    --theme-badge-default-text: #f8f9fa;
+    --theme-badge-default-border: #6c757d;
+    --theme-badge-primary-bg: #61b0e7;
+    --theme-badge-primary-text: #222222;
+    --theme-badge-primary-border: #61b0e7;
+    --theme-badge-success-bg: #51cf66;
+    --theme-badge-success-text: #222222;
+    --theme-badge-success-border: #51cf66;
+    --theme-badge-warning-bg: #ffd43b;
+    --theme-badge-warning-text: #222222;
+    --theme-badge-warning-border: #ffd43b;
+    --theme-badge-danger-bg: #ff6b6b;
+    --theme-badge-danger-text: #ffffff;
+    --theme-badge-danger-border: #ff6b6b;
+    --theme-badge-info-bg: #22b8cf;
+    --theme-badge-info-text: #222222;
+    --theme-badge-info-border: #22b8cf;
+}
+
+// Helper mixin to use theme variables
+@mixin theme-var($property, $var-name) {
+    #{$property}: var(--theme-#{$var-name});
+}

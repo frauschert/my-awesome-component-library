@@ -1,5 +1,5 @@
 @import '../../styles/variables';
-@import '../../styles/themes';
+@import '../../styles/theme-vars';
 
 .checkbox-wrapper {
     display: inline-flex;
@@ -32,11 +32,8 @@
         z-index: 1;
 
         &:focus-visible + .checkbox__box {
-            outline: 2px solid;
+            outline: 2px solid var(--theme-focus-ring);
             outline-offset: 2px;
-            @include themify() {
-                outline-color: themed('focusRing');
-            }
         }
     }
 
@@ -49,11 +46,8 @@
         border-radius: 0.25rem;
         transition: all 0.15s ease;
         pointer-events: none;
-
-        @include themify() {
-            border-color: themed('borderColor');
-            background-color: themed('inputBackground');
-        }
+        border-color: var(--theme-border-color);
+        background-color: var(--theme-input-bg);
     }
 
     &__icon {
@@ -68,67 +62,50 @@
         user-select: none;
         font-size: inherit;
         line-height: 1.5;
-
-        @include themify() {
-            color: themed('textColor');
-        }
+        color: var(--theme-text-primary);
 
         &:hover {
-            @include themify() {
-                color: themed('primaryColor');
-            }
+            color: var(--theme-primary);
         }
     }
 
     &__required {
-        @include themify() {
-            color: themed('dangerColor');
-        }
+        color: var(--theme-danger);
         margin-left: 0.125rem;
     }
 
     // Checked state
     &--checked {
         .checkbox__box {
-            @include themify() {
-                background-color: themed('primaryColor');
-                border-color: themed('primaryColor');
-            }
+            background-color: var(--theme-primary);
+            border-color: var(--theme-primary);
         }
 
         .checkbox__icon {
             opacity: 1;
             transform: scale(1);
-            @include themify() {
-                color: themed('primaryTextColor');
-            }
+            color: var(--theme-text-on-primary);
         }
     }
 
     // Indeterminate state
     &--indeterminate {
         .checkbox__box {
-            @include themify() {
-                background-color: themed('primaryColor');
-                border-color: themed('primaryColor');
-            }
+            background-color: var(--theme-primary);
+            border-color: var(--theme-primary);
         }
 
         .checkbox__icon {
             opacity: 1;
             transform: scale(1);
-            @include themify() {
-                color: themed('primaryTextColor');
-            }
+            color: var(--theme-text-on-primary);
         }
     }
 
     // Hover state
     &:hover:not(&--disabled) {
         .checkbox__box {
-            @include themify() {
-                border-color: themed('primaryColor');
-            }
+            border-color: var(--theme-primary);
         }
     }
 
@@ -143,24 +120,18 @@
         }
 
         &:hover .checkbox__box {
-            @include themify() {
-                border-color: themed('borderColor');
-            }
+            border-color: var(--theme-border-color);
         }
     }
 
     // Error state
     &--error {
         .checkbox__box {
-            @include themify() {
-                border-color: themed('dangerColor');
-            }
+            border-color: var(--theme-danger);
         }
 
         &:hover:not(&--disabled) .checkbox__box {
-            @include themify() {
-                border-color: themed('dangerColor');
-            }
+            border-color: var(--theme-danger);
         }
     }
 }
@@ -212,15 +183,10 @@
 .checkbox-helper {
     font-size: 0.875rem;
     margin-left: 1.75rem;
-
-    @include themify() {
-        color: themed('textColorMuted');
-    }
+    color: var(--theme-text-secondary);
 
     &--error {
-        @include themify() {
-            color: themed('dangerColor');
-        }
+        color: var(--theme-danger);
     }
 }
 
