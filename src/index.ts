@@ -70,6 +70,12 @@ import type {
     RatingSize,
     RatingPrecision,
 } from './components/Rating'
+import DataGrid from './components/DataGrid'
+import type {
+    DataGridProps,
+    DataGridColumn,
+    DataGridColumnPinning,
+} from './components/DataGrid'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -154,6 +160,7 @@ export {
     Switch,
     Timeline,
     Rating,
+    DataGrid,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -254,4 +261,7 @@ export type {
     RatingProps,
     RatingSize,
     RatingPrecision,
+    DataGridProps,
+    DataGridColumn,
+    DataGridColumnPinning,
 }
