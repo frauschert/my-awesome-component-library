@@ -48,6 +48,8 @@ import DatePicker from './components/DatePicker'
 import type { DatePickerProps } from './components/DatePicker'
 import Divider from './components/Divider'
 import type { DividerProps } from './components/Divider'
+import ColorPicker from './components/ColorPicker'
+import type { ColorPickerProps } from './components/ColorPicker'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -126,6 +128,7 @@ export {
     RadioGroup,
     DatePicker,
     Divider,
+    ColorPicker,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -213,4 +216,5 @@ export type {
     RadioOption,
     DatePickerProps,
     DividerProps,
+    ColorPickerProps,
 }
