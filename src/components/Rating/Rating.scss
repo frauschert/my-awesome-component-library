@@ -1,0 +1,124 @@
+@import '../../styles/variables';
+
+.rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    --rating-color: #ffc107;
+}
+
+.rating__stars {
+    display: inline-flex;
+    gap: 0.25rem;
+}
+
+.rating__star {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-border-focus, #007bff);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+}
+
+.rating--interactive .rating__star:hover {
+    transform: scale(1.15);
+}
+
+.rating--interactive .rating__star:active {
+    transform: scale(1.05);
+}
+
+.rating--readonly .rating__star,
+.rating--disabled .rating__star {
+    cursor: default;
+}
+
+.rating--disabled .rating__star {
+    opacity: 0.5;
+}
+
+.rating__star-bg,
+.rating__star-fill {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.rating__star-bg {
+    color: var(--theme-bg-tertiary, #e0e0e0);
+}
+
+.rating__star-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--rating-color);
+}
+
+// Sizes
+.rating--small {
+    .rating__star {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .rating__value {
+        font-size: 0.875rem;
+    }
+}
+
+.rating--medium {
+    .rating__star {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    .rating__value {
+        font-size: 1rem;
+    }
+}
+
+.rating--large {
+    .rating__star {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .rating__value {
+        font-size: 1.25rem;
+    }
+}
+
+// Value display
+.rating__value {
+    font-weight: 600;
+    color: var(--theme-text-primary, #000);
+    min-width: 2ch;
+    text-align: left;
+}
+
+// Dark theme
+[data-theme='dark'] {
+    .rating__star-bg {
+        color: var(--theme-bg-tertiary, #404040);
+    }
+}
+
+// Animation for fill
+.rating__star-fill {
+    transition: opacity 0.2s ease;
+}
+
+.rating--interactive .rating__star:hover .rating__star-fill {
+    opacity: 0.9;
+}

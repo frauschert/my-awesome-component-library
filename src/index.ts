@@ -64,6 +64,12 @@ import type {
     TimelineVariant,
     TimelinePosition,
 } from './components/Timeline'
+import Rating from './components/Rating'
+import type {
+    RatingProps,
+    RatingSize,
+    RatingPrecision,
+} from './components/Rating'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -147,6 +153,7 @@ export {
     ProgressBar,
     Switch,
     Timeline,
+    Rating,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -244,4 +251,7 @@ export type {
     TimelineItemStatus,
     TimelineVariant,
     TimelinePosition,
+    RatingProps,
+    RatingSize,
+    RatingPrecision,
 }
