@@ -1,0 +1,186 @@
+@import '../../styles/variables';
+
+.stepper {
+    display: flex;
+
+    &--horizontal {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    &--vertical {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.stepper__step {
+    display: flex;
+    position: relative;
+    outline: none;
+    user-select: none;
+
+    .stepper--horizontal & {
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        text-align: center;
+    }
+
+    .stepper--vertical & {
+        flex-direction: row;
+        align-items: flex-start;
+        padding-bottom: 1.5rem;
+    }
+
+    &--clickable {
+        cursor: pointer;
+
+        &:hover .stepper__step-indicator {
+            transform: scale(1.1);
+        }
+
+        &:focus-visible .stepper__step-icon {
+            outline: 2px solid var(--theme-border-focus, #007bff);
+            outline-offset: 2px;
+        }
+    }
+
+    &--disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
+
+.stepper__step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+
+    .stepper--horizontal & {
+        margin-bottom: 0.5rem;
+    }
+
+    .stepper--vertical & {
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+}
+
+.stepper__step-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: 2px solid var(--theme-border-primary, #e0e0e0);
+    background-color: var(--theme-bg-primary, #ffffff);
+    color: var(--theme-text-secondary, #666666);
+
+    .stepper--compact & {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.75rem;
+    }
+
+    .stepper__step--completed & {
+        background-color: var(--theme-primary, #007bff);
+        border-color: var(--theme-primary, #007bff);
+        color: #ffffff;
+    }
+
+    .stepper__step--active & {
+        background-color: var(--theme-primary, #007bff);
+        border-color: var(--theme-primary, #007bff);
+        color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+    }
+
+    .stepper__step--pending & {
+        background-color: var(--theme-bg-secondary, #f5f5f5);
+        border-color: var(--theme-border-primary, #e0e0e0);
+        color: var(--theme-text-tertiary, #999999);
+    }
+}
+
+.stepper__step-content {
+    .stepper--vertical & {
+        flex: 1;
+        padding-top: 0.25rem;
+    }
+}
+
+.stepper__step-label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--theme-text-secondary, #666666);
+    margin-bottom: 0.25rem;
+
+    .stepper--compact & {
+        font-size: 0.8125rem;
+    }
+
+    .stepper__step--active & {
+        color: var(--theme-text-primary, #000000);
+        font-weight: 600;
+    }
+
+    .stepper__step--completed & {
+        color: var(--theme-text-primary, #000000);
+    }
+}
+
+.stepper__step-description {
+    font-size: 0.75rem;
+    color: var(--theme-text-tertiary, #999999);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+
+    .stepper--horizontal & {
+        max-width: 150px;
+    }
+}
+
+.stepper__connector {
+    flex: 1;
+    height: 2px;
+    background-color: var(--theme-border-primary, #e0e0e0);
+    transition: background-color 0.3s ease;
+
+    .stepper--horizontal & {
+        align-self: center;
+        margin: 0 0.5rem;
+        margin-top: calc(
+            1.25rem - 0.5rem
+        ); // Align with icon center minus half margin-bottom
+    }
+
+    .stepper--compact.stepper--horizontal & {
+        margin-top: calc(1rem - 0.5rem);
+    }
+
+    .stepper--vertical & {
+        width: 2px;
+        height: 100%;
+        position: absolute;
+        left: 1.25rem;
+        top: 2.5rem;
+        bottom: 0;
+        transform: translateX(-50%);
+    }
+
+    .stepper--compact.stepper--vertical & {
+        left: 1rem;
+        top: 2rem;
+    }
+
+    &--completed {
+        background-color: var(--theme-primary, #007bff);
+    }
+}
