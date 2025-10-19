@@ -52,6 +52,8 @@ import ColorPicker from './components/ColorPicker'
 import type { ColorPickerProps } from './components/ColorPicker'
 import Chip from './components/Chip'
 import type { ChipProps } from './components/Chip'
+import ProgressBar from './components/ProgressBar'
+import type { ProgressBarProps } from './components/ProgressBar'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -132,6 +134,7 @@ export {
     Divider,
     ColorPicker,
     Chip,
+    ProgressBar,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -221,4 +224,5 @@ export type {
     DividerProps,
     ColorPickerProps,
     ChipProps,
+    ProgressBarProps,
 }
