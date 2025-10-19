@@ -1,0 +1,68 @@
+@import '../../styles/theme-vars';
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    &__list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 0.5rem;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &--collapsed {
+            .breadcrumb__text {
+                cursor: default;
+            }
+        }
+
+        &--current {
+            .breadcrumb__text {
+                font-weight: 500;
+            }
+        }
+    }
+
+    &__link {
+        color: var(--theme-text-secondary);
+        text-decoration: none;
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: var(--theme-text-primary);
+            text-decoration: underline;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--theme-border-focus);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+    }
+
+    &__text {
+        color: var(--theme-text-secondary);
+
+        &--current {
+            color: var(--theme-text-primary);
+            font-weight: 500;
+        }
+    }
+
+    &__separator {
+        color: var(--theme-text-tertiary);
+        user-select: none;
+        font-size: 0.75rem;
+    }
+}
