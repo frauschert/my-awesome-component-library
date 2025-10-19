@@ -1,7 +1,6 @@
 import React, { useEffect, ReactNode, useRef } from 'react'
 import { useLatestRef } from '../../utility/hooks/useLatestRef'
 import './toast.css'
-import Button from '../Button'
 
 type ToastProps = {
     children: ReactNode
@@ -60,6 +59,7 @@ function Toast({
     }
 
     const role = variant === 'error' || variant === 'warn' ? 'alert' : 'status'
+
     return (
         <div
             className={`toast toast--${variant}`}
@@ -70,19 +70,28 @@ function Toast({
             onMouseLeave={resumeTimer}
             onFocus={pauseTimer}
             onBlur={resumeTimer}
-            onClick={removeRef.current}
         >
             <div className="toast__text">{children}</div>
-            <div>
-                <Button
-                    variant="circle"
-                    aria-label="Dismiss notification"
-                    title="Dismiss"
-                    onClick={removeRef.current}
+            <button
+                className="toast__close-btn"
+                aria-label="Dismiss notification"
+                title="Dismiss"
+                onClick={(e) => {
+                    e.stopPropagation()
+                    removeRef.current()
+                }}
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
                 >
-                    ×
-                </Button>
-            </div>
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
         </div>
     )
 }
