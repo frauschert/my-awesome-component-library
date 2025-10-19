@@ -56,6 +56,14 @@ import ProgressBar from './components/ProgressBar'
 import type { ProgressBarProps } from './components/ProgressBar'
 import Switch from './components/Switch'
 import type { SwitchProps, SwitchSize } from './components/Switch'
+import Timeline from './components/Timeline'
+import type {
+    TimelineProps,
+    TimelineItemProps,
+    TimelineItemStatus,
+    TimelineVariant,
+    TimelinePosition,
+} from './components/Timeline'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -138,6 +146,7 @@ export {
     Chip,
     ProgressBar,
     Switch,
+    Timeline,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -230,4 +239,9 @@ export type {
     ProgressBarProps,
     SwitchProps,
     SwitchSize,
+    TimelineProps,
+    TimelineItemProps,
+    TimelineItemStatus,
+    TimelineVariant,
+    TimelinePosition,
 }
