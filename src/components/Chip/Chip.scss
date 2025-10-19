@@ -1,0 +1,398 @@
+@import '../../styles/variables';
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25;
+    transition: all 0.2s ease;
+    max-width: 100%;
+    border: 1px solid transparent;
+    user-select: none;
+    white-space: nowrap;
+}
+
+// Sizes
+.chip--small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+    border-radius: 12px;
+
+    .chip__icon,
+    .chip__avatar {
+        width: 1rem;
+        height: 1rem;
+        font-size: 0.625rem;
+    }
+
+    .chip__dismiss svg {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+.chip--large {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    gap: 0.5rem;
+    border-radius: 20px;
+
+    .chip__icon,
+    .chip__avatar {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.875rem;
+    }
+
+    .chip__dismiss svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+// Icon and Avatar
+.chip__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.chip__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--theme-bg-tertiary, #e0e0e0);
+    color: var(--theme-text-primary, #000000);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: -0.25rem;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.chip--small .chip__avatar {
+    margin-left: -0.125rem;
+}
+
+.chip--large .chip__avatar {
+    margin-left: -0.375rem;
+}
+
+// Label
+.chip__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Dismiss button
+.chip__dismiss {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    margin-right: -0.25rem;
+    cursor: pointer;
+    color: currentColor;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+        border-radius: 2px;
+        opacity: 1;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
+}
+
+// Filled variant colors
+.chip--filled {
+    &.chip--default {
+        background-color: var(--theme-bg-tertiary, #e0e0e0);
+        color: var(--theme-text-primary, #000000);
+    }
+
+    &.chip--primary {
+        background-color: var(--theme-primary, #007bff);
+        color: #ffffff;
+    }
+
+    &.chip--secondary {
+        background-color: var(--theme-secondary, #6c757d);
+        color: #ffffff;
+    }
+
+    &.chip--success {
+        background-color: var(--theme-success, #28a745);
+        color: #ffffff;
+    }
+
+    &.chip--warning {
+        background-color: var(--theme-warning, #ffc107);
+        color: #000000;
+    }
+
+    &.chip--danger {
+        background-color: var(--theme-danger, #dc3545);
+        color: #ffffff;
+    }
+
+    &.chip--info {
+        background-color: var(--theme-info, #17a2b8);
+        color: #ffffff;
+    }
+}
+
+// Outlined variant colors
+.chip--outlined {
+    background-color: transparent;
+    border-color: currentColor;
+
+    &.chip--default {
+        color: var(--theme-text-primary, #000000);
+        border-color: var(--theme-border-primary, #d0d0d0);
+    }
+
+    &.chip--primary {
+        color: var(--theme-primary, #007bff);
+    }
+
+    &.chip--secondary {
+        color: var(--theme-secondary, #6c757d);
+    }
+
+    &.chip--success {
+        color: var(--theme-success, #28a745);
+    }
+
+    &.chip--warning {
+        color: var(--theme-warning, #ffc107);
+    }
+
+    &.chip--danger {
+        color: var(--theme-danger, #dc3545);
+    }
+
+    &.chip--info {
+        color: var(--theme-info, #17a2b8);
+    }
+}
+
+// Light variant colors
+.chip--light {
+    &.chip--default {
+        background-color: var(--theme-bg-secondary, #f5f5f5);
+        color: var(--theme-text-primary, #000000);
+    }
+
+    &.chip--primary {
+        background-color: rgba(0, 123, 255, 0.1);
+        color: var(--theme-primary, #007bff);
+    }
+
+    &.chip--secondary {
+        background-color: rgba(108, 117, 125, 0.1);
+        color: var(--theme-secondary, #6c757d);
+    }
+
+    &.chip--success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: var(--theme-success, #28a745);
+    }
+
+    &.chip--warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: var(--theme-warning-dark, #d39e00);
+    }
+
+    &.chip--danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: var(--theme-danger, #dc3545);
+    }
+
+    &.chip--info {
+        background-color: rgba(23, 162, 184, 0.1);
+        color: var(--theme-info, #17a2b8);
+    }
+}
+
+// Clickable state
+.chip--clickable {
+    cursor: pointer;
+
+    &:hover:not(.chip--disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active:not(.chip--disabled) {
+        transform: translateY(0);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-border-focus, #007bff);
+        outline-offset: 2px;
+    }
+
+    &.chip--filled:hover:not(.chip--disabled) {
+        filter: brightness(1.1);
+    }
+
+    &.chip--outlined:hover:not(.chip--disabled) {
+        &.chip--default {
+            background-color: var(--theme-bg-tertiary, #e0e0e0);
+        }
+
+        &.chip--primary {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        &.chip--secondary {
+            background-color: rgba(108, 117, 125, 0.1);
+        }
+
+        &.chip--success {
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+
+        &.chip--warning {
+            background-color: rgba(255, 193, 7, 0.15);
+        }
+
+        &.chip--danger {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        &.chip--info {
+            background-color: rgba(23, 162, 184, 0.1);
+        }
+    }
+
+    &.chip--light:hover:not(.chip--disabled) {
+        &.chip--default {
+            background-color: var(--theme-bg-tertiary, #e0e0e0);
+        }
+
+        &.chip--primary {
+            background-color: rgba(0, 123, 255, 0.2);
+        }
+
+        &.chip--secondary {
+            background-color: rgba(108, 117, 125, 0.2);
+        }
+
+        &.chip--success {
+            background-color: rgba(40, 167, 69, 0.2);
+        }
+
+        &.chip--warning {
+            background-color: rgba(255, 193, 7, 0.3);
+        }
+
+        &.chip--danger {
+            background-color: rgba(220, 53, 69, 0.2);
+        }
+
+        &.chip--info {
+            background-color: rgba(23, 162, 184, 0.2);
+        }
+    }
+}
+
+// Selected state
+.chip--selected {
+    &.chip--outlined {
+        background-color: currentColor;
+        color: #ffffff;
+
+        &.chip--default {
+            background-color: var(--theme-text-primary, #000000);
+            color: #ffffff;
+            border-color: var(--theme-text-primary, #000000);
+        }
+
+        &.chip--warning {
+            color: #000000;
+        }
+    }
+
+    &.chip--light {
+        &.chip--default {
+            background-color: var(--theme-text-primary, #000000);
+            color: #ffffff;
+        }
+
+        &.chip--primary {
+            background-color: var(--theme-primary, #007bff);
+            color: #ffffff;
+        }
+
+        &.chip--secondary {
+            background-color: var(--theme-secondary, #6c757d);
+            color: #ffffff;
+        }
+
+        &.chip--success {
+            background-color: var(--theme-success, #28a745);
+            color: #ffffff;
+        }
+
+        &.chip--warning {
+            background-color: var(--theme-warning, #ffc107);
+            color: #000000;
+        }
+
+        &.chip--danger {
+            background-color: var(--theme-danger, #dc3545);
+            color: #ffffff;
+        }
+
+        &.chip--info {
+            background-color: var(--theme-info, #17a2b8);
+            color: #ffffff;
+        }
+    }
+}
+
+// Disabled state
+.chip--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}

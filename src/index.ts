@@ -50,6 +50,8 @@ import Divider from './components/Divider'
 import type { DividerProps } from './components/Divider'
 import ColorPicker from './components/ColorPicker'
 import type { ColorPickerProps } from './components/ColorPicker'
+import Chip from './components/Chip'
+import type { ChipProps } from './components/Chip'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -129,6 +131,7 @@ export {
     DatePicker,
     Divider,
     ColorPicker,
+    Chip,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -217,4 +220,5 @@ export type {
     DatePickerProps,
     DividerProps,
     ColorPickerProps,
+    ChipProps,
 }
