@@ -38,6 +38,8 @@ import Checkbox from './components/Checkbox'
 import type { CheckboxProps, CheckboxSize } from './components/Checkbox'
 import Breadcrumb from './components/Breadcrumb'
 import type { BreadcrumbProps, BreadcrumbItem } from './components/Breadcrumb'
+import Drawer from './components/Drawer'
+import type { DrawerProps } from './components/Drawer'
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
@@ -111,6 +113,7 @@ export {
     Tooltip,
     Checkbox,
     Breadcrumb,
+    Drawer,
     ContextMenuProvider,
     RangeInput,
     SpinCoin,
@@ -191,4 +194,5 @@ export type {
     CheckboxSize,
     BreadcrumbProps,
     BreadcrumbItem,
+    DrawerProps,
 }
