@@ -11,7 +11,7 @@ import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
 
-// Wrapper component to sync Storybook global theme with context AND apply to document
+// Wrapper component to sync Storybook global theme with context
 function ThemeSync({
     theme,
     children,
@@ -19,11 +19,10 @@ function ThemeSync({
     theme: ThemeKey
     children: React.ReactNode
 }) {
-    const [, setTheme] = useTheme((s) => s.theme)
+    const [, setTheme] = useTheme()
 
+    // Sync Storybook global to context on mount and when theme changes
     useEffect(() => {
-        console.log('ThemeSync: Setting theme to', theme)
-        // Update context
         setTheme({ theme })
     }, [theme, setTheme])
 
@@ -53,6 +52,15 @@ const preview: Preview = {
     decorators: [
         (Story, context) => {
             const theme = context.globals.theme as ThemeKey
+
+            // Apply theme immediately to document (before React renders)
+            useEffect(() => {
+                document.documentElement.classList.remove(
+                    'theme--light',
+                    'theme--dark'
+                )
+                document.documentElement.classList.add(`theme--${theme}`)
+            }, [theme])
 
             return (
                 <ThemeProvider>
