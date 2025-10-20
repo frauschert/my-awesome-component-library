@@ -180,6 +180,8 @@ function DataGrid<T extends Record<string, unknown>>({
         direction: 'asc' | 'desc'
     } | null>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+    const headerRef = useRef<HTMLDivElement>(null)
+    const bodyRef = useRef<HTMLDivElement>(null)
     const resizeStartX = useRef<number>(0)
     const resizeStartWidth = useRef<number>(0)
 
@@ -307,9 +309,30 @@ function DataGrid<T extends Record<string, unknown>>({
         }
     }, [resizingColumn, handleResizeMove, handleResizeEnd])
 
+    // Sync scrollbar width to header padding
+    React.useEffect(() => {
+        const updateScrollbarWidth = () => {
+            if (bodyRef.current && headerRef.current) {
+                const scrollbarWidth =
+                    bodyRef.current.offsetWidth - bodyRef.current.clientWidth
+                headerRef.current.style.paddingRight = `${scrollbarWidth}px`
+            }
+        }
+
+        updateScrollbarWidth()
+        // Update on window resize and data changes
+        window.addEventListener('resize', updateScrollbarWidth)
+        return () => window.removeEventListener('resize', updateScrollbarWidth)
+    }, [sortedData.length, height])
+
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const target = e.currentTarget
         if (virtualScroll) {
-            setScrollTop(e.currentTarget.scrollTop)
+            setScrollTop(target.scrollTop)
+        }
+        // Sync header horizontal scroll
+        if (headerRef.current) {
+            headerRef.current.scrollLeft = target.scrollLeft
         }
     }
 
@@ -435,6 +458,7 @@ function DataGrid<T extends Record<string, unknown>>({
         >
             {/* Header */}
             <div
+                ref={headerRef}
                 className={classNames('datagrid__header', {
                     'datagrid__header--sticky': stickyHeader,
                 })}
@@ -457,7 +481,11 @@ function DataGrid<T extends Record<string, unknown>>({
             </div>
 
             {/* Body */}
-            <div className="datagrid__body" onScroll={handleScroll}>
+            <div
+                ref={bodyRef}
+                className="datagrid__body"
+                onScroll={handleScroll}
+            >
                 {loading ? (
                     <div className="datagrid__loading">Loading...</div>
                 ) : sortedData.length === 0 ? (
