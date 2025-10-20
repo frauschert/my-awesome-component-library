@@ -79,6 +79,12 @@ import type {
 import { ContextMenuProvider } from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
+import Popover from './components/Popover'
+import type {
+    PopoverProps,
+    PopoverPlacement,
+    PopoverTrigger,
+} from './components/Popover'
 import {
     SpinCoin,
     Ellipsis,
@@ -163,6 +169,7 @@ export {
     DataGrid,
     ContextMenuProvider,
     RangeInput,
+    Popover,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -199,6 +206,9 @@ export type {
     ReadOnlyAtom,
     WritableAtom,
     RangeInputProps,
+    PopoverProps,
+    PopoverPlacement,
+    PopoverTrigger,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,

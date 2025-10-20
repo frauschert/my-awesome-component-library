@@ -1,0 +1,148 @@
+@import '../../styles/variables';
+
+.popover {
+    background: var(--theme-bg-primary, #ffffff);
+    border: 1px solid var(--theme-border-color, #e5e5e5);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    pointer-events: none;
+    max-width: 400px;
+    min-width: 120px;
+
+    &--visible {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+    }
+}
+
+.popover__trigger {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.popover__content {
+    padding: 12px 16px;
+    color: var(--theme-text-primary, #333333);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.popover__arrow {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--theme-bg-primary, #ffffff);
+    border: 1px solid var(--theme-border-color, #e5e5e5);
+    transform: rotate(45deg);
+    z-index: -1;
+
+    // Top placements
+    &--top,
+    &--top-start,
+    &--top-end {
+        bottom: -7px;
+        border-top: none;
+        border-left: none;
+    }
+
+    &--top {
+        left: 50%;
+        margin-left: -6px;
+    }
+
+    &--top-start {
+        left: 16px;
+    }
+
+    &--top-end {
+        right: 16px;
+    }
+
+    // Bottom placements
+    &--bottom,
+    &--bottom-start,
+    &--bottom-end {
+        top: -7px;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    &--bottom {
+        left: 50%;
+        margin-left: -6px;
+    }
+
+    &--bottom-start {
+        left: 16px;
+    }
+
+    &--bottom-end {
+        right: 16px;
+    }
+
+    // Left placements
+    &--left,
+    &--left-start,
+    &--left-end {
+        right: -7px;
+        border-left: none;
+        border-bottom: none;
+    }
+
+    &--left {
+        top: 50%;
+        margin-top: -6px;
+    }
+
+    &--left-start {
+        top: 12px;
+    }
+
+    &--left-end {
+        bottom: 12px;
+    }
+
+    // Right placements
+    &--right,
+    &--right-start,
+    &--right-end {
+        left: -7px;
+        border-right: none;
+        border-top: none;
+    }
+
+    &--right {
+        top: 50%;
+        margin-top: -6px;
+    }
+
+    &--right-start {
+        top: 12px;
+    }
+
+    &--right-end {
+        bottom: 12px;
+    }
+}
+
+// Dark theme
+[data-theme='dark'] {
+    .popover {
+        background: var(--theme-bg-primary, #1a1a1a);
+        border-color: var(--theme-border-color, #2d2d2d);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .popover__content {
+        color: var(--theme-text-primary, #e0e0e0);
+    }
+
+    .popover__arrow {
+        background: var(--theme-bg-primary, #1a1a1a);
+        border-color: var(--theme-border-color, #2d2d2d);
+    }
+}
