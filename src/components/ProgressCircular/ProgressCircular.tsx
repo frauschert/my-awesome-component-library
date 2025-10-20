@@ -1,7 +1,7 @@
 import React from 'react'
 import './progressCircular.css'
 
-type ProgressCircularProps = {
+export type ProgressCircularProps = {
     size?: number
     progress?: number
     trackWidth?: number

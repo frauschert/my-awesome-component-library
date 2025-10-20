@@ -8,7 +8,7 @@ import React, {
 import Portal from '../Portal'
 import './modal.scss'
 
-type ModalBaseProps = PropsWithChildren<{
+export type ModalProps = PropsWithChildren<{
     open: boolean
     onClose?: () => void
     title?: React.ReactNode
@@ -27,6 +27,8 @@ type ModalBaseProps = PropsWithChildren<{
     contentClassName?: string
     overlayClassName?: string
 }>
+
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl'
 
 function getFocusable(container: HTMLElement): HTMLElement[] {
     const focusableSelectors = [
@@ -63,7 +65,7 @@ const Modal = ({
     contentClassName,
     overlayClassName,
     children,
-}: ModalBaseProps) => {
+}: ModalProps) => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const contentRef = useRef<HTMLDivElement | null>(null)
     const previouslyFocused = useRef<HTMLElement | null>(null)
