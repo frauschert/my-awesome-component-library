@@ -75,74 +75,74 @@
     --theme-badge-info-border: #17a2b8;
 }
 
-// Dark theme
+// Dark theme - Improved color palette inspired by modern editors
 .theme--dark {
-    // Backgrounds
-    --theme-bg-primary: #222222;
-    --theme-bg-secondary: #2a2a2a;
-    --theme-bg-tertiary: #333333;
+    // Backgrounds - Richer, deeper tones with better separation
+    --theme-bg-primary: #1e1e1e; // Main background (VS Code-like)
+    --theme-bg-secondary: #252526; // Slightly elevated
+    --theme-bg-tertiary: #2d2d30; // More elevated surfaces
 
-    // Text colors
-    --theme-text-primary: #dddddd;
-    --theme-text-secondary: #999999;
-    --theme-text-muted: #666666;
-    --theme-text-on-primary: #222222;
+    // Text colors - Better contrast and readability
+    --theme-text-primary: #e0e0e0; // High contrast for primary text
+    --theme-text-secondary: #a8a8a8; // Medium contrast for secondary
+    --theme-text-muted: #6e6e6e; // Subtle for muted text
+    --theme-text-on-primary: #ffffff; // White on primary colors
 
-    // Brand colors
-    --theme-primary: #61b0e7;
-    --theme-primary-dark: #408bbd;
-    --theme-primary-light: #82c4f0;
+    // Brand colors - More vibrant and modern
+    --theme-primary: #569cd6; // Brighter blue, better visibility
+    --theme-primary-dark: #4080b8; // Darker variant
+    --theme-primary-light: #7ab8e8; // Lighter variant
 
-    // Semantic colors
-    --theme-danger: #ff6b6b;
-    --theme-danger-bg: #4a2c2c;
-    --theme-success: #51cf66;
-    --theme-warning: #ffd43b;
-    --theme-info: #22b8cf;
+    // Semantic colors - Vibrant but not harsh on the eyes
+    --theme-danger: #f48771; // Softer red, less aggressive
+    --theme-danger-bg: #3a2a2a; // Subtle danger background
+    --theme-success: #4ec9b0; // Teal-green, modern and pleasant
+    --theme-warning: #dcdcaa; // Softer yellow, better contrast
+    --theme-info: #4fc1ff; // Bright cyan-blue
 
-    // Borders
-    --theme-border-color: #444444;
+    // Borders - Subtle but visible
+    --theme-border-color: #3e3e42; // More visible than pure gray
 
-    // Interactive states
-    --theme-hover-bg: #333333;
-    --theme-selected-bg: #2a3f4f;
-    --theme-focus-ring: rgba(97, 176, 231, 0.25);
+    // Interactive states - Clear visual feedback
+    --theme-hover-bg: #2a2d2e; // Subtle hover state
+    --theme-selected-bg: #264f78; // Blue-tinted selection
+    --theme-focus-ring: rgba(86, 156, 214, 0.4); // More visible focus
 
-    // Shadows
-    --theme-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-    --theme-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --theme-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+    // Shadows - Enhanced for dark mode
+    --theme-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --theme-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
+    --theme-shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.7);
 
-    // Input
-    --theme-input-bg: #333333;
-    --theme-input-border: #444444;
+    // Input - Better contrast
+    --theme-input-bg: #2d2d30;
+    --theme-input-border: #3e3e42;
 
-    // Card
-    --theme-card-bg: #2a2a2a;
+    // Card - Slightly elevated from primary
+    --theme-card-bg: #252526;
 
-    // Tooltips
-    --theme-tooltip-bg: #f8f9fa;
-    --theme-tooltip-text: #222222;
+    // Tooltips - Inverted for dark theme
+    --theme-tooltip-bg: #f0f0f0;
+    --theme-tooltip-text: #1e1e1e;
 
-    // Badges
-    --theme-badge-default-bg: #495057;
-    --theme-badge-default-text: #f8f9fa;
-    --theme-badge-default-border: #6c757d;
-    --theme-badge-primary-bg: #61b0e7;
-    --theme-badge-primary-text: #222222;
-    --theme-badge-primary-border: #61b0e7;
-    --theme-badge-success-bg: #51cf66;
-    --theme-badge-success-text: #222222;
-    --theme-badge-success-border: #51cf66;
-    --theme-badge-warning-bg: #ffd43b;
-    --theme-badge-warning-text: #222222;
-    --theme-badge-warning-border: #ffd43b;
-    --theme-badge-danger-bg: #ff6b6b;
+    // Badges - Refined colors with better contrast
+    --theme-badge-default-bg: #3e3e42;
+    --theme-badge-default-text: #cccccc;
+    --theme-badge-default-border: #4e4e52;
+    --theme-badge-primary-bg: #0e639c;
+    --theme-badge-primary-text: #ffffff;
+    --theme-badge-primary-border: #1177bb;
+    --theme-badge-success-bg: #0e6a5c;
+    --theme-badge-success-text: #ffffff;
+    --theme-badge-success-border: #12897a;
+    --theme-badge-warning-bg: #5a5a2e;
+    --theme-badge-warning-text: #ffffff;
+    --theme-badge-warning-border: #6d6d3a;
+    --theme-badge-danger-bg: #93342a;
     --theme-badge-danger-text: #ffffff;
-    --theme-badge-danger-border: #ff6b6b;
-    --theme-badge-info-bg: #22b8cf;
-    --theme-badge-info-text: #222222;
-    --theme-badge-info-border: #22b8cf;
+    --theme-badge-danger-border: #a8423a;
+    --theme-badge-info-bg: #1e5c7a;
+    --theme-badge-info-text: #ffffff;
+    --theme-badge-info-border: #267a9c;
 }
 
 // Helper mixin to use theme variables

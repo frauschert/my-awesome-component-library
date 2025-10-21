@@ -88,7 +88,7 @@
 }
 
 .command-palette__item--active {
-    background: var(--theme-bg-highlight, #f0faff);
+    background: var(--theme-hover-bg, #f0faff);
 }
 
 .command-palette__item-icon {
