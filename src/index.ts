@@ -115,6 +115,11 @@ import type {
 } from './components/DropdownMenu'
 import ProgressCircular from './components/ProgressCircular'
 import type { ProgressCircularProps } from './components/ProgressCircular'
+import CommandPalette from './components/CommandPalette'
+import type {
+    CommandItem,
+    CommandPaletteProps,
+} from './components/CommandPalette'
 import {
     SpinCoin,
     Ellipsis,
@@ -213,6 +218,7 @@ export {
     SkeletonImage,
     DropdownMenu,
     ProgressCircular,
+    CommandPalette,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -268,6 +274,8 @@ export type {
     DropdownMenuProps,
     DropdownMenuItem,
     ProgressCircularProps,
+    CommandItem,
+    CommandPaletteProps,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
