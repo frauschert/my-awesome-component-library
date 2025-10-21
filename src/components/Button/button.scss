@@ -1,10 +1,10 @@
-@use '../../styles/_colors.scss' as *;
+@import '../../styles/theme-vars';
 
 .button {
-    font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: var(--theme-font-family);
     font-weight: 700;
     border: 0;
-    border-radius: 3em;
+    border-radius: var(--theme-border-radius);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -25,18 +25,18 @@
     }
 
     &:focus-visible {
-        outline: 2px solid #7ab8ff;
+        outline: 2px solid var(--theme-primary-light);
         outline-offset: 2px;
     }
 }
 
 .button--primary {
-    color: white;
-    background-color: #1ea7fd;
-    box-shadow: rgba(30, 167, 253, 0.3) 0 2px 6px;
+    color: var(--theme-text-on-primary);
+    background-color: var(--theme-primary);
+    box-shadow: var(--theme-shadow-md);
 
     &:hover:not(:disabled) {
-        background-color: #1593e1;
+        background-color: var(--theme-primary-dark);
     }
     &:active:not(:disabled) {
         transform: translateY(1px);
@@ -44,12 +44,12 @@
 }
 
 .button--secondary {
-    color: #333;
+    color: var(--theme-text-primary);
     background-color: transparent;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+    box-shadow: var(--theme-border-color) 0px 0px 0px 1px inset;
 
     &:hover:not(:disabled) {
-        background-color: rgba(0, 0, 0, 0.04);
+        background-color: var(--theme-hover-bg);
     }
     &:active:not(:disabled) {
         transform: translateY(1px);
@@ -57,22 +57,22 @@
 }
 
 .button--danger {
-    color: white;
-    background-color: #ef4444;
-    box-shadow: rgba(239, 68, 68, 0.3) 0 2px 6px;
+    color: var(--theme-text-on-primary);
+    background-color: var(--theme-danger);
+    box-shadow: var(--theme-shadow-md);
     &:hover:not(:disabled) {
-        background-color: #dc2626;
+        filter: brightness(0.9);
     }
 }
 
 .button--link {
-    color: #1ea7fd;
+    color: var(--theme-primary);
     background-color: transparent;
     text-decoration: underline;
     padding: 0;
     border-radius: 0;
     &:hover:not(:disabled) {
-        color: #1593e1;
+        color: var(--theme-primary-dark);
     }
 }
 
@@ -89,10 +89,10 @@
     box-sizing: border-box;
     background: transparent;
     color: inherit;
-    box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px inset;
+    box-shadow: var(--theme-border-color) 0 0 0 1px inset;
 }
 .button--circle:hover:not(:disabled) {
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--theme-hover-bg);
 }
 .button--circle:active:not(:disabled) {
     transform: translateY(1px);
