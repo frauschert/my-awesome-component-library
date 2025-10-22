@@ -131,6 +131,15 @@ import type {
 } from './components/NavBar'
 import Kanban from './components/Kanban'
 import type { KanbanProps, KanbanColumn, KanbanCard } from './components/Kanban'
+import ButtonGroup from './components/ButtonGroup'
+import type {
+    ButtonGroupProps,
+    ButtonGroupButton,
+    ButtonGroupSize,
+    ButtonGroupVariant,
+    ButtonGroupOrientation,
+    ButtonGroupSelectionMode,
+} from './components/ButtonGroup'
 import {
     SpinCoin,
     Ellipsis,
@@ -233,6 +242,7 @@ export {
     CommandPalette,
     NavBar,
     Kanban,
+    ButtonGroup,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -297,6 +307,12 @@ export type {
     KanbanProps,
     KanbanColumn,
     KanbanCard,
+    ButtonGroupProps,
+    ButtonGroupButton,
+    ButtonGroupSize,
+    ButtonGroupVariant,
+    ButtonGroupOrientation,
+    ButtonGroupSelectionMode,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
