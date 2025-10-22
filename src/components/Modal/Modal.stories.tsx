@@ -2,6 +2,7 @@ import React from 'react'
 import { StoryObj, Meta } from '@storybook/react-vite'
 import { userEvent, within, expect } from 'storybook/test'
 import Modal from './Modal'
+import Button from '../Button'
 
 const meta: Meta<typeof Modal> = {
     title: 'Components/Modal',
@@ -32,10 +33,10 @@ export const Basic: Story = {
                         title="Example modal"
                         footer={
                             <>
-                                <button onClick={() => setOpen(false)}>
+                                <Button onClick={() => setOpen(false)}>
                                     Close
-                                </button>
-                                <button>Confirm</button>
+                                </Button>
+                                <Button>Confirm</Button>
                             </>
                         }
                     >
@@ -82,16 +83,16 @@ export const Themed: Story = {
             const [open, setOpen] = React.useState(true)
             return (
                 <div className="theme--dark" style={{ padding: 16 }}>
-                    <button onClick={() => setOpen(true)}>Open modal</button>
+                    <Button onClick={() => setOpen(true)}>Open modal</Button>
                     <Modal
                         {...args}
                         open={open}
                         onClose={() => setOpen(false)}
                         title="Dark themed modal"
                         footer={
-                            <button onClick={() => setOpen(false)}>
+                            <Button onClick={() => setOpen(false)}>
                                 Close
-                            </button>
+                            </Button>
                         }
                     >
                         This modal uses the dark theme hook.

@@ -6,6 +6,7 @@ import React, {
     useRef,
 } from 'react'
 import Portal from '../Portal'
+import Button from '../Button'
 import './modal.scss'
 
 export type ModalProps = PropsWithChildren<{
@@ -203,15 +204,16 @@ const Modal = ({
                                 {title}
                             </h2>
                             {onClose && (
-                                <button
+                                <Button
                                     type="button"
                                     className="modal__close"
+                                    variant="circle"
                                     aria-label="Close"
                                     onClick={onClose}
                                     data-testid="modal-close"
                                 >
                                     ×
-                                </button>
+                                </Button>
                             )}
                         </div>
                     ) : null}
