@@ -1,0 +1,285 @@
+@import '../../styles/theme-vars';
+
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--theme-border-radius);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    position: relative;
+    animation: alertSlideIn 0.2s ease-out;
+
+    // Icon container
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+
+        svg {
+            display: block;
+        }
+    }
+
+    // Content area
+    &__content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        line-height: 1.4;
+    }
+
+    &__message {
+        line-height: 1.5;
+
+        p {
+            margin: 0;
+
+            & + p {
+                margin-top: 0.5rem;
+            }
+        }
+
+        a {
+            text-decoration: underline;
+            font-weight: 500;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    // Close button
+    &__close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        padding: 0.25rem;
+        margin: -0.25rem -0.25rem -0.25rem 0;
+        cursor: pointer;
+        border-radius: 4px;
+        color: currentColor;
+        opacity: 0.6;
+        transition: opacity 0.15s ease, background-color 0.15s ease;
+
+        &:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+            opacity: 1;
+        }
+    }
+
+    // Sizes
+    &--sm {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
+        gap: 0.5rem;
+
+        .alert__icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .alert__close svg {
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    &--md {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        gap: 0.75rem;
+
+        .alert__icon svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &--lg {
+        padding: 1rem 1.25rem;
+        font-size: 0.9375rem;
+        gap: 1rem;
+
+        .alert__icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .alert__title {
+            font-size: 1rem;
+        }
+    }
+
+    // Variants - Info
+    &--info {
+        background-color: var(--theme-info-bg, #e3f2fd);
+        color: var(--theme-info-text, #0d47a1);
+        border: 1px solid transparent;
+
+        &.alert--bordered {
+            border-color: var(--theme-info, #2196f3);
+        }
+
+        &.alert--filled {
+            background-color: var(--theme-info, #2196f3);
+            color: white;
+        }
+    }
+
+    // Variants - Success
+    &--success {
+        background-color: var(--theme-success-bg, #e8f5e9);
+        color: var(--theme-success-text, #1b5e20);
+        border: 1px solid transparent;
+
+        &.alert--bordered {
+            border-color: var(--theme-success, #4caf50);
+        }
+
+        &.alert--filled {
+            background-color: var(--theme-success, #4caf50);
+            color: white;
+        }
+    }
+
+    // Variants - Warning
+    &--warning {
+        background-color: var(--theme-warning-bg, #fff8e1);
+        color: var(--theme-warning-text, #f57c00);
+        border: 1px solid transparent;
+
+        &.alert--bordered {
+            border-color: var(--theme-warning, #ff9800);
+        }
+
+        &.alert--filled {
+            background-color: var(--theme-warning, #ff9800);
+            color: white;
+        }
+    }
+
+    // Variants - Error
+    &--error {
+        background-color: var(--theme-danger-bg, #ffebee);
+        color: var(--theme-danger-text, #c62828);
+        border: 1px solid transparent;
+
+        &.alert--bordered {
+            border-color: var(--theme-danger, #f44336);
+        }
+
+        &.alert--filled {
+            background-color: var(--theme-danger, #f44336);
+            color: white;
+        }
+    }
+
+    // With title spacing
+    &--with-title {
+        .alert__icon {
+            margin-top: 0.25rem;
+        }
+    }
+}
+
+// Animation
+@keyframes alertSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Dark theme adjustments
+[data-theme='dark'] {
+    .alert {
+        &--info {
+            background-color: rgba(33, 150, 243, 0.15);
+            color: #64b5f6;
+
+            &.alert--bordered {
+                border-color: #42a5f5;
+            }
+
+            &.alert--filled {
+                background-color: #1976d2;
+                color: white;
+            }
+        }
+
+        &--success {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: #81c784;
+
+            &.alert--bordered {
+                border-color: #66bb6a;
+            }
+
+            &.alert--filled {
+                background-color: var(--theme-success, #4caf50);
+                color: white;
+            }
+        }
+
+        &--warning {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: #ffb74d;
+
+            &.alert--bordered {
+                border-color: #ffa726;
+            }
+
+            &.alert--filled {
+                background-color: #f57c00;
+                color: white;
+            }
+        }
+
+        &--error {
+            background-color: rgba(244, 67, 54, 0.15);
+            color: #e57373;
+
+            &.alert--bordered {
+                border-color: #ef5350;
+            }
+
+            &.alert--filled {
+                background-color: var(--theme-danger, #f44336);
+                color: white;
+            }
+        }
+
+        .alert__close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+    .alert {
+        animation: none;
+    }
+}

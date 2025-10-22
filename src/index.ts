@@ -9,6 +9,8 @@ import type {
     AccordionVariant,
     AccordionSize,
 } from './components/Accordion'
+import Alert from './components/Alert'
+import type { AlertProps, AlertVariant, AlertSize } from './components/Alert'
 import Badge from './components/Badge'
 import type { BadgeProps, BadgeVariant, BadgeSize } from './components/Badge'
 import Card from './components/Card'
@@ -183,6 +185,7 @@ export {
     Box,
     Table,
     Accordion,
+    Alert,
     Badge,
     Card,
     Tabs,
@@ -296,6 +299,9 @@ export type {
     AccordionMode,
     AccordionVariant,
     AccordionSize,
+    AlertProps,
+    AlertVariant,
+    AlertSize,
     BadgeProps,
     BadgeVariant,
     BadgeSize,

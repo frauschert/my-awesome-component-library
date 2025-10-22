@@ -50,7 +50,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         if (controlledValue !== undefined) {
             setValue(controlledValue as any)
         }
-    }, [controlledValue])
+    }, [controlledValue, setValue])
 
     // ids for a11y wiring
     const generatedIdRef = useRef(`input-${uniqueId()}`)
@@ -104,7 +104,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     const setRefs = (node: HTMLInputElement | null) => {
         innerRef.current = node
         if (typeof ref === 'function') ref(node)
-        else if (ref && 'current' in (ref as any)) (ref as any).current = node
+        else if (ref) ref.current = node
     }
 
     const handleClear = () => {
@@ -112,7 +112,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         setValue('')
         onValueChange?.('')
         onDebouncedValueChange?.('')
-        onLegacyTypedChange && type === 'text' && onLegacyTypedChange('')
+        if (type === 'text') onLegacyTypedChange?.('')
         onClear?.()
         // refocus input for usability
         innerRef.current?.focus()
@@ -138,7 +138,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                 id={id}
                 ref={setRefs}
                 type={type}
-                value={value as any}
+                value={value}
                 onChange={handleChange}
                 aria-invalid={invalid || !!errorText || undefined}
                 aria-describedby={describedBy}
