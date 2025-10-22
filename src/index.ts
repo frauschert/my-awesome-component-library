@@ -142,6 +142,8 @@ import type {
 } from './components/ButtonGroup'
 import VirtualList from './components/VirtualList'
 import type { VirtualListProps } from './components/VirtualList'
+import TreeView from './components/TreeView'
+import type { TreeViewProps, TreeNode } from './components/TreeView'
 import {
     SpinCoin,
     Ellipsis,
@@ -246,6 +248,7 @@ export {
     Kanban,
     ButtonGroup,
     VirtualList,
+    TreeView,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -317,6 +320,8 @@ export type {
     ButtonGroupOrientation,
     ButtonGroupSelectionMode,
     VirtualListProps,
+    TreeViewProps,
+    TreeNode,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
