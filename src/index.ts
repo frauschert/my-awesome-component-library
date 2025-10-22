@@ -129,6 +129,8 @@ import type {
     NavBarVariant,
     NavBarPosition,
 } from './components/NavBar'
+import Kanban from './components/Kanban'
+import type { KanbanProps, KanbanColumn, KanbanCard } from './components/Kanban'
 import {
     SpinCoin,
     Ellipsis,
@@ -230,6 +232,7 @@ export {
     ProgressCircular,
     CommandPalette,
     NavBar,
+    Kanban,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -291,6 +294,9 @@ export type {
     NavBarItem,
     NavBarVariant,
     NavBarPosition,
+    KanbanProps,
+    KanbanColumn,
+    KanbanCard,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
