@@ -1,0 +1,101 @@
+@import '../../styles/variables';
+
+.virtual-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    background-color: var(--theme-surface, #ffffff);
+    border: 1px solid var(--theme-border, #e5e7eb);
+    border-radius: 6px;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: var(--theme-background, #f5f7fa);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--theme-border, #e5e7eb);
+        border-radius: 4px;
+
+        &:hover {
+            background-color: var(--theme-text-secondary, #6b7280);
+        }
+    }
+
+    &--empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.virtual-list__content {
+    position: relative;
+    width: 100%;
+}
+
+.virtual-list__items {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    will-change: transform;
+}
+
+.virtual-list__item {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.virtual-list__empty-state {
+    padding: 3rem;
+    text-align: center;
+    color: var(--theme-text-secondary, #6b7280);
+    font-size: 0.9375rem;
+}
+
+.virtual-list__loader {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--theme-surface, #ffffff);
+    border-top: 1px solid var(--theme-border, #e5e7eb);
+    z-index: 10;
+}
+
+.virtual-list__spinner {
+    display: inline-block;
+    color: var(--theme-primary, #408bbd);
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+// Dark theme
+:root[data-theme='dark'] {
+    .virtual-list {
+        background-color: var(--theme-surface, #2d2d2d);
+        border-color: var(--theme-border, #404040);
+    }
+
+    .virtual-list__loader {
+        background-color: var(--theme-surface, #2d2d2d);
+        border-top-color: var(--theme-border, #404040);
+    }
+}

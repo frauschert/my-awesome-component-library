@@ -140,6 +140,8 @@ import type {
     ButtonGroupOrientation,
     ButtonGroupSelectionMode,
 } from './components/ButtonGroup'
+import VirtualList from './components/VirtualList'
+import type { VirtualListProps } from './components/VirtualList'
 import {
     SpinCoin,
     Ellipsis,
@@ -243,6 +245,7 @@ export {
     NavBar,
     Kanban,
     ButtonGroup,
+    VirtualList,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -313,6 +316,7 @@ export type {
     ButtonGroupVariant,
     ButtonGroupOrientation,
     ButtonGroupSelectionMode,
+    VirtualListProps,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
