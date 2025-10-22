@@ -122,6 +122,13 @@ import type {
     CommandItem,
     CommandPaletteProps,
 } from './components/CommandPalette'
+import NavBar from './components/NavBar'
+import type {
+    NavBarProps,
+    NavBarItem,
+    NavBarVariant,
+    NavBarPosition,
+} from './components/NavBar'
 import {
     SpinCoin,
     Ellipsis,
@@ -222,6 +229,7 @@ export {
     DropdownMenu,
     ProgressCircular,
     CommandPalette,
+    NavBar,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -279,6 +287,10 @@ export type {
     ProgressCircularProps,
     CommandItem,
     CommandPaletteProps,
+    NavBarProps,
+    NavBarItem,
+    NavBarVariant,
+    NavBarPosition,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
