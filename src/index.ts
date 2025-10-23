@@ -174,6 +174,13 @@ import type {
     SplitButtonVariant,
     SplitButtonSize,
 } from './components/SplitButton'
+import Avatar, { AvatarGroup } from './components/Avatar'
+import type {
+    AvatarProps,
+    AvatarSize,
+    AvatarStatus,
+    AvatarGroupProps,
+} from './components/Avatar'
 import type { TreeViewProps, TreeNode } from './components/TreeView'
 import {
     SpinCoin,
@@ -284,6 +291,8 @@ export {
     Sidebar,
     FloatingActionButton,
     SplitButton,
+    Avatar,
+    AvatarGroup,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -376,6 +385,10 @@ export type {
     SplitButtonAction,
     SplitButtonVariant,
     SplitButtonSize,
+    AvatarProps,
+    AvatarSize,
+    AvatarStatus,
+    AvatarGroupProps,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
