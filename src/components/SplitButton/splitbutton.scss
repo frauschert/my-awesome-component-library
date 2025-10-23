@@ -1,0 +1,301 @@
+@import '../../styles/variables';
+@import '../../styles/theme-vars';
+
+.splitbutton {
+    display: inline-flex;
+    position: relative;
+    vertical-align: middle;
+}
+
+// Primary button (main action)
+.splitbutton__primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-right: none;
+    border-top-left-radius: var(--theme-border-radius, 6px);
+    border-bottom-left-radius: var(--theme-border-radius, 6px);
+    cursor: pointer;
+    font-family: var(--theme-font-family);
+    font-weight: 500;
+    line-height: 1;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    position: relative;
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-primary);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+}
+
+// Dropdown trigger button
+.splitbutton__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    border-top-right-radius: var(--theme-border-radius, 6px);
+    border-bottom-right-radius: var(--theme-border-radius, 6px);
+    cursor: pointer;
+    font-family: var(--theme-font-family);
+    line-height: 1;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-primary);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+}
+
+.splitbutton__chevron {
+    width: 1em;
+    height: 1em;
+    transition: transform 0.2s ease;
+}
+
+.splitbutton--open .splitbutton__chevron {
+    transform: rotate(180deg);
+}
+
+// Icon and label
+.splitbutton__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+        width: 1em;
+        height: 1em;
+        fill: currentColor;
+    }
+}
+
+.splitbutton__label {
+    font-weight: 500;
+}
+
+// Spinner
+.splitbutton__spinner {
+    display: inline-flex;
+    animation: spin 1s linear infinite;
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+// Dropdown menu
+.splitbutton__menu {
+    position: fixed;
+    min-width: 200px;
+    background-color: var(--theme-card-bg);
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--theme-border-radius, 6px);
+    box-shadow: var(--theme-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+    padding: 0.25rem 0;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.splitbutton__menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--theme-text-primary);
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--theme-font-family);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    transition: background-color 0.15s ease;
+
+    &:hover:not(:disabled) {
+        background-color: var(--theme-hover-bg, #f3f4f6);
+    }
+
+    &:focus-visible {
+        outline: none;
+        background-color: var(--theme-hover-bg, #f3f4f6);
+    }
+
+    &--disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.splitbutton__menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--theme-text-secondary);
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.splitbutton__menu-label {
+    flex: 1;
+}
+
+.splitbutton__divider {
+    height: 1px;
+    background-color: var(--theme-border-color);
+    margin: 0.25rem 0;
+}
+
+// Variants
+.splitbutton--primary {
+    .splitbutton__primary,
+    .splitbutton__trigger {
+        background-color: var(--theme-primary);
+        color: var(--theme-text-on-primary);
+        border-color: var(--theme-primary);
+
+        &:hover:not(:disabled) {
+            background-color: var(--theme-primary-dark, #2563eb);
+        }
+
+        &:active:not(:disabled) {
+            background-color: var(--theme-primary-dark, #1d4ed8);
+        }
+    }
+
+    .splitbutton__trigger {
+        border-left-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.splitbutton--secondary {
+    .splitbutton__primary,
+    .splitbutton__trigger {
+        background-color: var(--theme-card-bg);
+        color: var(--theme-text-primary);
+        border-color: var(--theme-border-color);
+
+        &:hover:not(:disabled) {
+            background-color: var(--theme-hover-bg, #f3f4f6);
+        }
+
+        &:active:not(:disabled) {
+            background-color: var(--theme-hover-bg, #e5e7eb);
+        }
+    }
+
+    .splitbutton__trigger {
+        border-left-color: var(--theme-border-color);
+    }
+}
+
+.splitbutton--danger {
+    .splitbutton__primary,
+    .splitbutton__trigger {
+        background-color: var(--theme-danger, #ef4444);
+        color: var(--theme-text-on-primary);
+        border-color: var(--theme-danger, #ef4444);
+
+        &:hover:not(:disabled) {
+            background-color: var(--theme-danger-dark, #dc2626);
+        }
+
+        &:active:not(:disabled) {
+            background-color: var(--theme-danger-dark, #b91c1c);
+        }
+    }
+
+    .splitbutton__trigger {
+        border-left-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+// Sizes
+.splitbutton--small {
+    .splitbutton__primary {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .splitbutton__trigger {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .splitbutton__icon {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+.splitbutton--medium {
+    .splitbutton__primary {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+
+    .splitbutton__trigger {
+        padding: 0.5rem 0.625rem;
+        font-size: 1rem;
+    }
+
+    .splitbutton__icon {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+.splitbutton--large {
+    .splitbutton__primary {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.125rem;
+    }
+
+    .splitbutton__trigger {
+        padding: 0.75rem 0.875rem;
+        font-size: 1.125rem;
+    }
+
+    .splitbutton__icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+// Loading state
+.splitbutton--loading {
+    .splitbutton__primary,
+    .splitbutton__trigger {
+        opacity: 0.7;
+    }
+}

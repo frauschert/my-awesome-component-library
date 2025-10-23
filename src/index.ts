@@ -167,6 +167,13 @@ import type {
     FABVariant,
     FABPosition,
 } from './components/FloatingActionButton'
+import SplitButton from './components/SplitButton'
+import type {
+    SplitButtonProps,
+    SplitButtonAction,
+    SplitButtonVariant,
+    SplitButtonSize,
+} from './components/SplitButton'
 import type { TreeViewProps, TreeNode } from './components/TreeView'
 import {
     SpinCoin,
@@ -276,6 +283,7 @@ export {
     JsonViewer,
     Sidebar,
     FloatingActionButton,
+    SplitButton,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -364,6 +372,10 @@ export type {
     FABSize,
     FABVariant,
     FABPosition,
+    SplitButtonProps,
+    SplitButtonAction,
+    SplitButtonVariant,
+    SplitButtonSize,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
