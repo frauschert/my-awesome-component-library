@@ -160,6 +160,13 @@ import type {
     SidebarPosition,
     SidebarWidth,
 } from './components/Sidebar'
+import FloatingActionButton from './components/FloatingActionButton'
+import type {
+    FloatingActionButtonProps,
+    FABSize,
+    FABVariant,
+    FABPosition,
+} from './components/FloatingActionButton'
 import type { TreeViewProps, TreeNode } from './components/TreeView'
 import {
     SpinCoin,
@@ -268,6 +275,7 @@ export {
     TreeView,
     JsonViewer,
     Sidebar,
+    FloatingActionButton,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -352,6 +360,10 @@ export type {
     SidebarVariant,
     SidebarPosition,
     SidebarWidth,
+    FloatingActionButtonProps,
+    FABSize,
+    FABVariant,
+    FABPosition,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,

@@ -1,0 +1,207 @@
+@import '../../styles/variables';
+@import '../../styles/theme-vars';
+
+.fab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    border-radius: 9999px; // Fully rounded
+    cursor: pointer;
+    font-family: var(--theme-font-family);
+    font-weight: 600;
+    line-height: 1;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-primary-light);
+        outline-offset: 2px;
+    }
+
+    &:not(:disabled):hover {
+        transform: scale(1.05);
+    }
+
+    &:not(:disabled):active {
+        transform: scale(0.98);
+    }
+}
+
+// Elevation/Shadow
+.fab--elevated {
+    box-shadow: var(--theme-shadow-lg);
+
+    &:not(:disabled):hover {
+        box-shadow: var(--theme-shadow-xl);
+    }
+}
+
+// Variants
+.fab--primary {
+    background-color: var(--theme-primary);
+    color: var(--theme-text-on-primary);
+
+    &:not(:disabled):hover {
+        background-color: var(--theme-primary-dark);
+    }
+}
+
+.fab--secondary {
+    background-color: var(--theme-card-bg);
+    color: var(--theme-text-primary);
+    border: 1px solid var(--theme-border-color);
+
+    &:not(:disabled):hover {
+        background-color: var(--theme-hover-bg);
+    }
+}
+
+.fab--danger {
+    background-color: var(--theme-danger);
+    color: var(--theme-text-on-primary);
+
+    &:not(:disabled):hover {
+        background-color: var(--theme-danger-dark, #dc2626);
+    }
+}
+
+// Sizes
+.fab--small {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+
+    &.fab--extended {
+        width: auto;
+        padding: 0 16px;
+        height: 40px;
+    }
+
+    .fab__icon {
+        width: 20px;
+        height: 20px;
+        font-size: 1rem;
+    }
+
+    .fab__label {
+        font-size: 0.875rem;
+    }
+}
+
+.fab--medium {
+    width: 56px;
+    height: 56px;
+    font-size: 1.25rem;
+
+    &.fab--extended {
+        width: auto;
+        padding: 0 20px;
+        height: 56px;
+    }
+
+    .fab__icon {
+        width: 24px;
+        height: 24px;
+        font-size: 1.25rem;
+    }
+
+    .fab__label {
+        font-size: 1rem;
+    }
+}
+
+.fab--large {
+    width: 72px;
+    height: 72px;
+    font-size: 1.5rem;
+
+    &.fab--extended {
+        width: auto;
+        padding: 0 24px;
+        height: 72px;
+    }
+
+    .fab__icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1.5rem;
+    }
+
+    .fab__label {
+        font-size: 1.125rem;
+    }
+}
+
+// Icon wrapper
+.fab__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+    }
+}
+
+// Label (for extended FAB)
+.fab__label {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+// Fixed positioning
+.fab--fixed {
+    position: fixed;
+    z-index: 1000;
+}
+
+.fab--bottom-right {
+    bottom: 16px;
+    right: 16px;
+
+    @media (min-width: 768px) {
+        bottom: 24px;
+        right: 24px;
+    }
+}
+
+.fab--bottom-left {
+    bottom: 16px;
+    left: 16px;
+
+    @media (min-width: 768px) {
+        bottom: 24px;
+        left: 24px;
+    }
+}
+
+.fab--top-right {
+    top: 16px;
+    right: 16px;
+
+    @media (min-width: 768px) {
+        top: 24px;
+        right: 24px;
+    }
+}
+
+.fab--top-left {
+    top: 16px;
+    left: 16px;
+
+    @media (min-width: 768px) {
+        top: 24px;
+        left: 24px;
+    }
+}
