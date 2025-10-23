@@ -143,6 +143,15 @@ import type {
 import VirtualList from './components/VirtualList'
 import type { VirtualListProps } from './components/VirtualList'
 import TreeView from './components/TreeView'
+import JsonViewer from './components/JsonViewer'
+import type {
+    JsonViewerProps,
+    JsonValue,
+    JsonObject,
+    JsonArray,
+    JsonViewerTheme,
+    JsonViewerSize,
+} from './components/JsonViewer'
 import Sidebar from './components/Sidebar'
 import type {
     SidebarProps,
@@ -257,6 +266,7 @@ export {
     ButtonGroup,
     VirtualList,
     TreeView,
+    JsonViewer,
     Sidebar,
     SpinCoin,
     Ellipsis,
@@ -331,6 +341,12 @@ export type {
     VirtualListProps,
     TreeViewProps,
     TreeNode,
+    JsonViewerProps,
+    JsonValue,
+    JsonObject,
+    JsonArray,
+    JsonViewerTheme,
+    JsonViewerSize,
     SidebarProps,
     SidebarItem,
     SidebarVariant,

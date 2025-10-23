@@ -1,0 +1,300 @@
+@import '../../styles/variables';
+@import '../../styles/theme-vars';
+
+.jsonviewer {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    border: 1px solid var(--theme-border-color);
+    border-radius: 8px;
+    background-color: var(--theme-card-bg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--theme-text-primary); // Size variants
+    &--small {
+        font-size: 12px;
+
+        .jsonviewer__toolbar {
+            padding: 8px;
+        }
+
+        .jsonviewer__search,
+        .jsonviewer__button {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+    }
+
+    &--medium {
+        font-size: 14px;
+
+        .jsonviewer__toolbar {
+            padding: 12px;
+        }
+
+        .jsonviewer__search,
+        .jsonviewer__button {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+    }
+
+    &--large {
+        font-size: 16px;
+
+        .jsonviewer__toolbar {
+            padding: 16px;
+        }
+
+        .jsonviewer__search,
+        .jsonviewer__button {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+    }
+
+    // Remove custom theme variants - using global theme system
+}
+
+.jsonviewer__toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background-color: var(--theme-bg-secondary, #f9fafb);
+    border-bottom: 1px solid var(--theme-border-color);
+    flex-wrap: wrap;
+}
+
+.jsonviewer__search {
+    flex: 1;
+    min-width: 150px;
+    border: 1px solid var(--theme-border-color);
+    border-radius: 4px;
+    background-color: var(--theme-input-bg, var(--theme-card-bg));
+    color: var(--theme-text-primary);
+    outline: none;
+
+    &:focus {
+        border-color: var(--theme-primary);
+        box-shadow: 0 0 0 1px var(--theme-primary);
+    }
+
+    &::placeholder {
+        color: var(--theme-text-secondary, #6b7280);
+    }
+}
+
+.jsonviewer__collapse-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.jsonviewer__button {
+    border: 1px solid var(--theme-border-color);
+    border-radius: 4px;
+    background-color: var(--theme-button-bg, var(--theme-surface-bg));
+    color: var(--theme-text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+
+    &:hover {
+        background-color: var(--theme-hover-bg, #f3f4f6);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-primary);
+        outline-offset: 2px;
+    }
+
+    &--copy {
+        margin-left: auto;
+    }
+}
+
+.jsonviewer__content {
+    display: flex;
+    overflow: auto;
+    flex: 1;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: var(--theme-surface-bg, #f9fafb);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--theme-border-color);
+        border-radius: 4px;
+
+        &:hover {
+            background: var(--theme-text-secondary, #6b7280);
+        }
+    }
+}
+
+.jsonviewer__line-numbers {
+    background-color: var(--theme-surface-bg, #f9fafb);
+    border-right: 1px solid var(--theme-border-color);
+    padding: 12px 8px;
+    user-select: none;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.jsonviewer__line-number {
+    color: var(--theme-text-secondary, #6b7280);
+    line-height: 1.6;
+    min-width: 30px;
+}
+
+.jsonviewer__body {
+    flex: 1;
+    padding: 12px;
+    color: var(--theme-text-primary);
+    line-height: 1.6;
+    min-width: 0;
+}
+
+.jsonviewer__node {
+    position: relative;
+
+    &--updated {
+        animation: flashUpdate 1s ease;
+    }
+
+    &--expandable {
+        .jsonviewer__line {
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--theme-hover-bg, #f3f4f6);
+            }
+        }
+    }
+}
+
+.jsonviewer__line {
+    display: flex;
+    align-items: baseline;
+    padding: 2px 4px;
+    border-radius: 4px;
+    min-height: 1.6em;
+    transition: background-color 0.15s ease;
+}
+
+.jsonviewer__toggle {
+    background: none;
+    border: none;
+    color: var(--theme-text-secondary, #6b7280);
+    cursor: pointer;
+    padding: 0;
+    margin-right: 6px;
+    font-size: 0.8em;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        color: var(--theme-text-primary);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-primary);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+}
+
+.jsonviewer__key {
+    color: var(--theme-primary, #3b82f6);
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.jsonviewer__colon {
+    color: var(--theme-text-primary);
+    margin-right: 6px;
+}
+
+.jsonviewer__value {
+    word-break: break-word;
+
+    &--string {
+        color: var(--theme-success, #10b981);
+    }
+
+    &--number {
+        color: var(--theme-error, #ef4444);
+    }
+
+    &--boolean {
+        color: var(--theme-warning, #8b5cf6);
+        font-weight: 600;
+    }
+
+    &--null {
+        color: var(--theme-text-secondary, #6b7280);
+        font-style: italic;
+    }
+}
+
+.jsonviewer__bracket {
+    color: var(--theme-text-primary);
+    font-weight: 600;
+}
+
+.jsonviewer__comma {
+    color: var(--theme-text-primary);
+    margin-left: 0;
+}
+
+.jsonviewer__preview {
+    color: var(--theme-text-secondary, #6b7280);
+    font-style: italic;
+    margin-left: 6px;
+}
+
+.jsonviewer__children {
+    animation: slideDown 0.2s ease;
+}
+
+.jsonviewer__highlight {
+    background-color: var(--theme-highlight-bg, #fef3c7);
+    color: var(--theme-text-primary);
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+.jsonviewer__custom-node {
+    padding: 4px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes flashUpdate {
+    0%,
+    100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: var(--theme-success-bg, rgba(16, 185, 129, 0.1));
+    }
+}
