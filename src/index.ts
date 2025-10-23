@@ -148,8 +148,6 @@ import type {
     JsonViewerProps,
     JsonValue,
     JsonObject,
-    JsonArray,
-    JsonViewerTheme,
     JsonViewerSize,
 } from './components/JsonViewer'
 import Sidebar from './components/Sidebar'
@@ -369,8 +367,6 @@ export type {
     JsonViewerProps,
     JsonValue,
     JsonObject,
-    JsonArray,
-    JsonViewerTheme,
     JsonViewerSize,
     SidebarProps,
     SidebarItem,
