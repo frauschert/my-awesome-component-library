@@ -143,6 +143,14 @@ import type {
 import VirtualList from './components/VirtualList'
 import type { VirtualListProps } from './components/VirtualList'
 import TreeView from './components/TreeView'
+import Sidebar from './components/Sidebar'
+import type {
+    SidebarProps,
+    SidebarItem,
+    SidebarVariant,
+    SidebarPosition,
+    SidebarWidth,
+} from './components/Sidebar'
 import type { TreeViewProps, TreeNode } from './components/TreeView'
 import {
     SpinCoin,
@@ -249,6 +257,7 @@ export {
     ButtonGroup,
     VirtualList,
     TreeView,
+    Sidebar,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -322,6 +331,11 @@ export type {
     VirtualListProps,
     TreeViewProps,
     TreeNode,
+    SidebarProps,
+    SidebarItem,
+    SidebarVariant,
+    SidebarPosition,
+    SidebarWidth,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
