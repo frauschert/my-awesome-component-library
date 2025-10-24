@@ -1,0 +1,244 @@
+@use '../../styles/variables' as *;
+@use '../../styles/theme-vars';
+
+.typography {
+    font-family: var(--theme-font-family);
+    color: var(--theme-text-primary);
+    margin: 0;
+    padding: 0;
+
+    // Variants
+    &--h1 {
+        font-size: 2.5rem; // 40px
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.01562em;
+
+        @media (max-width: 768px) {
+            font-size: 2rem; // 32px
+        }
+    }
+
+    &--h2 {
+        font-size: 2rem; // 32px
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.00833em;
+
+        @media (max-width: 768px) {
+            font-size: 1.75rem; // 28px
+        }
+    }
+
+    &--h3 {
+        font-size: 1.75rem; // 28px
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: 0em;
+
+        @media (max-width: 768px) {
+            font-size: 1.5rem; // 24px
+        }
+    }
+
+    &--h4 {
+        font-size: 1.5rem; // 24px
+        font-weight: 600;
+        line-height: 1.35;
+        letter-spacing: 0.00735em;
+
+        @media (max-width: 768px) {
+            font-size: 1.25rem; // 20px
+        }
+    }
+
+    &--h5 {
+        font-size: 1.25rem; // 20px
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: 0em;
+
+        @media (max-width: 768px) {
+            font-size: 1.125rem; // 18px
+        }
+    }
+
+    &--h6 {
+        font-size: 1.125rem; // 18px
+        font-weight: 600;
+        line-height: 1.45;
+        letter-spacing: 0.0075em;
+
+        @media (max-width: 768px) {
+            font-size: 1rem; // 16px
+        }
+    }
+
+    &--subtitle1 {
+        font-size: 1rem; // 16px
+        font-weight: 500;
+        line-height: 1.5;
+        letter-spacing: 0.00938em;
+    }
+
+    &--subtitle2 {
+        font-size: 0.875rem; // 14px
+        font-weight: 500;
+        line-height: 1.57;
+        letter-spacing: 0.00714em;
+    }
+
+    &--body1 {
+        font-size: 1rem; // 16px
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0.00938em;
+    }
+
+    &--body2 {
+        font-size: 0.875rem; // 14px
+        font-weight: 400;
+        line-height: 1.43;
+        letter-spacing: 0.01071em;
+    }
+
+    &--button {
+        font-size: 0.875rem; // 14px
+        font-weight: 500;
+        line-height: 1.75;
+        letter-spacing: 0.02857em;
+        text-transform: uppercase;
+    }
+
+    &--caption {
+        font-size: 0.75rem; // 12px
+        font-weight: 400;
+        line-height: 1.66;
+        letter-spacing: 0.03333em;
+    }
+
+    &--overline {
+        font-size: 0.75rem; // 12px
+        font-weight: 500;
+        line-height: 2.66;
+        letter-spacing: 0.08333em;
+        text-transform: uppercase;
+    }
+
+    // Alignment
+    &--align-left {
+        text-align: left;
+    }
+
+    &--align-center {
+        text-align: center;
+    }
+
+    &--align-right {
+        text-align: right;
+    }
+
+    &--align-justify {
+        text-align: justify;
+    }
+
+    // Colors
+    &--color-primary {
+        color: var(--theme-primary);
+    }
+
+    &--color-secondary {
+        color: var(--theme-text-secondary);
+    }
+
+    &--color-success {
+        color: var(--theme-success);
+    }
+
+    &--color-error {
+        color: var(--theme-danger);
+    }
+
+    &--color-warning {
+        color: var(--theme-warning);
+    }
+
+    &--color-info {
+        color: var(--theme-info);
+    }
+
+    &--color-muted {
+        color: var(--theme-text-muted);
+    }
+
+    // Font weights
+    &--weight-light {
+        font-weight: 300;
+    }
+
+    &--weight-regular {
+        font-weight: 400;
+    }
+
+    &--weight-medium {
+        font-weight: 500;
+    }
+
+    &--weight-semibold {
+        font-weight: 600;
+    }
+
+    &--weight-bold {
+        font-weight: 700;
+    }
+
+    // Utilities
+    &--no-wrap {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &--gutter-bottom {
+        margin-bottom: 0.75rem;
+    }
+}
+
+// Dark theme adjustments
+.theme--dark {
+    .typography {
+        color: var(--theme-text-primary);
+    }
+}
+
+// Responsive font scaling
+@media (max-width: 480px) {
+    .typography {
+        &--h1 {
+            font-size: 1.75rem; // 28px
+        }
+
+        &--h2 {
+            font-size: 1.5rem; // 24px
+        }
+
+        &--h3 {
+            font-size: 1.375rem; // 22px
+        }
+    }
+}
+
+// Print styles
+@media print {
+    .typography {
+        &--h1,
+        &--h2,
+        &--h3,
+        &--h4,
+        &--h5,
+        &--h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+    }
+}

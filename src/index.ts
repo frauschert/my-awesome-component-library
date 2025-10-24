@@ -36,6 +36,14 @@ import type {
     TooltipPlacement,
     TooltipTrigger,
 } from './components/Tooltip'
+import Typography from './components/Typography'
+import type {
+    TypographyProps,
+    TypographyVariant,
+    TypographyAlign,
+    TypographyColor,
+    TypographyWeight,
+} from './components/Typography'
 import Checkbox from './components/Checkbox'
 import type { CheckboxProps, CheckboxSize } from './components/Checkbox'
 import Breadcrumb from './components/Breadcrumb'
@@ -249,6 +257,7 @@ export {
     Tabs,
     Toolbar,
     Tooltip,
+    Typography,
     Checkbox,
     Breadcrumb,
     Drawer,
@@ -426,6 +435,11 @@ export type {
     TooltipProps,
     TooltipPlacement,
     TooltipTrigger,
+    TypographyProps,
+    TypographyVariant,
+    TypographyAlign,
+    TypographyColor,
+    TypographyWeight,
     CheckboxProps,
     CheckboxSize,
     BreadcrumbProps,
