@@ -1,5 +1,5 @@
-@import '../../styles/_variables.scss';
-@import '../../styles/_theme-vars.scss';
+@use '../../styles/variables' as *;
+@use '../../styles/theme-vars';
 
 .tooltip {
     position: fixed;

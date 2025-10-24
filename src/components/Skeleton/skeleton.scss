@@ -1,4 +1,4 @@
-@import '../../styles/colors';
+@use '../../styles/colors' as *;
 
 $skeleton-bg: theme-color('background', 'dark');
 $skeleton-shimmer-color: rgba(255, 255, 255, 0.5);

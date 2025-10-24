@@ -5,6 +5,7 @@ import typescript from 'rollup-plugin-typescript2'
 import postcss from 'rollup-plugin-postcss'
 import svgr from '@svgr/rollup'
 import url from '@rollup/plugin-url'
+import * as sass from 'sass'
 import packageJson from './package.json' assert { type: 'json' }
 
 export default {
@@ -35,7 +36,12 @@ export default {
             extract: true,
             modules: true,
             extensions: ['.css', '.scss'],
-            use: ['sass'],
+            use: {
+                sass: {
+                    implementation: sass,
+                    silenceDeprecations: ['legacy-js-api'],
+                },
+            },
         }),
         url(),
         svgr(),

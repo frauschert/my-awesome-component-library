@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $theme-colors: (
     'primary': (
         'base': #384ea9,
@@ -57,13 +59,13 @@ $contrast-colors: (
 );
 
 @function theme-color($key: 'primary', $variant: 'base') {
-    $map: map-get($theme-colors, $key);
-    @return map-get($map, $variant);
+    $map: map.get($theme-colors, $key);
+    @return map.get($map, $variant);
 }
 
 @function contrast($background: 'light', $type: 'primary') {
-    $map: map-get($contrast-colors, $background);
-    @return map-get($map, $type);
+    $map: map.get($contrast-colors, $background);
+    @return map.get($map, $type);
 }
 
 @mixin contrast($background: 'light', $type: 'primary') {

@@ -1,5 +1,5 @@
-@import '../../styles/theme-vars';
-@import '../../styles/_variables.scss';
+@use '../../styles/theme-vars';
+@use '../../styles/variables' as *;
 
 .accordion {
     width: 100%;

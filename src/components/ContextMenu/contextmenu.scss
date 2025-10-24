@@ -1,5 +1,5 @@
-@import '../../styles/colors';
-@import '../../styles/theme-vars';
+@use '../../styles/colors' as *;
+@use '../../styles/theme-vars';
 
 // CSS Custom Properties for easy theming
 .contextmenu {

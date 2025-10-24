@@ -1,6 +1,6 @@
-@import '../../styles/variables';
-@import '../../styles/colors';
-@import '../../styles/themes';
+@use '../../styles/variables' as *;
+@use '../../styles/colors' as *;
+@use '../../styles/themes' as *;
 
 .dropdown-menu {
     position: relative;

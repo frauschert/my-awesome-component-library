@@ -1,5 +1,5 @@
-@import '../../styles/theme-vars';
-@import '../../styles/_variables.scss';
+@use '../../styles/theme-vars';
+@use '../../styles/variables' as *;
 
 // Table Container
 .table-container {
@@ -7,7 +7,7 @@
     width: 100%;
 
     background-color: var(--theme-bg-primary);
-        color: var(--theme-text-primary);
+    color: var(--theme-text-primary);
 
     &--loading {
         pointer-events: none;
@@ -26,7 +26,7 @@
             z-index: 10;
 
             background-color: var(--theme-bg-primary);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     }
 }
@@ -41,7 +41,7 @@
     flex-wrap: wrap;
 
     background-color: var(--theme-bg-primary);
-        border-bottom: 1px solid var(--theme-border-color);
+    border-bottom: 1px solid var(--theme-border-color);
 }
 
 .table-search {
@@ -57,14 +57,14 @@
         transition: all 0.2s ease;
 
         background-color: var(--theme-input-bg);
-            color: var(--theme-text-primary);
-            border: 1px solid var(--theme-border-color);
+        color: var(--theme-text-primary);
+        border: 1px solid var(--theme-border-color);
 
         &:focus {
             outline: none;
 
             border-color: var(--theme-primary);
-                box-shadow: 0 0 0 3px var(--theme-focus-ring);
+            box-shadow: 0 0 0 3px var(--theme-focus-ring);
         }
 
         &::placeholder {
@@ -98,7 +98,7 @@
         transition: all 0.2s ease;
 
         background-color: var(--theme-primary);
-            color: var(--theme-text-on-primary);
+        color: var(--theme-text-on-primary);
 
         &:hover:not(:disabled) {
             background-color: var(--theme-primary-dark);
@@ -141,13 +141,13 @@
         animation: spin 1s linear infinite;
 
         border-top-color: var(--theme-primary);
-            border-right-color: var(--theme-primary);
+        border-right-color: var(--theme-primary);
     }
 }
 
 .table-error {
     color: var(--theme-danger);
-        background-color: var(--theme-danger-bg);
+    background-color: var(--theme-danger-bg);
 }
 
 @keyframes spin {
@@ -171,7 +171,7 @@
     font-size: 0.875rem;
 
     background-color: var(--theme-bg-primary);
-        color: var(--theme-text-primary);
+    color: var(--theme-text-primary);
 
     &--bordered {
         .table-cell {
@@ -202,7 +202,7 @@
 // Table Header
 .table-header {
     background-color: var(--theme-header-bg);
-        border-bottom: 2px solid var(--theme-border-color);
+    border-bottom: 2px solid var(--theme-border-color);
 
     &__cell {
         padding: 0.75rem 1rem;
@@ -307,7 +307,7 @@
 
     &--expanded-content {
         background-color: var(--theme-bg-secondary);
-            border-top: none;
+        border-top: none;
     }
 
     &__checkbox {
@@ -387,7 +387,7 @@
 
     &:hover {
         background-color: var(--theme-hover-bg);
-            color: var(--theme-text-primary);
+        color: var(--theme-text-primary);
     }
 
     &:focus {
@@ -428,7 +428,7 @@
 
         &:hover:not(:disabled) {
             background-color: var(--theme-hover-bg);
-                color: var(--theme-text-primary);
+            color: var(--theme-text-primary);
         }
 
         &:disabled {
@@ -459,7 +459,7 @@
     flex-wrap: wrap;
 
     background-color: var(--theme-bg-primary);
-        border-top: 1px solid var(--theme-border-color);
+    border-top: 1px solid var(--theme-border-color);
 
     &__info {
         font-size: 0.875rem;
@@ -484,12 +484,12 @@
         transition: all 0.2s ease;
 
         background-color: var(--theme-bg-primary);
-            color: var(--theme-text-primary);
-            border: 1px solid var(--theme-border-color);
+        color: var(--theme-text-primary);
+        border: 1px solid var(--theme-border-color);
 
         &:hover:not(:disabled) {
             background-color: var(--theme-hover-bg);
-                border-color: var(--theme-primary);
+            border-color: var(--theme-primary);
         }
 
         &:disabled {
@@ -499,8 +499,8 @@
 
         &--active {
             background-color: var(--theme-primary);
-                color: var(--theme-text-on-primary);
-                border-color: var(--theme-primary);
+            color: var(--theme-text-on-primary);
+            border-color: var(--theme-primary);
         }
 
         &:focus {
@@ -528,14 +528,14 @@
         cursor: pointer;
 
         background-color: var(--theme-input-bg);
-            color: var(--theme-text-primary);
-            border: 1px solid var(--theme-border-color);
+        color: var(--theme-text-primary);
+        border: 1px solid var(--theme-border-color);
 
         &:focus {
             outline: none;
 
             border-color: var(--theme-primary);
-                box-shadow: 0 0 0 2px var(--theme-focus-ring);
+            box-shadow: 0 0 0 2px var(--theme-focus-ring);
         }
     }
 }

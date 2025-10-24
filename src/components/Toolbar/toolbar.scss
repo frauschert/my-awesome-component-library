@@ -1,5 +1,5 @@
-@import '../../styles/theme-vars';
-@import '../../styles/_variables.scss';
+@use '../../styles/theme-vars';
+@use '../../styles/variables' as *;
 
 .toolbar {
     display: flex;
@@ -55,20 +55,20 @@
         border-bottom: 1px solid;
 
         background-color: var(--theme-bg-primary);
-            border-color: var(--theme-border-color);
-            color: var(--theme-text-primary);
+        border-color: var(--theme-border-color);
+        color: var(--theme-text-primary);
     }
 
     &--elevated {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
         background-color: var(--theme-bg-primary);
-            color: var(--theme-text-primary);
+        color: var(--theme-text-primary);
     }
 
     &--filled {
         background-color: var(--theme-bg-secondary);
-            color: var(--theme-text-primary);
+        color: var(--theme-text-primary);
     }
 }
 
