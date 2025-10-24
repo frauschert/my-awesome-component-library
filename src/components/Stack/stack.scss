@@ -1,0 +1,172 @@
+@use '../../styles/variables' as *;
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+.stack {
+    display: flex;
+
+    // Direction
+    &--vertical {
+        flex-direction: column;
+    }
+
+    &--horizontal {
+        flex-direction: row;
+    }
+
+    // Gap sizes
+    &--gap-none {
+        gap: 0;
+    }
+
+    &--gap-xs {
+        gap: 0.25rem;
+    }
+
+    &--gap-sm {
+        gap: 0.5rem;
+    }
+
+    &--gap-md {
+        gap: 1rem;
+    }
+
+    &--gap-lg {
+        gap: 1.5rem;
+    }
+
+    &--gap-xl {
+        gap: 2rem;
+    }
+
+    // Align items (cross axis)
+    &--align-start {
+        align-items: flex-start;
+    }
+
+    &--align-center {
+        align-items: center;
+    }
+
+    &--align-end {
+        align-items: flex-end;
+    }
+
+    &--align-stretch {
+        align-items: stretch;
+    }
+
+    &--align-baseline {
+        align-items: baseline;
+    }
+
+    // Justify content (main axis)
+    &--justify-start {
+        justify-content: flex-start;
+    }
+
+    &--justify-center {
+        justify-content: center;
+    }
+
+    &--justify-end {
+        justify-content: flex-end;
+    }
+
+    &--justify-space-between {
+        justify-content: space-between;
+    }
+
+    &--justify-space-around {
+        justify-content: space-around;
+    }
+
+    &--justify-space-evenly {
+        justify-content: space-evenly;
+    }
+
+    // Wrap
+    &--wrap {
+        flex-wrap: wrap;
+    }
+
+    // Reverse
+    &--reverse {
+        &.stack--vertical {
+            flex-direction: column-reverse;
+        }
+
+        &.stack--horizontal {
+            flex-direction: row-reverse;
+        }
+    }
+
+    // Fill - children take equal space
+    &--fill {
+        > * {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+    }
+
+    // Responsive direction
+    @media (min-width: $breakpoint-xs) {
+        &--xs-vertical {
+            flex-direction: column;
+        }
+
+        &--xs-horizontal {
+            flex-direction: row;
+        }
+    }
+
+    @media (min-width: $breakpoint-sm) {
+        &--sm-vertical {
+            flex-direction: column;
+        }
+
+        &--sm-horizontal {
+            flex-direction: row;
+        }
+    }
+
+    @media (min-width: $breakpoint-md) {
+        &--md-vertical {
+            flex-direction: column;
+        }
+
+        &--md-horizontal {
+            flex-direction: row;
+        }
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        &--lg-vertical {
+            flex-direction: column;
+        }
+
+        &--lg-horizontal {
+            flex-direction: row;
+        }
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        &--xl-vertical {
+            flex-direction: column;
+        }
+
+        &--xl-horizontal {
+            flex-direction: row;
+        }
+    }
+
+    // Divider
+    &__divider {
+        flex-shrink: 0;
+    }
+}

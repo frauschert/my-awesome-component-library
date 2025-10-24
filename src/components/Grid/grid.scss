@@ -1,0 +1,297 @@
+@use '../../styles/variables' as *;
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+.grid {
+    display: grid;
+    width: 100%;
+
+    // Gap sizes
+    &--gap-none {
+        gap: 0;
+    }
+
+    &--gap-xs {
+        gap: 0.25rem;
+    }
+
+    &--gap-sm {
+        gap: 0.5rem;
+    }
+
+    &--gap-md {
+        gap: 1rem;
+    }
+
+    &--gap-lg {
+        gap: 1.5rem;
+    }
+
+    &--gap-xl {
+        gap: 2rem;
+    }
+
+    // Justify items
+    &--justify-items-start {
+        justify-items: start;
+    }
+
+    &--justify-items-center {
+        justify-items: center;
+    }
+
+    &--justify-items-end {
+        justify-items: end;
+    }
+
+    &--justify-items-stretch {
+        justify-items: stretch;
+    }
+
+    // Align items
+    &--align-items-start {
+        align-items: start;
+    }
+
+    &--align-items-center {
+        align-items: center;
+    }
+
+    &--align-items-end {
+        align-items: end;
+    }
+
+    &--align-items-stretch {
+        align-items: stretch;
+    }
+
+    // Justify content
+    &--justify-content-start {
+        justify-content: start;
+    }
+
+    &--justify-content-center {
+        justify-content: center;
+    }
+
+    &--justify-content-end {
+        justify-content: end;
+    }
+
+    &--justify-content-space-between {
+        justify-content: space-between;
+    }
+
+    &--justify-content-space-around {
+        justify-content: space-around;
+    }
+
+    &--justify-content-space-evenly {
+        justify-content: space-evenly;
+    }
+
+    // Align content
+    &--align-content-start {
+        align-content: start;
+    }
+
+    &--align-content-center {
+        align-content: center;
+    }
+
+    &--align-content-end {
+        align-content: end;
+    }
+
+    &--align-content-space-between {
+        align-content: space-between;
+    }
+
+    &--align-content-space-around {
+        align-content: space-around;
+    }
+
+    &--align-content-space-evenly {
+        align-content: space-evenly;
+    }
+
+    // Column count (1-12)
+    @for $i from 1 through 12 {
+        &--cols-#{$i} {
+            grid-template-columns: repeat($i, 1fr);
+        }
+    }
+
+    // Responsive columns
+    @media (min-width: $breakpoint-xs) {
+        @for $i from 1 through 12 {
+            &--cols-xs-#{$i} {
+                grid-template-columns: repeat($i, 1fr);
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-sm) {
+        @for $i from 1 through 12 {
+            &--cols-sm-#{$i} {
+                grid-template-columns: repeat($i, 1fr);
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-md) {
+        @for $i from 1 through 12 {
+            &--cols-md-#{$i} {
+                grid-template-columns: repeat($i, 1fr);
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        @for $i from 1 through 12 {
+            &--cols-lg-#{$i} {
+                grid-template-columns: repeat($i, 1fr);
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        @for $i from 1 through 12 {
+            &--cols-xl-#{$i} {
+                grid-template-columns: repeat($i, 1fr);
+            }
+        }
+    }
+}
+
+.grid-item {
+    min-width: 0; // Prevents overflow issues
+
+    // Column span (1-12)
+    @for $i from 1 through 12 {
+        &--col-span-#{$i} {
+            grid-column: span $i;
+        }
+
+        &--col-start-#{$i} {
+            grid-column-start: $i;
+        }
+    }
+
+    // Row span (1-12)
+    @for $i from 1 through 12 {
+        &--row-span-#{$i} {
+            grid-row: span $i;
+        }
+
+        &--row-start-#{$i} {
+            grid-row-start: $i;
+        }
+    }
+
+    // Responsive column span
+    @media (min-width: $breakpoint-xs) {
+        @for $i from 1 through 12 {
+            &--col-span-xs-#{$i} {
+                grid-column: span $i;
+            }
+
+            &--col-start-xs-#{$i} {
+                grid-column-start: $i;
+            }
+
+            &--row-span-xs-#{$i} {
+                grid-row: span $i;
+            }
+
+            &--row-start-xs-#{$i} {
+                grid-row-start: $i;
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-sm) {
+        @for $i from 1 through 12 {
+            &--col-span-sm-#{$i} {
+                grid-column: span $i;
+            }
+
+            &--col-start-sm-#{$i} {
+                grid-column-start: $i;
+            }
+
+            &--row-span-sm-#{$i} {
+                grid-row: span $i;
+            }
+
+            &--row-start-sm-#{$i} {
+                grid-row-start: $i;
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-md) {
+        @for $i from 1 through 12 {
+            &--col-span-md-#{$i} {
+                grid-column: span $i;
+            }
+
+            &--col-start-md-#{$i} {
+                grid-column-start: $i;
+            }
+
+            &--row-span-md-#{$i} {
+                grid-row: span $i;
+            }
+
+            &--row-start-md-#{$i} {
+                grid-row-start: $i;
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        @for $i from 1 through 12 {
+            &--col-span-lg-#{$i} {
+                grid-column: span $i;
+            }
+
+            &--col-start-lg-#{$i} {
+                grid-column-start: $i;
+            }
+
+            &--row-span-lg-#{$i} {
+                grid-row: span $i;
+            }
+
+            &--row-start-lg-#{$i} {
+                grid-row-start: $i;
+            }
+        }
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        @for $i from 1 through 12 {
+            &--col-span-xl-#{$i} {
+                grid-column: span $i;
+            }
+
+            &--col-start-xl-#{$i} {
+                grid-column-start: $i;
+            }
+
+            &--row-span-xl-#{$i} {
+                grid-row: span $i;
+            }
+
+            &--row-start-xl-#{$i} {
+                grid-row-start: $i;
+            }
+        }
+    }
+}

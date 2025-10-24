@@ -245,6 +245,18 @@ import type {
     BulkAction,
     CellRenderer,
 } from './components/Table/types'
+import Grid, { GridItem } from './components/Grid'
+import type { GridProps, GridItemProps } from './components/Grid'
+import Stack from './components/Stack'
+import type {
+    StackProps,
+    StackDirection,
+    StackAlign,
+    StackJustify,
+    StackGap,
+} from './components/Stack'
+import Container from './components/Container'
+import type { ContainerProps, ContainerSize } from './components/Container'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -253,6 +265,10 @@ export {
     Button,
     Box,
     Table,
+    Grid,
+    GridItem,
+    Stack,
+    Container,
     Accordion,
     Alert,
     Badge,
@@ -338,6 +354,15 @@ export {
 export type {
     ReadOnlyAtom,
     WritableAtom,
+    GridProps,
+    GridItemProps,
+    StackProps,
+    StackDirection,
+    StackAlign,
+    StackJustify,
+    StackGap,
+    ContainerProps,
+    ContainerSize,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
