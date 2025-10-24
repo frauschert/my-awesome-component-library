@@ -70,7 +70,7 @@ const Avatar: React.FC<AvatarProps> = ({
         'avatar',
         `avatar--${size}`,
         {
-            'avatar--clickable': clickable || onClick,
+            'avatar--clickable': clickable || onClick !== undefined,
             'avatar--with-status': !!status,
             'avatar--loaded': imageLoaded,
         },

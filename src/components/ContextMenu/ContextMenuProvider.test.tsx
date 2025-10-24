@@ -1,7 +1,8 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { ContextMenuProvider, useContextMenu } from './ContextMenuProvider'
+import { ContextMenuProvider } from './ContextMenuProvider'
+import { useContextMenu } from './ContextMenuContext'
 import type { MenuEntry } from './types'
 
 // Test component that uses the hook

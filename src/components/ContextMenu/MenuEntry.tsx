@@ -1,17 +1,16 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import type {
     MenuEntry,
     MenuItem as ContextMenuItem,
-    MenuDivider,
     MenuSubmenu,
 } from './types'
-import { useContextMenu } from './ContextMenuProvider'
+import { useContextMenu } from './ContextMenuContext'
 
 type ContextMenuEntryProps = MenuEntry & { index: number }
 
 export function ContextMenuEntry({ index, ...rest }: ContextMenuEntryProps) {
     if (rest.type === 'divider') {
-        return <ContextMenuDivider {...rest} />
+        return <ContextMenuDivider />
     }
     if (rest.type === 'submenu') {
         return <ContextMenuSubmenu {...rest} index={index} />
@@ -54,7 +53,7 @@ function ContextMenuItem(props: ContextMenuItem) {
         </li>
     )
 }
-export function ContextMenuDivider(props: MenuDivider) {
+export function ContextMenuDivider() {
     return <li className="menu-divider" role="separator" />
 }
 

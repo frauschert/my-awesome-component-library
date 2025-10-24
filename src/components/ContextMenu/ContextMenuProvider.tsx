@@ -3,19 +3,7 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import type { MenuEntry } from './types'
 import { ContextMenuEntry } from './MenuEntry'
-
-interface ContextMenuContextProps {
-    menuVisible: boolean
-    position: { top: number; left: number }
-    showMenu: (e: React.MouseEvent) => void
-    hideMenu: () => void
-    focusedIndex: number
-    setFocusedIndex: (index: number) => void
-}
-
-const ContextMenuContext = React.createContext<
-    ContextMenuContextProps | undefined
->(undefined)
+import { ContextMenuContext } from './ContextMenuContext'
 
 interface ContextMenuProviderProps {
     menuEntries: MenuEntry[]
@@ -178,14 +166,4 @@ export function ContextMenuProvider({
                 )}
         </ContextMenuContext.Provider>
     )
-}
-
-export function useContextMenu() {
-    const context = React.useContext(ContextMenuContext)
-    if (!context) {
-        throw new Error(
-            'useContextMenu must be used within a ContextMenuProvider'
-        )
-    }
-    return context
 }
