@@ -246,6 +246,9 @@ import type {
     CellRenderer,
 } from './components/Table/types'
 
+// CSS-in-JS exports
+export * from './styles'
+
 export {
     Button,
     Box,
