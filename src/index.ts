@@ -257,6 +257,22 @@ import type {
 } from './components/Stack'
 import Container from './components/Container'
 import type { ContainerProps, ContainerSize } from './components/Container'
+import NotificationCenter, {
+    NotificationCenterProvider,
+    useNotificationCenter,
+} from './components/NotificationCenter'
+import type {
+    NotificationCenterProps,
+    NotificationItem,
+    NotificationAction,
+} from './components/NotificationCenter'
+import {
+    ThemeProvider,
+    ThemeWrapper,
+    useTheme,
+    ThemeSwitcher,
+} from './components/Theme'
+import type { ThemeKey } from './components/Theme'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -319,6 +335,13 @@ export {
     SplitButton,
     Avatar,
     AvatarGroup,
+    NotificationCenter,
+    NotificationCenterProvider,
+    useNotificationCenter,
+    ThemeProvider,
+    ThemeWrapper,
+    ThemeSwitcher,
+    useTheme,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -363,6 +386,7 @@ export type {
     StackGap,
     ContainerProps,
     ContainerSize,
+    ThemeKey,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
@@ -422,6 +446,9 @@ export type {
     AvatarSize,
     AvatarStatus,
     AvatarGroupProps,
+    NotificationCenterProps,
+    NotificationItem,
+    NotificationAction,
     SpinnerProps,
     SpinnerSize,
     SpinnerVariant,
