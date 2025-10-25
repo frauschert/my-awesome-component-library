@@ -273,6 +273,11 @@ import {
     ThemeSwitcher,
 } from './components/Theme'
 import type { ThemeKey } from './components/Theme'
+import RichTextEditor from './components/RichTextEditor'
+import type {
+    RichTextEditorProps,
+    ToolbarItem,
+} from './components/RichTextEditor'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -342,6 +347,7 @@ export {
     ThemeWrapper,
     ThemeSwitcher,
     useTheme,
+    RichTextEditor,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -387,6 +393,8 @@ export type {
     ContainerProps,
     ContainerSize,
     ThemeKey,
+    RichTextEditorProps,
+    ToolbarItem,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
