@@ -74,7 +74,12 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
         // Apply indeterminate state via ref
         const inputRef = React.useRef<HTMLInputElement>(null)
-        React.useImperativeHandle(ref, () => inputRef.current!)
+        React.useImperativeHandle(ref, () => {
+            if (!inputRef.current) {
+                throw new Error('Checkbox input ref is not attached')
+            }
+            return inputRef.current
+        })
 
         React.useEffect(() => {
             if (inputRef.current) {

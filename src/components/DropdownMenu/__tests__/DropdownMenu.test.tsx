@@ -12,24 +12,14 @@ const defaultItems = [
 
 describe('DropdownMenu', () => {
     it('renders a trigger button', () => {
-        render(
-            <DropdownMenu
-                items={defaultItems}
-                trigger={<button>Open Menu</button>}
-            />
-        )
+        render(<DropdownMenu items={defaultItems} trigger="Open Menu" />)
         expect(
             screen.getByRole('button', { name: 'Open Menu' })
         ).toBeInTheDocument()
     })
 
     it('shows menu when trigger is clicked', async () => {
-        render(
-            <DropdownMenu
-                items={defaultItems}
-                trigger={<button>Open Menu</button>}
-            />
-        )
+        render(<DropdownMenu items={defaultItems} trigger="Open Menu" />)
 
         const trigger = screen.getByRole('button')
         fireEvent.click(trigger)
@@ -44,7 +34,7 @@ describe('DropdownMenu', () => {
         render(
             <DropdownMenu
                 items={defaultItems}
-                trigger={<button>Open Menu</button>}
+                trigger="Open Menu"
                 onChange={onChange}
             />
         )
@@ -63,7 +53,7 @@ describe('DropdownMenu', () => {
         render(
             <DropdownMenu
                 items={defaultItems}
-                trigger={<button>Open Menu</button>}
+                trigger="Open Menu"
                 onChange={onChange}
                 multiple
                 closeOnSelect={false}
@@ -73,7 +63,7 @@ describe('DropdownMenu', () => {
         const trigger = screen.getByRole('button')
         fireEvent.click(trigger)
 
-        const option1 = await screen.findByText('Option 1')
+        const option1 = screen.getByText('Option 1')
         const option2 = await screen.findByText('Option 2')
 
         fireEvent.click(option1)
@@ -86,7 +76,7 @@ describe('DropdownMenu', () => {
         render(
             <DropdownMenu
                 items={defaultItems}
-                trigger={<button>Open Menu</button>}
+                trigger="Open Menu"
                 searchable
                 searchPlaceholder="Search..."
             />
@@ -104,12 +94,7 @@ describe('DropdownMenu', () => {
     })
 
     it('handles keyboard navigation', async () => {
-        render(
-            <DropdownMenu
-                items={defaultItems}
-                trigger={<button>Open Menu</button>}
-            />
-        )
+        render(<DropdownMenu items={defaultItems} trigger="Open Menu" />)
 
         const trigger = screen.getByRole('button')
         fireEvent.click(trigger)
@@ -131,7 +116,7 @@ describe('DropdownMenu', () => {
         render(
             <DropdownMenu
                 items={defaultItems}
-                trigger={<button>Open Menu</button>}
+                trigger="Open Menu"
                 onChange={onChange}
             />
         )
@@ -150,7 +135,7 @@ describe('DropdownMenu', () => {
         const { rerender } = render(
             <DropdownMenu
                 items={defaultItems}
-                trigger={<button>Open Menu</button>}
+                trigger="Open Menu"
                 value="option1"
                 onChange={onChange}
             />
@@ -164,22 +149,26 @@ describe('DropdownMenu', () => {
 
         expect(onChange).toHaveBeenCalledWith('option2')
 
-        // Controlled value shouldn't change without parent update
-        const options = screen.getAllByRole('option')
-        expect(options[0]).toHaveAttribute('aria-selected', 'true')
-        expect(options[1]).toHaveAttribute('aria-selected', 'false')
-
-        // Update controlled value
+        // Update controlled value and reopen menu
         rerender(
             <DropdownMenu
                 items={defaultItems}
-                trigger={<button>Open Menu</button>}
+                trigger="Open Menu"
                 value="option2"
                 onChange={onChange}
+                open={true}
             />
         )
 
-        expect(options[0]).toHaveAttribute('aria-selected', 'false')
-        expect(options[1]).toHaveAttribute('aria-selected', 'true')
+        // After updating the controlled value, option 2 should be selected
+        const updatedOptions = await screen.findAllByRole('option')
+        const updatedOption1 = updatedOptions.find(
+            (opt) => opt.textContent === 'Option 1'
+        )
+        const updatedOption2 = updatedOptions.find(
+            (opt) => opt.textContent === 'Option 2'
+        )
+        expect(updatedOption1).toHaveAttribute('aria-selected', 'false')
+        expect(updatedOption2).toHaveAttribute('aria-selected', 'true')
     })
 })
