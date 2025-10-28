@@ -1,0 +1,151 @@
+.form {
+    width: 100%;
+
+    &__fieldset {
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    // Vertical layout (default)
+    &--vertical {
+        .form__fieldset > * + * {
+            margin-top: 1rem;
+        }
+    }
+
+    // Horizontal layout
+    &--horizontal {
+        .form__fieldset {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form__fieldset > * {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            > label {
+                min-width: 120px;
+                text-align: right;
+            }
+
+            > input,
+            > select,
+            > textarea {
+                flex: 1;
+            }
+        }
+    }
+
+    // Inline layout
+    &--inline {
+        .form__fieldset {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .form__fieldset > * {
+            flex: 0 1 auto;
+        }
+    }
+
+    // Size variants
+    &--sm {
+        font-size: 0.875rem;
+
+        &.form--vertical .form__fieldset > * + * {
+            margin-top: 0.75rem;
+        }
+
+        &.form--horizontal .form__fieldset {
+            gap: 1rem;
+        }
+
+        &.form--inline .form__fieldset {
+            gap: 0.5rem;
+        }
+    }
+
+    &--lg {
+        font-size: 1.125rem;
+
+        &.form--vertical .form__fieldset > * + * {
+            margin-top: 1.5rem;
+        }
+
+        &.form--horizontal .form__fieldset {
+            gap: 2rem;
+        }
+
+        &.form--inline .form__fieldset {
+            gap: 1rem;
+        }
+    }
+
+    // Disabled state
+    &--disabled {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+}
+
+// Form group for grouping related fields
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &__label {
+        font-weight: 500;
+        color: var(--theme-text-primary, #111827);
+        font-size: 0.875rem;
+    }
+
+    &__description {
+        font-size: 0.8125rem;
+        color: var(--theme-text-secondary, #6b7280);
+        margin-top: 0.25rem;
+    }
+
+    &__error {
+        font-size: 0.8125rem;
+        color: var(--theme-error, #dc2626);
+        margin-top: 0.25rem;
+    }
+
+    &__hint {
+        font-size: 0.8125rem;
+        color: var(--theme-text-secondary, #6b7280);
+        margin-top: 0.25rem;
+    }
+}
+
+// Form actions (button group at bottom)
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--theme-border, #e5e7eb);
+
+    &--right {
+        justify-content: flex-end;
+    }
+
+    &--left {
+        justify-content: flex-start;
+    }
+
+    &--center {
+        justify-content: center;
+    }
+
+    &--space-between {
+        justify-content: space-between;
+    }
+}

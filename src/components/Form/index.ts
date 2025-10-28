@@ -1,1 +1,7 @@
 export { default } from './Form'
+export { default as Form } from './Form'
+export { default as FormGroup } from './FormGroup'
+export { default as FormActions } from './FormActions'
+export type { FormProps, FormLayout, FormSize } from './Form'
+export type { FormGroupProps } from './FormGroup'
+export type { FormActionsProps, FormActionsAlign } from './FormActions'

@@ -293,6 +293,24 @@ import type {
     SortableItem,
     DragHandleProps,
 } from './components/DragDrop'
+import FileUpload from './components/FileUpload/FileUpload'
+import type { FileUploadProps } from './components/FileUpload/FileUpload'
+import FileUploader from './components/FileUpload/FileUploader'
+import Form, { FormGroup, FormActions } from './components/Form'
+import type {
+    FormProps,
+    FormLayout,
+    FormSize,
+    FormGroupProps,
+    FormActionsProps,
+    FormActionsAlign,
+} from './components/Form'
+import Portal from './components/Portal'
+import Resizable from './components/Resizable'
+import type {
+    ResizableProps,
+    ResizableHandle,
+} from './components/Resizable/Resizable'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -372,6 +390,13 @@ export {
     Ellipsis,
     LoadingBoundary,
     useSpinner,
+    FileUpload,
+    FileUploader,
+    Form,
+    FormGroup,
+    FormActions,
+    Portal,
+    Resizable,
     atom,
     useAtom,
     useAtomValue,
@@ -421,6 +446,15 @@ export type {
     SortableListProps,
     SortableItem,
     DragHandleProps,
+    FileUploadProps,
+    FormProps,
+    FormLayout,
+    FormSize,
+    FormGroupProps,
+    FormActionsProps,
+    FormActionsAlign,
+    ResizableProps,
+    ResizableHandle,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
