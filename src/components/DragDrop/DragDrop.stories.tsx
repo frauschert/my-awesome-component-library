@@ -121,7 +121,7 @@ export const BasicDropZone: StoryObj = {
 export const BasicSortableList: StoryObj = {
     render: () => {
         const SortableDemo = () => {
-            const [items, setItems] = useState<SortableItem[]>([
+            const [items, setItems] = useState([
                 { id: 1, name: 'Task 1', completed: false },
                 { id: 2, name: 'Task 2', completed: true },
                 { id: 3, name: 'Task 3', completed: false },
@@ -142,7 +142,6 @@ export const BasicSortableList: StoryObj = {
                             items={items}
                             onReorder={setItems}
                             renderItem={(item) => {
-                                const typedItem = item as (typeof items)[0]
                                 return (
                                     <div
                                         style={{
@@ -153,18 +152,17 @@ export const BasicSortableList: StoryObj = {
                                     >
                                         <input
                                             type="checkbox"
-                                            checked={typedItem.completed}
+                                            checked={item.completed}
                                             onChange={() => {}}
                                         />
                                         <span
                                             style={{
-                                                textDecoration:
-                                                    typedItem.completed
-                                                        ? 'line-through'
-                                                        : 'none',
+                                                textDecoration: item.completed
+                                                    ? 'line-through'
+                                                    : 'none',
                                             }}
                                         >
-                                            {typedItem.name}
+                                            {item.name}
                                         </span>
                                     </div>
                                 )
@@ -183,7 +181,7 @@ export const BasicSortableList: StoryObj = {
 export const SortableWithHandles: StoryObj = {
     render: () => {
         const SortableHandleDemo = () => {
-            const [items, setItems] = useState<SortableItem[]>([
+            const [items, setItems] = useState([
                 { id: 1, title: 'Introduction', pages: 10 },
                 { id: 2, title: 'Chapter 1', pages: 25 },
                 { id: 3, title: 'Chapter 2', pages: 30 },
@@ -205,11 +203,10 @@ export const SortableWithHandles: StoryObj = {
                             onReorder={setItems}
                             showHandle
                             renderItem={(item) => {
-                                const typedItem = item as (typeof items)[0]
                                 return (
                                     <div>
                                         <div style={{ fontWeight: 600 }}>
-                                            {typedItem.title}
+                                            {item.title}
                                         </div>
                                         <div
                                             style={{
@@ -217,7 +214,7 @@ export const SortableWithHandles: StoryObj = {
                                                 color: '#6c757d',
                                             }}
                                         >
-                                            {typedItem.pages} pages
+                                            {item.pages} pages
                                         </div>
                                     </div>
                                 )
@@ -555,14 +552,13 @@ export const NestedDragDrop: StoryObj = {
                                                 )
                                             )
                                         }}
-                                        renderItem={(item) => (
-                                            <div>
-                                                {
-                                                    (item as { text: string })
-                                                        .text
-                                                }
-                                            </div>
-                                        )}
+                                        renderItem={(item) => {
+                                            const typedItem = item as {
+                                                id: number
+                                                text: string
+                                            }
+                                            return <div>{typedItem.text}</div>
+                                        }}
                                         showHandle
                                     />
                                 </div>

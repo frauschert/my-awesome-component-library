@@ -140,6 +140,7 @@ export type DropZoneProps = {
     className?: string
     disabled?: boolean
     showDropIndicator?: boolean
+    style?: React.CSSProperties
 }
 
 export const DropZone: React.FC<DropZoneProps> = ({
@@ -150,6 +151,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     className = '',
     disabled = false,
     showDropIndicator = true,
+    style,
 }) => {
     const context = useDragContext()
     const [isOver, setIsOver] = useState(false)
@@ -224,6 +226,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     return (
         <div
             className={dropZoneClasses}
+            style={style}
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -244,23 +247,23 @@ export type SortableItem = {
     [key: string]: unknown
 }
 
-export type SortableListProps = {
-    items: SortableItem[]
-    onReorder: (items: SortableItem[]) => void
-    renderItem: (item: SortableItem, index: number) => React.ReactNode
+export type SortableListProps<T extends SortableItem> = {
+    items: T[]
+    onReorder: (items: T[]) => void
+    renderItem: (item: T, index: number) => React.ReactNode
     className?: string
     disabled?: boolean
     showHandle?: boolean
 }
 
-export const SortableList: React.FC<SortableListProps> = ({
+export const SortableList = <T extends SortableItem>({
     items,
     onReorder,
     renderItem,
     className = '',
     disabled = false,
     showHandle = false,
-}) => {
+}: SortableListProps<T>) => {
     const [localItems, setLocalItems] = useState(items)
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
