@@ -36,18 +36,28 @@ export default function deepEqual(a: unknown, b: unknown): boolean {
     // Same reference or strict equality (handles primitives, NaN with Object.is)
     if (Object.is(a, b)) return true
 
+    // Handle 0 and -0 as equal (unlike Object.is)
+    if (a === 0 && b === 0) return true
+
     // Different types or one is null/undefined
     if (typeof a !== typeof b || a == null || b == null) return false
 
-    // Arrays
+    // Arrays (check before general object check)
     if (Array.isArray(a) && Array.isArray(b)) {
         if (a.length !== b.length) return false
         return a.every((item, i) => deepEqual(item, b[i]))
     }
 
+    // Arrays vs objects - different types
+    if (Array.isArray(a) || Array.isArray(b)) return false
+
     // Dates
     if (a instanceof Date && b instanceof Date) {
-        return a.getTime() === b.getTime()
+        // Handle invalid dates (NaN times)
+        const timeA = a.getTime()
+        const timeB = b.getTime()
+        if (isNaN(timeA) && isNaN(timeB)) return true
+        return timeA === timeB
     }
 
     // RegExp

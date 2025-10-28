@@ -33,9 +33,11 @@
 const omit = <T extends Record<PropertyKey, unknown>, K extends keyof T>(
     obj: T,
     ...keys: K[]
-): Omit<T, K> =>
-    Object.fromEntries(
-        Object.entries(obj).filter(([k]) => !keys.includes(k as K))
+): Omit<T, K> => {
+    const keyStrings = keys.map((k) => String(k))
+    return Object.fromEntries(
+        Object.entries(obj).filter(([k]) => !keyStrings.includes(k))
     ) as Omit<T, K>
+}
 
 export default omit
