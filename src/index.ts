@@ -278,6 +278,21 @@ import type {
     RichTextEditorProps,
     ToolbarItem,
 } from './components/RichTextEditor'
+import {
+    DragDropProvider,
+    Draggable,
+    DropZone,
+    SortableList,
+    DragHandle,
+} from './components/DragDrop'
+import type {
+    DragDropProviderProps,
+    DraggableProps,
+    DropZoneProps,
+    SortableListProps,
+    SortableItem,
+    DragHandleProps,
+} from './components/DragDrop'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -348,6 +363,11 @@ export {
     ThemeSwitcher,
     useTheme,
     RichTextEditor,
+    DragDropProvider,
+    Draggable,
+    DropZone,
+    SortableList,
+    DragHandle,
     SpinCoin,
     Ellipsis,
     LoadingBoundary,
@@ -395,6 +415,12 @@ export type {
     ThemeKey,
     RichTextEditorProps,
     ToolbarItem,
+    DragDropProviderProps,
+    DraggableProps,
+    DropZoneProps,
+    SortableListProps,
+    SortableItem,
+    DragHandleProps,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
