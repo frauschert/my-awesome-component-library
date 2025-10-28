@@ -9,19 +9,19 @@ import React, {
 import './DragDrop.scss'
 
 // Context for drag state
-type DragContextValue = {
-    draggedItem: unknown
+type DragContextValue<T = unknown> = {
+    draggedItem: T | null
     draggedIndex: number | null
     draggedFrom: string | null
-    setDraggedItem: (item: unknown) => void
+    setDraggedItem: (item: T | null) => void
     setDraggedIndex: (index: number | null) => void
     setDraggedFrom: (from: string | null) => void
 }
 
-const DragContext = createContext<DragContextValue | null>(null)
+const DragContext = createContext<DragContextValue<unknown> | null>(null)
 
-const useDragContext = () => {
-    const context = useContext(DragContext)
+const useDragContext = <T = unknown,>() => {
+    const context = useContext(DragContext) as DragContextValue<T> | null
     if (!context) {
         throw new Error('Drag components must be used within DragDropProvider')
     }
@@ -33,23 +33,23 @@ export type DragDropProviderProps = {
     children: React.ReactNode
 }
 
-export const DragDropProvider: React.FC<DragDropProviderProps> = ({
-    children,
-}) => {
+export const DragDropProvider = ({ children }: DragDropProviderProps) => {
     const [draggedItem, setDraggedItem] = useState<unknown>(null)
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
     const [draggedFrom, setDraggedFrom] = useState<string | null>(null)
 
     return (
         <DragContext.Provider
-            value={{
-                draggedItem,
-                draggedIndex,
-                draggedFrom,
-                setDraggedItem,
-                setDraggedIndex,
-                setDraggedFrom,
-            }}
+            value={
+                {
+                    draggedItem,
+                    draggedIndex,
+                    draggedFrom,
+                    setDraggedItem,
+                    setDraggedIndex,
+                    setDraggedFrom,
+                } as DragContextValue<unknown>
+            }
         >
             {children}
         </DragContext.Provider>
@@ -57,18 +57,18 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
 }
 
 // Draggable Component
-export type DraggableProps = {
+export type DraggableProps<T = unknown> = {
     children: React.ReactNode
-    data: unknown
+    data: T
     index?: number
     disabled?: boolean
     handle?: boolean
     className?: string
-    onDragStart?: (data: unknown, index?: number) => void
-    onDragEnd?: (data: unknown, index?: number) => void
+    onDragStart?: (data: T, index?: number) => void
+    onDragEnd?: (data: T, index?: number) => void
 }
 
-export const Draggable: React.FC<DraggableProps> = ({
+export const Draggable = <T = unknown,>({
     children,
     data,
     index,
@@ -77,8 +77,8 @@ export const Draggable: React.FC<DraggableProps> = ({
     className = '',
     onDragStart,
     onDragEnd,
-}) => {
-    const context = useDragContext()
+}: DraggableProps<T>) => {
+    const context = useDragContext<T>()
     const [isDragging, setIsDragging] = useState(false)
     const dragRef = useRef<HTMLDivElement>(null)
 
@@ -132,9 +132,9 @@ export const Draggable: React.FC<DraggableProps> = ({
 }
 
 // Drop Zone Component
-export type DropZoneProps = {
+export type DropZoneProps<T = unknown> = {
     children: React.ReactNode
-    onDrop: (data: unknown, index?: number) => void
+    onDrop: (data: T, index?: number) => void
     accept?: string[]
     id?: string
     className?: string
@@ -143,7 +143,7 @@ export type DropZoneProps = {
     style?: React.CSSProperties
 }
 
-export const DropZone: React.FC<DropZoneProps> = ({
+export const DropZone = <T = unknown,>({
     children,
     onDrop,
     accept,
@@ -152,8 +152,8 @@ export const DropZone: React.FC<DropZoneProps> = ({
     disabled = false,
     showDropIndicator = true,
     style,
-}) => {
-    const context = useDragContext()
+}: DropZoneProps<T>) => {
+    const context = useDragContext<T>()
     const [isOver, setIsOver] = useState(false)
     const [canDrop, setCanDrop] = useState(true)
 
@@ -204,8 +204,8 @@ export const DropZone: React.FC<DropZoneProps> = ({
             setIsOver(false)
 
             const data =
-                context.draggedItem ||
-                JSON.parse(e.dataTransfer.getData('text/plain'))
+                context.draggedItem ??
+                (JSON.parse(e.dataTransfer.getData('text/plain')) as T)
             const index = context.draggedIndex
 
             onDrop(data, index ?? undefined)
