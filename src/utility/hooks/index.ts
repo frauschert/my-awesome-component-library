@@ -31,6 +31,7 @@ import useMemoCompare from './useMemoCompare'
 import { useResize } from './useResize'
 import useScrollIntoView from './useScrollIntoView'
 import useTimeoutFn from './useTimeoutFn'
+import useResizeObserver from './useResizeObserver'
 
 export {
     useDebounceEffect,
@@ -68,6 +69,7 @@ export {
     useResize,
     useScrollIntoView,
     useTimeoutFn,
+    useResizeObserver,
 }
 
 export default {
@@ -106,4 +108,5 @@ export default {
     useResize,
     useScrollIntoView,
     useTimeoutFn,
+    useResizeObserver,
 }

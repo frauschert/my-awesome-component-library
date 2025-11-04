@@ -17,6 +17,7 @@ Custom React hooks for common use cases in the component library.
 -   [useWindowSize](#usewindowsize)
 -   [useDebounce (value)](#usedebounce-value)
 -   [useThrottle](#usethrottle)
+-   [useResizeObserver](#useresizeobserver)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -1992,6 +1993,214 @@ function DrawingCanvas() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useThrottle.test.tsx` for comprehensive tests covering basic throttling, rapid changes, timing behavior, different delays, various value types, cleanup, and edge cases.
+
+---
+
+## useResizeObserver
+
+Observes size changes of an element using the modern ResizeObserver API. This hook provides more accurate and performant resize detection compared to window resize events or polling.
+
+### API
+
+```ts
+useResizeObserver<T extends HTMLElement>(
+  ref: RefObject<T>,
+  options?: UseResizeObserverOptions
+): ResizeObserverEntry | null
+```
+
+### Parameters
+
+-   **ref**: Reference to the element to observe
+-   **options** (optional):
+    -   **box**: Observation box type (`'border-box'` | `'content-box'` | `'device-pixel-content-box'`) - defaults to `'content-box'`
+    -   **onResize**: Callback function called on each resize with the entry
+
+### Returns
+
+`ResizeObserverEntry | null` - The latest resize observation entry or null if not yet observed
+
+### Features
+
+-   **Modern API**: Uses the native ResizeObserver API for accurate size tracking
+-   **Multiple box types**: Observe border-box, content-box, or device-pixel-content-box
+-   **Callback support**: Optional callback for side effects on resize
+-   **Automatic cleanup**: Disconnects observer on unmount
+-   **SSR safe**: Checks for ResizeObserver availability
+-   **Detailed metrics**: Access to contentRect, borderBoxSize, contentBoxSize, and devicePixelContentBoxSize
+
+### Usage
+
+**Basic element size tracking:**
+
+```tsx
+import { useResizeObserver } from './utility/hooks'
+
+function ResizableComponent() {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useResizeObserver(ref)
+
+    return (
+        <div
+            ref={ref}
+            style={{ resize: 'both', overflow: 'auto', border: '1px solid' }}
+        >
+            {entry && (
+                <div>
+                    Width: {Math.round(entry.contentRect.width)}px
+                    <br />
+                    Height: {Math.round(entry.contentRect.height)}px
+                </div>
+            )}
+            Resize me!
+        </div>
+    )
+}
+```
+
+**With callback:**
+
+```tsx
+function ComponentWithCallback() {
+    const ref = useRef<HTMLDivElement>(null)
+
+    useResizeObserver(ref, {
+        onResize: (entry) => {
+            console.log('Element resized:', entry.contentRect)
+        },
+    })
+
+    return <div ref={ref}>Content that triggers callback on resize</div>
+}
+```
+
+**Border-box observation:**
+
+```tsx
+function BorderBoxObserver() {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useResizeObserver(ref, { box: 'border-box' })
+
+    return (
+        <div ref={ref} style={{ padding: 20, border: '10px solid' }}>
+            {entry?.borderBoxSize && (
+                <div>
+                    Border box size: {entry.borderBoxSize[0].inlineSize} x{' '}
+                    {entry.borderBoxSize[0].blockSize}
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+**Responsive layout adaptation:**
+
+```tsx
+function ResponsiveCard() {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useResizeObserver(ref)
+    const width = entry?.contentRect.width ?? 0
+
+    const layout = width < 300 ? 'compact' : width < 600 ? 'normal' : 'expanded'
+
+    return (
+        <div ref={ref} className={`card card--${layout}`}>
+            <h2>Responsive Card</h2>
+            <p>Layout: {layout}</p>
+            <p>Current width: {Math.round(width)}px</p>
+        </div>
+    )
+}
+```
+
+**Chart that adapts to container:**
+
+```tsx
+function AdaptiveChart({ data }) {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const entry = useResizeObserver(containerRef)
+
+    const chartWidth = entry?.contentRect.width ?? 400
+    const chartHeight = entry?.contentRect.height ?? 300
+
+    return (
+        <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+            <svg width={chartWidth} height={chartHeight}>
+                {/* Chart renders with exact container dimensions */}
+            </svg>
+        </div>
+    )
+}
+```
+
+**Performance monitoring:**
+
+```tsx
+function PerformanceMonitor() {
+    const ref = useRef<HTMLDivElement>(null)
+    const [resizeCount, setResizeCount] = useState(0)
+
+    useResizeObserver(ref, {
+        onResize: (entry) => {
+            setResizeCount((c) => c + 1)
+            console.log('Resize detected:', {
+                width: entry.contentRect.width,
+                height: entry.contentRect.height,
+                timestamp: Date.now(),
+            })
+        },
+    })
+
+    return (
+        <div ref={ref} style={{ resize: 'both', overflow: 'auto' }}>
+            <p>Resize count: {resizeCount}</p>
+            <p>Resize this element to test</p>
+        </div>
+    )
+}
+```
+
+**Grid item auto-sizing:**
+
+```tsx
+function AutoSizingGridItem() {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useResizeObserver(ref)
+    const area = entry ? entry.contentRect.width * entry.contentRect.height : 0
+
+    const fontSize = Math.max(12, Math.min(24, Math.sqrt(area) / 10))
+
+    return (
+        <div ref={ref} style={{ fontSize }}>
+            <h3>Auto-sizing Content</h3>
+            <p>Font size adapts to element size</p>
+            <small>Area: {Math.round(area)}px²</small>
+        </div>
+    )
+}
+```
+
+### Browser Support
+
+ResizeObserver is supported in all modern browsers. The hook includes a check and warning for older browsers that don't support it.
+
+### Performance Notes
+
+-   ResizeObserver fires efficiently on actual size changes only
+-   More performant than polling or window resize listeners
+-   Fires before paint for smooth visual updates
+-   Use the callback option for side effects to avoid unnecessary re-renders
+
+### Comparison with other hooks
+
+-   **vs useSize**: useResizeObserver uses the modern API and provides more detailed metrics
+-   **vs useWindowSize**: useResizeObserver tracks specific elements, not the window
+-   **vs useResize**: useResizeObserver is read-only observation, useResize is for interactive resizing
+
+### Tests
+
+See `src/utility/hooks/__tests__/useResizeObserver.test.tsx` for comprehensive tests covering observation, callbacks, box types, multiple resize events, cleanup, browser support detection, and ref changes.
 
 ---
 
