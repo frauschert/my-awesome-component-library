@@ -12,6 +12,7 @@ Custom React hooks for common use cases in the component library.
 -   [useTimeout](#usetimeout)
 -   [useMediaQuery](#usemediaquery)
 -   [useWhyDidYouUpdate](#usewhydidyouupdate)
+-   [useCopyToClipboard](#usecopytoclipboard)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -1068,6 +1069,151 @@ const handleUpdateCallback = useCallback((data) => handleUpdate(data), [handleUp
 ### Tests
 
 See `src/utility/hooks/__tests__/useWhyDidYouUpdate.test.tsx` for comprehensive tests covering prop changes, object/array references, function references, added/removed props, edge cases (null, undefined, 0, empty string), and practical debugging scenarios.
+
+---
+
+## useCopyToClipboard
+
+Copy text to clipboard with modern Clipboard API and legacy fallback support.
+
+### Signature
+
+```ts
+function useCopyToClipboard(): {
+    copiedText: string | null
+    isCopying: boolean
+    isSuccess: boolean
+    error: Error | null
+    copy: (text: string) => Promise<boolean>
+    reset: () => void
+}
+```
+
+### Features
+
+-   🚀 Modern Clipboard API with `execCommand` fallback
+-   ⚡ Async status tracking (copying, success, error)
+-   🔄 Reset state for multiple copies
+-   🧪 SSR-safe (checks for browser environment)
+-   📦 Returns copied text for verification
+-   ⚠️ Comprehensive error handling
+
+### Parameters
+
+None. Returns an object with the following properties:
+
+-   `copiedText`: The last successfully copied text (or `null`)
+-   `isCopying`: Boolean indicating if a copy operation is in progress
+-   `isSuccess`: Boolean indicating if the last copy was successful
+-   `error`: Error object if the last copy failed (or `null`)
+-   `copy`: Async function that copies text to clipboard, returns `Promise<boolean>`
+-   `reset`: Function to reset all state to initial values
+
+### Usage
+
+```tsx
+import { useCopyToClipboard } from './utility/hooks'
+import { Button } from './components/Button'
+
+// Basic copy button
+function CopyButton() {
+    const { copy, isSuccess, isCopying } = useCopyToClipboard()
+
+    return (
+        <Button onClick={() => copy('Hello, World!')} disabled={isCopying}>
+            {isSuccess ? 'Copied!' : 'Copy'}
+        </Button>
+    )
+}
+```
+
+```tsx
+// Code snippet copy with feedback
+function CodeBlock({ code }: { code: string }) {
+    const { copy, copiedText, isSuccess, error } = useCopyToClipboard()
+
+    return (
+        <div>
+            <pre>{code}</pre>
+            <Button onClick={() => copy(code)}>
+                {isSuccess && copiedText === code ? '✓ Copied' : 'Copy'}
+            </Button>
+            {error && <span>Failed to copy: {error.message}</span>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Copy with reset after timeout
+function ShareButton({ url }: { url: string }) {
+    const { copy, isSuccess, reset } = useCopyToClipboard()
+
+    const handleCopy = async () => {
+        const success = await copy(url)
+        if (success) {
+            setTimeout(reset, 2000) // Reset after 2 seconds
+        }
+    }
+
+    return (
+        <Button onClick={handleCopy}>
+            {isSuccess ? 'Link Copied!' : 'Share'}
+        </Button>
+    )
+}
+```
+
+```tsx
+// Copy multiple items with state tracking
+function ApiKeyDisplay({ apiKey }: { apiKey: string }) {
+    const clipboard = useCopyToClipboard()
+
+    return (
+        <div>
+            <code>{apiKey}</code>
+            <Button
+                onClick={() => clipboard.copy(apiKey)}
+                disabled={clipboard.isCopying}
+            >
+                {clipboard.isCopying
+                    ? 'Copying...'
+                    : clipboard.isSuccess
+                    ? '✓ Copied'
+                    : 'Copy API Key'}
+            </Button>
+            {clipboard.error && (
+                <div>
+                    <p>Failed to copy: {clipboard.error.message}</p>
+                    <Button onClick={clipboard.reset}>Try Again</Button>
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Copy JSON data formatted
+function DataExporter({ data }: { data: object }) {
+    const { copy, isSuccess } = useCopyToClipboard()
+
+    const handleExport = () => {
+        const json = JSON.stringify(data, null, 2)
+        copy(json)
+    }
+
+    return (
+        <Button onClick={handleExport}>
+            {isSuccess ? '✓ Exported' : 'Export as JSON'}
+        </Button>
+    )
+}
+```
+
+### Tests
+
+See `src/utility/hooks/__tests__/useCopyToClipboard.test.tsx` for comprehensive tests covering Clipboard API, execCommand fallback, async status tracking, error handling, reset functionality, and practical use cases (code snippets, URLs, JSON, emails).
 
 ---
 
