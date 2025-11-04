@@ -11,6 +11,7 @@ import useMediaQuery from './useMediaQuery'
 import useWhyDidYouUpdate from './useWhyDidYouUpdate'
 import useCopyToClipboard from './useCopyToClipboard'
 import useInterval from './useInterval'
+import useWindowSize from './useWindowSize'
 
 export {
     useDebounce,
@@ -27,6 +28,7 @@ export {
     useWhyDidYouUpdate,
     useCopyToClipboard,
     useInterval,
+    useWindowSize,
 }
 
 export default {
@@ -44,4 +46,5 @@ export default {
     useWhyDidYouUpdate,
     useCopyToClipboard,
     useInterval,
+    useWindowSize,
 }

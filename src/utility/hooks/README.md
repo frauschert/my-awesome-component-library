@@ -14,6 +14,7 @@ Custom React hooks for common use cases in the component library.
 -   [useWhyDidYouUpdate](#usewhydidyouupdate)
 -   [useCopyToClipboard](#usecopytoclipboard)
 -   [useInterval](#useinterval)
+-   [useWindowSize](#usewindowsize)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -1388,6 +1389,193 @@ function AnimationSpeed() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useInterval.test.tsx` for tests covering basic intervals, pause/resume, callback updates, cleanup, and practical use cases.
+
+---
+
+## useWindowSize
+
+Track the browser window's dimensions and get updates on resize. Essential for responsive layouts and conditional rendering based on viewport size.
+
+### Signature
+
+```ts
+interface WindowSize {
+    width: number
+    height: number
+}
+
+function useWindowSize(): WindowSize
+```
+
+### Features
+
+-   📏 Real-time window width and height tracking
+-   🔄 Automatic updates on window resize
+-   🧹 Automatic cleanup on unmount
+-   🌐 SSR-safe (returns 0 for width/height on server)
+-   ⚡ Lightweight with single resize listener
+
+### Returns
+
+Object with `width` and `height` properties representing the current window dimensions in pixels.
+
+### Usage
+
+```tsx
+import { useWindowSize } from './utility/hooks'
+
+// Basic responsive layout
+function ResponsiveLayout() {
+    const { width, height } = useWindowSize()
+
+    return (
+        <div>
+            <h1>Window Size</h1>
+            <p>
+                Width: {width}px, Height: {height}px
+            </p>
+        </div>
+    )
+}
+```
+
+```tsx
+// Conditional rendering based on viewport
+function AdaptiveUI() {
+    const { width } = useWindowSize()
+
+    const isMobile = width < 768
+    const isTablet = width >= 768 && width < 1024
+    const isDesktop = width >= 1024
+
+    return (
+        <div>
+            {isMobile && <MobileNav />}
+            {isTablet && <TabletNav />}
+            {isDesktop && <DesktopNav />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Responsive columns
+function ResponsiveGrid({ items }: { items: any[] }) {
+    const { width } = useWindowSize()
+
+    const columns = width < 768 ? 1 : width < 1024 ? 2 : width < 1440 ? 3 : 4
+
+    return (
+        <div
+            style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${columns}, 1fr)`,
+                gap: '1rem',
+            }}
+        >
+            {items.map((item, i) => (
+                <div key={i}>{item}</div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Aspect ratio calculation
+function VideoPlayer() {
+    const { width, height } = useWindowSize()
+    const aspectRatio = width / height
+    const isWideScreen = aspectRatio > 16 / 9
+
+    return (
+        <video
+            style={{
+                width: isWideScreen ? 'auto' : '100%',
+                height: isWideScreen ? '100%' : 'auto',
+            }}
+        />
+    )
+}
+```
+
+```tsx
+// Orientation detection
+function OrientationAware() {
+    const { width, height } = useWindowSize()
+    const isLandscape = width > height
+    const isPortrait = height > width
+
+    return (
+        <div>
+            <p>Orientation: {isLandscape ? 'Landscape' : 'Portrait'}</p>
+            {isPortrait && <PortraitLayout />}
+            {isLandscape && <LandscapeLayout />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Responsive font sizing
+function AdaptiveTypography() {
+    const { width } = useWindowSize()
+
+    const fontSize = Math.max(16, Math.min(24, width / 50))
+
+    return (
+        <div
+            style={{
+                fontSize: `${fontSize}px`,
+            }}
+        >
+            <h1>Responsive Text</h1>
+            <p>This text scales with the viewport width</p>
+        </div>
+    )
+}
+```
+
+```tsx
+// Breakpoint-based component switching
+function MediaQuery() {
+    const { width } = useWindowSize()
+
+    const breakpoints = {
+        xs: width < 576,
+        sm: width >= 576 && width < 768,
+        md: width >= 768 && width < 992,
+        lg: width >= 992 && width < 1200,
+        xl: width >= 1200,
+    }
+
+    return (
+        <div>
+            {breakpoints.xs && <ExtraSmallLayout />}
+            {breakpoints.sm && <SmallLayout />}
+            {breakpoints.md && <MediumLayout />}
+            {breakpoints.lg && <LargeLayout />}
+            {breakpoints.xl && <ExtraLargeLayout />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Dynamic chart sizing
+function ResponsiveChart({ data }: { data: any[] }) {
+    const { width, height } = useWindowSize()
+
+    const chartWidth = Math.min(width * 0.9, 1200)
+    const chartHeight = Math.min(height * 0.6, 600)
+
+    return <Chart data={data} width={chartWidth} height={chartHeight} />
+}
+```
+
+### Tests
+
+See `src/utility/hooks/__tests__/useWindowSize.test.tsx` for comprehensive tests covering initial size, resize events, cleanup, edge cases (mobile/tablet/desktop viewports), and practical use cases (orientation, aspect ratio, breakpoints).
 
 ---
 

@@ -215,6 +215,7 @@ import {
     useWhyDidYouUpdate,
     useCopyToClipboard,
     useInterval,
+    useWindowSize,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -413,6 +414,7 @@ export {
     useWhyDidYouUpdate,
     useCopyToClipboard,
     useInterval,
+    useWindowSize,
     memoize,
     throttle,
     chunk,
