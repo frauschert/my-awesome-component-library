@@ -200,7 +200,7 @@
 }
 
 // Dark theme adjustments
-:root[data-theme='dark'] {
+.theme--dark {
     .button-group__button {
         background-color: var(--theme-surface, #2d2d2d);
         border-color: var(--theme-border, #404040);

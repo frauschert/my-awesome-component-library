@@ -328,7 +328,7 @@
 }
 
 // Dark theme adjustments
-:root[data-theme='dark'] {
+.theme--dark {
     .kanban {
         background-color: var(--theme-background, #1a1a1a);
     }

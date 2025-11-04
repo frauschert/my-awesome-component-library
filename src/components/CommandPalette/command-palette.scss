@@ -173,7 +173,7 @@
     color: var(--theme-text-muted, #666);
 }
 
-[data-theme='dark'] {
+.theme--dark {
     .command-palette__container {
         background: var(--theme-bg-primary, #1a1a1a);
         border: 1px solid var(--theme-border-color, #2d2d2d);

@@ -108,7 +108,7 @@
 }
 
 // Dark theme
-[data-theme='dark'] {
+.theme--dark {
     .rating__star-bg {
         color: var(--theme-bg-tertiary, #404040);
     }

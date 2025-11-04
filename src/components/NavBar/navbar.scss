@@ -397,7 +397,7 @@
 }
 
 // Dark theme adjustments
-:root[data-theme='dark'] {
+.theme--dark {
     .navbar__dropdown {
         background-color: var(--theme-surface);
         border-color: var(--theme-border);

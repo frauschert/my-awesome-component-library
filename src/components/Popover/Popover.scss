@@ -130,7 +130,7 @@
 }
 
 // Dark theme
-[data-theme='dark'] {
+.theme--dark {
     .popover {
         background: var(--theme-bg-primary, #1a1a1a);
         border-color: var(--theme-border-color, #2d2d2d);

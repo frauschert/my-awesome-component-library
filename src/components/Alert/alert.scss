@@ -213,7 +213,7 @@
 }
 
 // Dark theme adjustments
-[data-theme='dark'] {
+.theme--dark {
     .alert {
         &--info {
             background-color: rgba(33, 150, 243, 0.15);

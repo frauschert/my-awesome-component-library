@@ -254,7 +254,7 @@
 }
 
 // Dark theme
-[data-theme='dark'] {
+.theme--dark {
     .timeline::before {
         background-color: var(--theme-border, #404040);
     }

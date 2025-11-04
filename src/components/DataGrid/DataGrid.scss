@@ -263,7 +263,7 @@
 }
 
 // Dark theme
-[data-theme='dark'] {
+.theme--dark {
     .datagrid {
         background-color: var(--theme-bg-primary, #0d0d0d);
         border-color: var(--theme-border, #2d2d2d);
