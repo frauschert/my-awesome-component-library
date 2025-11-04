@@ -238,6 +238,7 @@ import {
     useTimeoutFn,
     useResizeObserver,
     useIntersectionObserver,
+    useIsFirstRender,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -459,6 +460,7 @@ export {
     useTimeoutFn,
     useResizeObserver,
     useIntersectionObserver,
+    useIsFirstRender,
     memoize,
     throttle,
     chunk,

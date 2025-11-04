@@ -19,6 +19,7 @@ Custom React hooks for common use cases in the component library.
 -   [useThrottle](#usethrottle)
 -   [useResizeObserver](#useresizeobserver)
 -   [useIntersectionObserver](#useintersectionobserver)
+-   [useIsFirstRender](#useisfirstrender)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -2464,6 +2465,112 @@ IntersectionObserver is supported in all modern browsers. The hook includes a ch
 ### Tests
 
 See `src/utility/hooks/__tests__/useIntersectionObserver.test.tsx` for comprehensive tests covering observation, callbacks, thresholds, root margins, freeze behavior, multiple updates, and browser support detection.
+
+---
+
+## useIsFirstRender
+
+Returns `true` if the component is on its first render, `false` otherwise. Useful for skipping effects on mount or handling first-render-only logic.
+
+### API
+
+```tsx
+const isFirstRender: boolean = useIsFirstRender()
+```
+
+### Parameters
+
+None
+
+### Returns
+
+-   `boolean` - `true` if this is the first render, `false` for all subsequent renders
+
+### Features
+
+-   ✅ Extremely lightweight (single ref)
+-   ✅ Stable reference (doesn't change identity)
+-   ✅ Each hook instance independent
+-   ✅ Works in React 18+ strict mode
+-   ✅ TypeScript support
+-   ✅ No dependencies
+
+### Usage
+
+```tsx
+import { useIsFirstRender } from './utility/hooks'
+
+// Skip effect on first render
+function MyComponent() {
+    const [count, setCount] = useState(0)
+    const isFirstRender = useIsFirstRender()
+
+    useEffect(() => {
+        if (!isFirstRender) {
+            console.log('Count changed:', count)
+        }
+    }, [count, isFirstRender])
+
+    return <button onClick={() => setCount(count + 1)}>Count: {count}</button>
+}
+
+// Show different UI on first render
+function WelcomeMessage() {
+    const isFirstRender = useIsFirstRender()
+
+    return (
+        <div>
+            {isFirstRender ? <h1>Welcome! 🎉</h1> : <h1>Welcome back!</h1>}
+        </div>
+    )
+}
+
+// Conditional effect execution
+function DataFetcher({ id }) {
+    const isFirstRender = useIsFirstRender()
+
+    useEffect(() => {
+        // Only fetch on ID changes, not on mount
+        if (!isFirstRender) {
+            fetchData(id)
+        }
+    }, [id, isFirstRender])
+}
+
+// Debug render count
+function DebugComponent() {
+    const isFirstRender = useIsFirstRender()
+    const renderCount = useRef(0)
+
+    renderCount.current++
+
+    console.log(`Render #${renderCount.current} - First: ${isFirstRender}`)
+
+    return <div>Check console</div>
+}
+```
+
+### How it works
+
+The hook uses a `useRef` to track whether the component has rendered before. The ref is initialized to `true` on mount. On the first call (first render), it returns `true` and sets the ref to `false`. All subsequent calls return `false`.
+
+### When to use
+
+-   **Skip mount effects**: Run effects only on updates, not on mount
+-   **First-render UI**: Show different content on first vs subsequent renders
+-   **Conditional logic**: Execute code based on whether it's the first render
+-   **Debug rendering**: Track whether a component just mounted
+
+### Notes
+
+-   Each instance of `useIsFirstRender` has its own independent state
+-   The hook returns `true` on the first render even in React 18 strict mode (which double-renders)
+-   The returned value doesn't change identity, so it's safe to use in dependency arrays
+-   For checking if a component is mounted (not unmounted), consider a different pattern
+
+### Tests
+
+See `src/utility/hooks/__tests__/useIsFirstRender.test.tsx` for comprehensive tests covering basic behavior, state updates, multiple instances, unmount/remount, strict mode, and consistency.
 
 ---
 
