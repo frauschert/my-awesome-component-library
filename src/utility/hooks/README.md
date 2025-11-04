@@ -15,7 +15,8 @@ Custom React hooks for common use cases in the component library.
 -   [useCopyToClipboard](#usecopytoclipboard)
 -   [useInterval](#useinterval)
 -   [useWindowSize](#usewindowsize)
--   [useDebounce](#usedebounce)
+-   [useDebounce (value)](#usedebounce-value)
+-   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
 -   [useSessionStorage](#usesessionstorage)
@@ -1579,7 +1580,225 @@ See `src/utility/hooks/__tests__/useWindowSize.test.tsx` for comprehensive tests
 
 ---
 
-## useDebounce
+## useDebounce (value)
+
+Debounces a value, delaying updates until after the specified delay. Perfect for search inputs, form validation, API calls, and any scenario where you want to wait for user input to stabilize.
+
+### Signature
+
+```ts
+function useDebounce<T>(value: T, delay: number): T
+```
+
+### Features
+
+-   ⏱️ Delays value updates until after specified delay
+-   🔄 Resets timer on each value change
+-   🧹 Automatic cleanup on unmount
+-   📦 Works with any value type (string, number, object, array, etc.)
+-   ⚡ Prevents unnecessary API calls or expensive operations
+
+### Parameters
+
+-   `value`: The value to debounce (any type)
+-   `delay`: Delay in milliseconds before updating the debounced value
+
+### Returns
+
+The debounced value (same type as input).
+
+### Usage
+
+```tsx
+import { useDebounce } from './utility/hooks'
+import { useState, useEffect } from 'react'
+
+// Search input with debounced API calls
+function SearchInput() {
+    const [searchTerm, setSearchTerm] = useState('')
+    const debouncedSearch = useDebounce(searchTerm, 500)
+
+    useEffect(() => {
+        if (debouncedSearch) {
+            // API call only happens after user stops typing for 500ms
+            searchAPI(debouncedSearch)
+        }
+    }, [debouncedSearch])
+
+    return (
+        <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+        />
+    )
+}
+```
+
+```tsx
+// Form validation with debounce
+function UsernameInput() {
+    const [username, setUsername] = useState('')
+    const debouncedUsername = useDebounce(username, 800)
+    const [isAvailable, setIsAvailable] = useState<boolean | null>(null)
+
+    useEffect(() => {
+        if (debouncedUsername.length >= 3) {
+            // Check availability only after user stops typing
+            checkUsernameAvailability(debouncedUsername).then(setIsAvailable)
+        }
+    }, [debouncedUsername])
+
+    return (
+        <div>
+            <input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            {isAvailable === true && <span>✓ Available</span>}
+            {isAvailable === false && <span>✗ Taken</span>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Auto-save with debounce
+function AutoSaveEditor() {
+    const [content, setContent] = useState('')
+    const debouncedContent = useDebounce(content, 2000)
+
+    useEffect(() => {
+        if (debouncedContent) {
+            // Auto-save 2 seconds after user stops typing
+            saveToServer(debouncedContent)
+        }
+    }, [debouncedContent])
+
+    return (
+        <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+        />
+    )
+}
+```
+
+```tsx
+// Responsive resize handling
+function ResponsiveComponent() {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+    const debouncedWidth = useDebounce(windowWidth, 200)
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    // Expensive calculations only run after resize settles
+    const layout = calculateLayout(debouncedWidth)
+
+    return <div>{layout}</div>
+}
+```
+
+```tsx
+// Filter list with debounce
+function FilterableList({ items }: { items: any[] }) {
+    const [filterText, setFilterText] = useState('')
+    const debouncedFilter = useDebounce(filterText, 300)
+
+    const filteredItems = items.filter((item) =>
+        item.name.toLowerCase().includes(debouncedFilter.toLowerCase())
+    )
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                placeholder="Filter..."
+            />
+            <ul>
+                {filteredItems.map((item) => (
+                    <li key={item.id}>{item.name}</li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+```
+
+```tsx
+// Debounce slider value for expensive operations
+function SliderControl() {
+    const [sliderValue, setSliderValue] = useState(50)
+    const debouncedValue = useDebounce(sliderValue, 100)
+
+    useEffect(() => {
+        // Expensive operation only runs when slider settles
+        performExpensiveCalculation(debouncedValue)
+    }, [debouncedValue])
+
+    return (
+        <div>
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value={sliderValue}
+                onChange={(e) => setSliderValue(Number(e.target.value))}
+            />
+            <span>Value: {sliderValue}</span>
+        </div>
+    )
+}
+```
+
+```tsx
+// Debounce API parameters
+function DataFetcher() {
+    const [params, setParams] = useState({
+        page: 1,
+        pageSize: 10,
+        sort: 'name',
+    })
+    const debouncedParams = useDebounce(params, 500)
+
+    useEffect(() => {
+        // Fetch data only after params stabilize
+        fetchData(debouncedParams)
+    }, [debouncedParams])
+
+    return (
+        <div>
+            <button
+                onClick={() => setParams({ ...params, page: params.page + 1 })}
+            >
+                Next Page
+            </button>
+            <select
+                value={params.sort}
+                onChange={(e) => setParams({ ...params, sort: e.target.value })}
+            >
+                <option value="name">Name</option>
+                <option value="date">Date</option>
+            </select>
+        </div>
+    )
+}
+```
+
+### Tests
+
+See `src/utility/hooks/__tests__/useDebounce.test.tsx` for comprehensive tests covering basic debouncing, rapid changes, timer resets, different delays, various value types (string, number, boolean, object, array, null, undefined), cleanup, and practical use cases (search input, resize handling, API throttling).
+
+---
+
+## useDebounce (effect)
 
 Debounces a value, delaying updates until after a specified delay period.
 

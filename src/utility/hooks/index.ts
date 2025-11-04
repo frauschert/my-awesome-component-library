@@ -1,4 +1,4 @@
-import * as useDebounce from './useDebounceEffect'
+import * as useDebounceEffect from './useDebounceEffect'
 import * as usePrevious from './usePrevious'
 import { useLocalStorage, useSessionStorage } from './useStorage'
 import useOnClickOutside from './useOnClickOutside'
@@ -12,8 +12,10 @@ import useWhyDidYouUpdate from './useWhyDidYouUpdate'
 import useCopyToClipboard from './useCopyToClipboard'
 import useInterval from './useInterval'
 import useWindowSize from './useWindowSize'
+import useDebounce from './useDebounce'
 
 export {
+    useDebounceEffect,
     useDebounce,
     usePrevious,
     useLocalStorage,
@@ -32,6 +34,7 @@ export {
 }
 
 export default {
+    useDebounceEffect,
     useDebounce,
     usePrevious,
     useLocalStorage,

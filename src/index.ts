@@ -216,6 +216,7 @@ import {
     useCopyToClipboard,
     useInterval,
     useWindowSize,
+    useDebounce,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -415,6 +416,7 @@ export {
     useCopyToClipboard,
     useInterval,
     useWindowSize,
+    useDebounce,
     memoize,
     throttle,
     chunk,
