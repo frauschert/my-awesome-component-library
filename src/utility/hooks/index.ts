@@ -10,6 +10,7 @@ import useTimeout from './useTimeout'
 import useMediaQuery from './useMediaQuery'
 import useWhyDidYouUpdate from './useWhyDidYouUpdate'
 import useCopyToClipboard from './useCopyToClipboard'
+import useInterval from './useInterval'
 
 export {
     useDebounce,
@@ -25,6 +26,7 @@ export {
     useMediaQuery,
     useWhyDidYouUpdate,
     useCopyToClipboard,
+    useInterval,
 }
 
 export default {
@@ -41,4 +43,5 @@ export default {
     useMediaQuery,
     useWhyDidYouUpdate,
     useCopyToClipboard,
+    useInterval,
 }

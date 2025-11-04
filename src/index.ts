@@ -214,6 +214,7 @@ import {
     useMediaQuery,
     useWhyDidYouUpdate,
     useCopyToClipboard,
+    useInterval,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -411,6 +412,7 @@ export {
     useMediaQuery,
     useWhyDidYouUpdate,
     useCopyToClipboard,
+    useInterval,
     memoize,
     throttle,
     chunk,

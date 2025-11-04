@@ -13,6 +13,7 @@ Custom React hooks for common use cases in the component library.
 -   [useMediaQuery](#usemediaquery)
 -   [useWhyDidYouUpdate](#usewhydidyouupdate)
 -   [useCopyToClipboard](#usecopytoclipboard)
+-   [useInterval](#useinterval)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -1214,6 +1215,179 @@ function DataExporter({ data }: { data: object }) {
 ### Tests
 
 See `src/utility/hooks/__tests__/useCopyToClipboard.test.tsx` for comprehensive tests covering Clipboard API, execCommand fallback, async status tracking, error handling, reset functionality, and practical use cases (code snippets, URLs, JSON, emails).
+
+---
+
+## useInterval
+
+Run a callback function on a specified interval with automatic cleanup. Pass `null` as the delay to pause the interval.
+
+### Signature
+
+```ts
+function useInterval(callback: () => void, delay: number | null): void
+```
+
+### Features
+
+-   🔄 Runs callback repeatedly at specified interval
+-   ⏸️ Pause by passing `null` as delay
+-   🧹 Automatic cleanup on unmount
+-   🔄 Updates callback without restarting interval
+-   📦 Properly handles delay changes
+
+### Parameters
+
+-   `callback`: Function to call on each interval tick
+-   `delay`: Interval delay in milliseconds, or `null` to pause
+
+### Usage
+
+```tsx
+import { useInterval } from './utility/hooks'
+import { useState } from 'react'
+
+// Simple counter
+function Counter() {
+    const [count, setCount] = useState(0)
+
+    useInterval(() => {
+        setCount((c) => c + 1)
+    }, 1000)
+
+    return <div>Count: {count}</div>
+}
+```
+
+```tsx
+// Pausable interval
+function Timer() {
+    const [seconds, setSeconds] = useState(0)
+    const [isPaused, setIsPaused] = useState(false)
+
+    useInterval(
+        () => {
+            setSeconds((s) => s + 1)
+        },
+        isPaused ? null : 1000
+    )
+
+    return (
+        <div>
+            <div>Elapsed: {seconds}s</div>
+            <button onClick={() => setIsPaused(!isPaused)}>
+                {isPaused ? 'Resume' : 'Pause'}
+            </button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Countdown timer
+function Countdown({ initialSeconds }: { initialSeconds: number }) {
+    const [seconds, setSeconds] = useState(initialSeconds)
+
+    useInterval(
+        () => {
+            setSeconds((s) => s - 1)
+        },
+        seconds > 0 ? 1000 : null, // Pause when reaching zero
+    )
+
+    return <div>{seconds > 0 ? `${seconds}s remaining` : 'Time's up!'}</div>
+}
+```
+
+```tsx
+// Polling data from API
+function LiveData() {
+    const [data, setData] = useState(null)
+    const [isPolling, setIsPolling] = useState(true)
+
+    useInterval(
+        async () => {
+            const response = await fetch('/api/data')
+            const json = await response.json()
+            setData(json)
+        },
+        isPolling ? 5000 : null // Poll every 5 seconds
+    )
+
+    return (
+        <div>
+            <div>Data: {JSON.stringify(data)}</div>
+            <button onClick={() => setIsPolling(!isPolling)}>
+                {isPolling ? 'Stop Polling' : 'Start Polling'}
+            </button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Auto-save form
+function AutoSaveForm() {
+    const [formData, setFormData] = useState({ title: '', content: '' })
+    const [lastSaved, setLastSaved] = useState<Date | null>(null)
+
+    useInterval(() => {
+        // Save to API
+        fetch('/api/save', {
+            method: 'POST',
+            body: JSON.stringify(formData),
+        })
+        setLastSaved(new Date())
+    }, 30000) // Auto-save every 30 seconds
+
+    return (
+        <div>
+            <input
+                value={formData.title}
+                onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                }
+            />
+            <textarea
+                value={formData.content}
+                onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                }
+            />
+            {lastSaved && (
+                <small>Last saved: {lastSaved.toLocaleTimeString()}</small>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Dynamic interval speed
+function AnimationSpeed() {
+    const [frame, setFrame] = useState(0)
+    const [speed, setSpeed] = useState<'slow' | 'normal' | 'fast'>('normal')
+
+    const delays = { slow: 100, normal: 50, fast: 16 }
+
+    useInterval(() => {
+        setFrame((f) => f + 1)
+    }, delays[speed])
+
+    return (
+        <div>
+            <div>Frame: {frame}</div>
+            <button onClick={() => setSpeed('slow')}>Slow</button>
+            <button onClick={() => setSpeed('normal')}>Normal</button>
+            <button onClick={() => setSpeed('fast')}>Fast</button>
+        </div>
+    )
+}
+```
+
+### Tests
+
+See `src/utility/hooks/__tests__/useInterval.test.tsx` for tests covering basic intervals, pause/resume, callback updates, cleanup, and practical use cases.
 
 ---
 
