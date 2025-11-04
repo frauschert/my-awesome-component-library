@@ -18,6 +18,7 @@ Custom React hooks for common use cases in the component library.
 -   [useDebounce (value)](#usedebounce-value)
 -   [useThrottle](#usethrottle)
 -   [useResizeObserver](#useresizeobserver)
+-   [useIntersectionObserver](#useintersectionobserver)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -2201,6 +2202,268 @@ ResizeObserver is supported in all modern browsers. The hook includes a check an
 ### Tests
 
 See `src/utility/hooks/__tests__/useResizeObserver.test.tsx` for comprehensive tests covering observation, callbacks, box types, multiple resize events, cleanup, browser support detection, and ref changes.
+
+---
+
+## useIntersectionObserver
+
+Observes visibility changes of an element using the IntersectionObserver API. Provides more control and flexibility than useOnScreen with full access to IntersectionObserver options and intersection details.
+
+### API
+
+```ts
+useIntersectionObserver<T extends HTMLElement>(
+  ref: RefObject<T>,
+  options?: UseIntersectionObserverOptions
+): IntersectionObserverEntry | null
+```
+
+### Parameters
+
+-   **ref**: Reference to the element to observe
+-   **options** (optional):
+    -   **root**: The element used as viewport for checking visibility (defaults to browser viewport)
+    -   **rootMargin**: Margin around root (e.g., `'10px 20px'`) - defaults to `'0px'`
+    -   **threshold**: Number or array of numbers between 0 and 1 indicating visibility percentage(s) to trigger callback - defaults to `0`
+    -   **freezeOnceVisible**: If true, stops observing after element becomes visible once - defaults to `false`
+    -   **onChange**: Callback function called on each intersection change with the entry
+
+### Returns
+
+`IntersectionObserverEntry | null` - The latest intersection entry or null if not yet observed
+
+### Features
+
+-   **Flexible visibility detection**: Control when callbacks fire with threshold options
+-   **Root viewport control**: Observe relative to any scrollable ancestor
+-   **Root margin support**: Trigger earlier/later with margin offsets
+-   **Freeze on visible**: Optimize performance by stopping observation once visible
+-   **Detailed intersection data**: Access full IntersectionObserverEntry with ratios, bounds, and timing
+-   **Automatic cleanup**: Disconnects observer on unmount
+-   **SSR safe**: Checks for IntersectionObserver availability
+
+### Usage
+
+**Basic visibility detection:**
+
+```tsx
+import { useIntersectionObserver } from './utility/hooks'
+
+function LazyImage({ src, alt }) {
+    const ref = useRef<HTMLImageElement>(null)
+    const entry = useIntersectionObserver(ref, { threshold: 0.1 })
+    const isVisible = entry?.isIntersecting
+
+    return (
+        <img
+            ref={ref}
+            src={isVisible ? src : undefined}
+            alt={alt}
+            loading="lazy"
+        />
+    )
+}
+```
+
+**Lazy load with freeze (load once):**
+
+```tsx
+function LazyLoadedComponent() {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useIntersectionObserver(ref, {
+        threshold: 0.5,
+        freezeOnceVisible: true,
+    })
+
+    const shouldLoad = entry?.isIntersecting
+
+    return (
+        <div ref={ref}>
+            {shouldLoad ? <ExpensiveComponent /> : <Placeholder />}
+        </div>
+    )
+}
+```
+
+**Scroll-triggered animation:**
+
+```tsx
+function AnimateOnScroll({ children }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useIntersectionObserver(ref, {
+        threshold: 0.3,
+        rootMargin: '-50px',
+    })
+
+    const isVisible = entry?.isIntersecting
+
+    return (
+        <div
+            ref={ref}
+            className={cn('transition-all duration-700', {
+                'opacity-100 translate-y-0': isVisible,
+                'opacity-0 translate-y-10': !isVisible,
+            })}
+        >
+            {children}
+        </div>
+    )
+}
+```
+
+**Progress tracking with multiple thresholds:**
+
+```tsx
+function ProgressTracker() {
+    const ref = useRef<HTMLDivElement>(null)
+    const [progress, setProgress] = useState(0)
+
+    useIntersectionObserver(ref, {
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+        onChange: (entry) => {
+            setProgress(Math.round(entry.intersectionRatio * 100))
+        },
+    })
+
+    return (
+        <div ref={ref} style={{ height: '200vh' }}>
+            <div style={{ position: 'sticky', top: 0 }}>
+                Progress: {progress}%
+            </div>
+        </div>
+    )
+}
+```
+
+**Viewport-relative observation:**
+
+```tsx
+function ScrollContainer() {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const itemRef = useRef<HTMLDivElement>(null)
+
+    const entry = useIntersectionObserver(itemRef, {
+        root: containerRef.current,
+        threshold: 1.0, // Fully visible within container
+    })
+
+    return (
+        <div ref={containerRef} style={{ height: 400, overflow: 'auto' }}>
+            <div style={{ height: 800 }}>
+                <div ref={itemRef}>
+                    {entry?.isIntersecting
+                        ? 'Fully visible in container'
+                        : 'Not fully visible'}
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+
+**Analytics tracking:**
+
+```tsx
+function ArticleView({ articleId }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const [viewed, setViewed] = useState(false)
+
+    useIntersectionObserver(ref, {
+        threshold: 0.75, // 75% visible
+        onChange: (entry) => {
+            if (entry.isIntersecting && !viewed) {
+                trackArticleView(articleId)
+                setViewed(true)
+            }
+        },
+    })
+
+    return (
+        <article ref={ref}>
+            <h1>Article Title</h1>
+            <p>Content...</p>
+        </article>
+    )
+}
+```
+
+**Infinite scroll:**
+
+```tsx
+function InfiniteList() {
+    const loadMoreRef = useRef<HTMLDivElement>(null)
+    const [items, setItems] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    useIntersectionObserver(loadMoreRef, {
+        threshold: 1.0,
+        onChange: async (entry) => {
+            if (entry.isIntersecting && !loading) {
+                setLoading(true)
+                const newItems = await fetchMoreItems()
+                setItems((prev) => [...prev, ...newItems])
+                setLoading(false)
+            }
+        },
+    })
+
+    return (
+        <div>
+            {items.map((item) => (
+                <div key={item.id}>{item.content}</div>
+            ))}
+            <div ref={loadMoreRef}>{loading ? 'Loading...' : 'Load more'}</div>
+        </div>
+    )
+}
+```
+
+**Visibility percentage tracking:**
+
+```tsx
+function VisibilityMeter() {
+    const ref = useRef<HTMLDivElement>(null)
+    const entry = useIntersectionObserver(ref, {
+        threshold: Array.from({ length: 101 }, (_, i) => i / 100), // 0%, 1%, 2%, ... 100%
+    })
+
+    const visiblePercent = Math.round((entry?.intersectionRatio ?? 0) * 100)
+
+    return (
+        <div ref={ref} style={{ height: 300 }}>
+            <div>Visible: {visiblePercent}%</div>
+            <div
+                style={{
+                    width: `${visiblePercent}%`,
+                    height: 4,
+                    background: 'green',
+                }}
+            />
+        </div>
+    )
+}
+```
+
+### Browser Support
+
+IntersectionObserver is supported in all modern browsers. The hook includes a check and warning for older browsers that don't support it.
+
+### Performance Tips
+
+-   Use `freezeOnceVisible: true` for one-time visibility checks (lazy loading)
+-   Keep threshold arrays reasonable (avoid hundreds of values unless necessary)
+-   Use `onChange` callback for side effects to avoid unnecessary re-renders
+-   Consider `rootMargin` for earlier/later triggering without changing thresholds
+
+### Comparison with other hooks
+
+-   **vs useOnScreen**: useIntersectionObserver provides full IntersectionObserver API access with more options
+-   **vs useResizeObserver**: useIntersectionObserver tracks visibility/position, useResizeObserver tracks size
+-   **vs useScrollPosition**: useIntersectionObserver is more efficient for visibility detection
+
+### Tests
+
+See `src/utility/hooks/__tests__/useIntersectionObserver.test.tsx` for comprehensive tests covering observation, callbacks, thresholds, root margins, freeze behavior, multiple updates, and browser support detection.
 
 ---
 

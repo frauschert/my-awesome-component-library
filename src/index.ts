@@ -237,6 +237,7 @@ import {
     useScrollIntoView,
     useTimeoutFn,
     useResizeObserver,
+    useIntersectionObserver,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -457,6 +458,7 @@ export {
     useScrollIntoView,
     useTimeoutFn,
     useResizeObserver,
+    useIntersectionObserver,
     memoize,
     throttle,
     chunk,

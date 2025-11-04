@@ -32,6 +32,7 @@ import { useResize } from './useResize'
 import useScrollIntoView from './useScrollIntoView'
 import useTimeoutFn from './useTimeoutFn'
 import useResizeObserver from './useResizeObserver'
+import useIntersectionObserver from './useIntersectionObserver'
 
 export {
     useDebounceEffect,
@@ -70,6 +71,7 @@ export {
     useScrollIntoView,
     useTimeoutFn,
     useResizeObserver,
+    useIntersectionObserver,
 }
 
 export default {
@@ -109,4 +111,5 @@ export default {
     useScrollIntoView,
     useTimeoutFn,
     useResizeObserver,
+    useIntersectionObserver,
 }
