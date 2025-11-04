@@ -20,6 +20,7 @@ Custom React hooks for common use cases in the component library.
 -   [useResizeObserver](#useresizeobserver)
 -   [useIntersectionObserver](#useintersectionobserver)
 -   [useIsFirstRender](#useisfirstrender)
+-   [useClickAway](#useclickaway)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -2571,6 +2572,200 @@ The hook uses a `useRef` to track whether the component has rendered before. The
 ### Tests
 
 See `src/utility/hooks/__tests__/useIsFirstRender.test.tsx` for comprehensive tests covering basic behavior, state updates, multiple instances, unmount/remount, strict mode, and consistency.
+
+---
+
+## useClickAway
+
+Detects clicks outside of specified element(s). A more feature-rich alternative to `useOnClickOutside`, `useClickOutside`, and `useDetectOutsideClick` with support for multiple refs, custom event types, and configurable options.
+
+### API
+
+```tsx
+useClickAway<T extends HTMLElement>(
+    refs: RefObject<T | null> | Array<RefObject<T | null>>,
+    handler: (event: MouseEvent | TouchEvent | FocusEvent) => void,
+    options?: {
+        events?: Array<'mousedown' | 'mouseup' | 'touchstart' | 'touchend' | 'focusin'>
+        capture?: boolean
+    }
+): void
+```
+
+### Parameters
+
+-   `refs` - Single ref or array of refs to monitor. Clicks outside all these elements will trigger the handler
+-   `handler` - Callback function invoked when a click occurs outside
+-   `options` (optional)
+    -   `events` - Array of event types to listen for (default: `['mousedown', 'touchstart']`)
+    -   `capture` - Whether to use event capture phase (default: `true`)
+
+### Features
+
+-   ✅ Support for single or multiple refs
+-   ✅ Customizable event types (mouse, touch, focus)
+-   ✅ Event capture control
+-   ✅ Stable handler reference (doesn't re-attach listeners on handler change)
+-   ✅ Automatic cleanup on unmount
+-   ✅ Handles nested elements correctly
+-   ✅ Graceful handling of null refs
+-   ✅ TypeScript support with generic types
+
+### Usage
+
+```tsx
+import { useClickAway } from './utility/hooks'
+
+// Basic usage - single ref
+function Dropdown() {
+    const [open, setOpen] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    useClickAway(ref, () => setOpen(false))
+
+    return (
+        <div ref={ref}>
+            <button onClick={() => setOpen(!open)}>Toggle</button>
+            {open && <div>Dropdown content</div>}
+        </div>
+    )
+}
+
+// Multiple refs
+function ComplexModal() {
+    const [open, setOpen] = useState(true)
+    const modalRef = useRef<HTMLDivElement>(null)
+    const triggerRef = useRef<HTMLButtonElement>(null)
+
+    // Click outside both modal AND trigger button closes modal
+    useClickAway([modalRef, triggerRef], () => setOpen(false))
+
+    return (
+        <>
+            <button ref={triggerRef}>Open Modal</button>
+            {open && (
+                <div ref={modalRef}>
+                    <h2>Modal Content</h2>
+                </div>
+            )}
+        </>
+    )
+}
+
+// Custom events
+function FocusAwareMenu() {
+    const [open, setOpen] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    // Close on click, touch, or focus outside
+    useClickAway(ref, () => setOpen(false), {
+        events: ['mousedown', 'touchstart', 'focusin'],
+    })
+
+    return (
+        <div ref={ref}>
+            <input placeholder="Menu stays open on focus" />
+        </div>
+    )
+}
+
+// Mouse up events
+function ContextMenu() {
+    const [position, setPosition] = useState<{ x: number; y: number } | null>(
+        null
+    )
+    const ref = useRef<HTMLDivElement>(null)
+
+    useClickAway(ref, () => setPosition(null), {
+        events: ['mouseup'], // Close on mouse up instead of mouse down
+    })
+
+    return position ? (
+        <div
+            ref={ref}
+            style={{ position: 'absolute', left: position.x, top: position.y }}
+        >
+            Context menu
+        </div>
+    ) : null
+}
+
+// With event details
+function SmartPopover() {
+    const [open, setOpen] = useState(true)
+    const ref = useRef<HTMLDivElement>(null)
+
+    useClickAway(ref, (event) => {
+        console.log('Clicked outside at:', event.target)
+        setOpen(false)
+    })
+
+    return open ? <div ref={ref}>Popover</div> : null
+}
+
+// Conditional closing
+function AdvancedMenu() {
+    const [open, setOpen] = useState(false)
+    const [locked, setLocked] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    useClickAway(ref, () => {
+        if (!locked) setOpen(false)
+    })
+
+    return (
+        <div ref={ref}>
+            <button onClick={() => setLocked(!locked)}>
+                {locked ? 'Unlock' : 'Lock'}
+            </button>
+            {open && <div>Menu content</div>}
+        </div>
+    )
+}
+
+// Null ref handling
+function LazyComponent() {
+    const [loaded, setLoaded] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    // Safe to use before ref is attached
+    useClickAway(ref, () => console.log('Clicked outside'))
+
+    useEffect(() => {
+        setTimeout(() => setLoaded(true), 1000)
+    }, [])
+
+    return loaded ? <div ref={ref}>Content</div> : <div>Loading...</div>
+}
+```
+
+### Comparison with other hooks
+
+-   **vs useOnClickOutside**: useClickAway supports multiple refs and custom event types
+-   **vs useClickOutside**: useClickAway has a more flexible API with options
+-   **vs useDetectOutsideClick**: useClickAway provides better TypeScript support and more features
+
+### When to use
+
+-   **Dropdowns & Menus**: Close when clicking outside
+-   **Modals & Dialogs**: Dismiss on backdrop click
+-   **Popovers & Tooltips**: Hide when focus moves away
+-   **Context Menus**: Close on outside interaction
+-   **Date Pickers**: Collapse when clicking elsewhere
+-   **Search Suggestions**: Hide results when clicking away
+
+### Notes
+
+-   The handler ref is updated without re-attaching event listeners for better performance
+-   Events are attached to `document` with optional capture phase control
+-   Supports React 18+ and works correctly with strict mode
+-   When using multiple refs, ALL refs must be clicked outside for the handler to trigger
+-   Null refs are treated as "not containing the click" (i.e., outside)
+-   The `capture` option affects event propagation order - `true` means handler runs during capture phase
+
+### Tests
+
+See `src/utility/hooks/__tests__/useClickAway.test.tsx` for comprehensive tests covering single/multiple refs, custom events, handler updates, null refs, cleanup, nested elements, capture option, and all event types.
 
 ---
 

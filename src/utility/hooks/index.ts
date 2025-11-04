@@ -34,6 +34,7 @@ import useTimeoutFn from './useTimeoutFn'
 import useResizeObserver from './useResizeObserver'
 import useIntersectionObserver from './useIntersectionObserver'
 import useIsFirstRender from './useIsFirstRender'
+import useClickAway from './useClickAway'
 
 export {
     useDebounceEffect,
@@ -74,6 +75,7 @@ export {
     useResizeObserver,
     useIntersectionObserver,
     useIsFirstRender,
+    useClickAway,
 }
 
 export default {
@@ -115,4 +117,5 @@ export default {
     useResizeObserver,
     useIntersectionObserver,
     useIsFirstRender,
+    useClickAway,
 }
