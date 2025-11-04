@@ -14,6 +14,23 @@ import useInterval from './useInterval'
 import useWindowSize from './useWindowSize'
 import useDebounce from './useDebounce'
 import useThrottle from './useThrottle'
+import useToggle from './useToggle'
+import useHover from './useHover'
+import useAsync from './useAsync'
+import { useFetch } from './useFetch'
+import useCounter from './useCounter'
+import { useDoubleClick } from './useDoubleClick'
+import useUndoRedo from './useUndoRedo'
+import useDidUpdate from './useDidUpdate'
+import useEffectOnce from './useEffectOnce'
+import useFileUpload from './useFileUpload'
+import useIdleEffect from './useIdleEffect'
+import useLongPress, { useLongPressHandlers } from './useLongPress'
+import { useLatestRef } from './useLatestRef'
+import useMemoCompare from './useMemoCompare'
+import { useResize } from './useResize'
+import useScrollIntoView from './useScrollIntoView'
+import useTimeoutFn from './useTimeoutFn'
 
 export {
     useDebounceEffect,
@@ -33,6 +50,24 @@ export {
     useCopyToClipboard,
     useInterval,
     useWindowSize,
+    useToggle,
+    useHover,
+    useAsync,
+    useFetch,
+    useCounter,
+    useDoubleClick,
+    useUndoRedo,
+    useDidUpdate,
+    useEffectOnce,
+    useFileUpload,
+    useIdleEffect,
+    useLongPress,
+    useLongPressHandlers,
+    useLatestRef,
+    useMemoCompare,
+    useResize,
+    useScrollIntoView,
+    useTimeoutFn,
 }
 
 export default {
@@ -53,4 +88,22 @@ export default {
     useCopyToClipboard,
     useInterval,
     useWindowSize,
+    useToggle,
+    useHover,
+    useAsync,
+    useFetch,
+    useCounter,
+    useDoubleClick,
+    useUndoRedo,
+    useDidUpdate,
+    useEffectOnce,
+    useFileUpload,
+    useIdleEffect,
+    useLongPress,
+    useLongPressHandlers,
+    useLatestRef,
+    useMemoCompare,
+    useResize,
+    useScrollIntoView,
+    useTimeoutFn,
 }
