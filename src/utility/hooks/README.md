@@ -10,6 +10,7 @@ Custom React hooks for common use cases in the component library.
 -   [useSize](#usesize)
 -   [useOnClickOutside](#useonclickoutside)
 -   [useTimeout](#usetimeout)
+-   [useMediaQuery](#usemediaquery)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -621,6 +622,214 @@ function ScaledImage({ src, alt }) {
 ### Tests
 
 See `src/utility/hooks/__tests__/useSize.test.tsx` for comprehensive tests covering basic functionality, resize updates, debouncing behavior, cleanup, null ref handling, ResizeObserver support detection, practical use cases (responsive containers, aspect ratios, canvas sizing), and edge cases (zero dimensions, very large dimensions, negative dimensions).
+
+---
+
+## useMediaQuery
+
+Detects when a CSS media query matches. Useful for responsive design, dark mode detection, and accessibility preferences.
+
+### API
+
+```ts
+useMediaQuery(query: string): boolean
+```
+
+### Parameters
+
+-   **query**: The media query string (e.g., `'(min-width: 768px)'`)
+    -   Use standard CSS media query syntax
+    -   Can include multiple conditions with `and`, `or`, `not`
+    -   Supports all CSS media features: `min-width`, `max-width`, `orientation`, `prefers-color-scheme`, etc.
+
+### Returns
+
+`boolean` - `true` when the media query matches, `false` otherwise
+
+### Usage
+
+```tsx
+import { useMediaQuery } from './utility/hooks'
+
+// Responsive breakpoints
+function ResponsiveComponent() {
+    const isMobile = useMediaQuery('(max-width: 767px)')
+    const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
+    const isDesktop = useMediaQuery('(min-width: 1024px)')
+
+    if (isMobile) return <MobileLayout />
+    if (isTablet) return <TabletLayout />
+    return <DesktopLayout />
+}
+```
+
+```tsx
+// Dark mode detection
+function ThemeAware() {
+    const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
+
+    return (
+        <div style={{ background: prefersDark ? '#000' : '#fff' }}>
+            {prefersDark ? 'Dark mode' : 'Light mode'}
+        </div>
+    )
+}
+```
+
+```tsx
+// Orientation detection
+function OrientationDisplay() {
+    const isPortrait = useMediaQuery('(orientation: portrait)')
+    const isLandscape = useMediaQuery('(orientation: landscape)')
+
+    return (
+        <div>
+            {isPortrait && <p>Please rotate your device to landscape</p>}
+            {isLandscape && <VideoPlayer />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Accessibility - reduced motion preference
+function AnimatedCard() {
+    const prefersReducedMotion = useMediaQuery(
+        '(prefers-reduced-motion: reduce)'
+    )
+
+    return (
+        <div
+            className={prefersReducedMotion ? 'no-animation' : 'animated-fade'}
+        >
+            Content
+        </div>
+    )
+}
+```
+
+```tsx
+// Print styles
+function Document() {
+    const isPrint = useMediaQuery('print')
+
+    return (
+        <div>
+            {!isPrint && <Navigation />}
+            <Content />
+            {!isPrint && <Footer />}
+        </div>
+    )
+}
+```
+
+```tsx
+// High contrast mode
+function AccessibleText() {
+    const highContrast = useMediaQuery('(prefers-contrast: high)')
+
+    return (
+        <p style={{ fontWeight: highContrast ? 'bold' : 'normal' }}>
+            This text adapts to user preferences
+        </p>
+    )
+}
+```
+
+```tsx
+// Retina display detection
+function ImageOptimizer({ src }) {
+    const isRetina = useMediaQuery('(min-resolution: 2dppx)')
+
+    return <img src={isRetina ? `${src}@2x.jpg` : `${src}.jpg`} />
+}
+```
+
+```tsx
+// Complex media query
+function TabletLandscape() {
+    const isTabletLandscape = useMediaQuery(
+        '(min-width: 768px) and (max-width: 1023px) and (orientation: landscape)'
+    )
+
+    return isTabletLandscape ? <SpecialLayout /> : <DefaultLayout />
+}
+```
+
+```tsx
+// Conditional feature rendering
+function FeatureToggle() {
+    const hasHover = useMediaQuery('(hover: hover)')
+    const hasPointer = useMediaQuery('(pointer: fine)')
+
+    return (
+        <div>
+            {hasHover && <TooltipOnHover />}
+            {!hasPointer && <LargeClickTargets />}
+        </div>
+    )
+}
+```
+
+### Common Media Queries
+
+**Breakpoints:**
+
+-   `'(max-width: 767px)'` - Mobile
+-   `'(min-width: 768px)'` - Tablet and up
+-   `'(min-width: 1024px)'` - Desktop and up
+-   `'(min-width: 1280px)'` - Large desktop
+-   `'(min-width: 768px) and (max-width: 1023px)'` - Tablet only
+
+**User Preferences:**
+
+-   `'(prefers-color-scheme: dark)'` - Dark mode
+-   `'(prefers-color-scheme: light)'` - Light mode
+-   `'(prefers-reduced-motion: reduce)'` - Reduced motion
+-   `'(prefers-contrast: high)'` - High contrast
+-   `'(prefers-reduced-transparency: reduce)'` - Reduced transparency
+
+**Device Features:**
+
+-   `'(orientation: portrait)'` - Portrait orientation
+-   `'(orientation: landscape)'` - Landscape orientation
+-   `'(hover: hover)'` - Device supports hover
+-   `'(pointer: fine)'` - Fine pointer (mouse)
+-   `'(pointer: coarse)'` - Coarse pointer (touch)
+
+**Display:**
+
+-   `'(min-resolution: 2dppx)'` - Retina/high-DPI
+-   `'print'` - Print media
+-   `'screen'` - Screen media
+
+### Behavior and limitations
+
+-   Returns `false` in SSR environments (when `window` is undefined)
+-   Uses native `window.matchMedia` API
+-   Automatically updates when media query match changes
+-   Supports both modern `addEventListener` and legacy `addListener` APIs
+-   Event listeners are automatically cleaned up on unmount
+-   When query string changes, hook re-subscribes to new media query
+-   Initial state is set synchronously to avoid flash of incorrect content
+-   Safe to use in server-side rendering (returns `false` server-side)
+
+### Common use cases
+
+-   Responsive component layouts (container queries alternative)
+-   Dark mode detection and theming
+-   Orientation-based UI changes (mobile games, video players)
+-   Accessibility: reduced motion, high contrast, forced colors
+-   Print-specific layouts
+-   Retina display image optimization
+-   Touch vs mouse input detection
+-   Conditional feature rendering based on device capabilities
+-   Mobile-first or desktop-first responsive design
+-   Adaptive loading (serve smaller assets on mobile)
+
+### Tests
+
+See `src/utility/hooks/__tests__/useMediaQuery.test.tsx` for comprehensive tests covering basic functionality, match state changes, different query types, event listener cleanup, legacy API support, SSR handling, practical use cases (breakpoints, dark mode, orientation, accessibility), and complex media queries.
 
 ---
 

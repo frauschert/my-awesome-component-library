@@ -7,6 +7,7 @@ import useOnScreen from './useOnScreen'
 import useEventListener from './useEventListener'
 import useSize from './useSize'
 import useTimeout from './useTimeout'
+import useMediaQuery from './useMediaQuery'
 
 export {
     useDebounce,
@@ -19,6 +20,7 @@ export {
     useEventListener,
     useSize,
     useTimeout,
+    useMediaQuery,
 }
 
 export default {
@@ -32,4 +34,5 @@ export default {
     useEventListener,
     useSize,
     useTimeout,
+    useMediaQuery,
 }
