@@ -217,6 +217,7 @@ import {
     useInterval,
     useWindowSize,
     useDebounce,
+    useThrottle,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -417,6 +418,7 @@ export {
     useInterval,
     useWindowSize,
     useDebounce,
+    useThrottle,
     memoize,
     throttle,
     chunk,

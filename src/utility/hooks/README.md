@@ -16,6 +16,7 @@ Custom React hooks for common use cases in the component library.
 -   [useInterval](#useinterval)
 -   [useWindowSize](#usewindowsize)
 -   [useDebounce (value)](#usedebounce-value)
+-   [useThrottle](#usethrottle)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -1795,6 +1796,202 @@ function DataFetcher() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useDebounce.test.tsx` for comprehensive tests covering basic debouncing, rapid changes, timer resets, different delays, various value types (string, number, boolean, object, array, null, undefined), cleanup, and practical use cases (search input, resize handling, API throttling).
+
+---
+
+## useThrottle
+
+Throttles a value, ensuring it only updates at most once per specified delay period. Unlike debouncing which delays updates until changes stop, throttling guarantees updates at regular intervals during continuous changes.
+
+### API
+
+```ts
+useThrottle<T>(value: T, delay: number): T
+```
+
+### Parameters
+
+-   **value**: The value to throttle (can be any type)
+-   **delay**: The throttle delay in milliseconds
+
+### Returns
+
+The throttled value that updates at most once per delay period
+
+### Features
+
+-   **Generic type support**: Works with any value type (string, number, boolean, object, array, etc.)
+-   **Leading edge execution**: First change happens immediately, subsequent changes are throttled
+-   **Trailing edge update**: Final value is guaranteed to update after throttle period
+-   **Automatic cleanup**: Clears timeouts on unmount
+-   **Performance optimized**: Ideal for high-frequency events (scroll, resize, mouse move)
+
+### Usage
+
+**Basic throttling:**
+
+```tsx
+import { useThrottle } from './utility/hooks'
+
+function ScrollTracker() {
+    const [scrollY, setScrollY] = useState(0)
+    const throttledScrollY = useThrottle(scrollY, 200)
+
+    useEffect(() => {
+        const handleScroll = () => setScrollY(window.scrollY)
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    return <div>Scroll position: {throttledScrollY}px</div>
+}
+```
+
+**Mouse tracking with throttle:**
+
+```tsx
+function MouseTracker() {
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+    const throttledPos = useThrottle(mousePos, 100)
+
+    useEffect(() => {
+        const handleMove = (e: MouseEvent) => {
+            setMousePos({ x: e.clientX, y: e.clientY })
+        }
+        window.addEventListener('mousemove', handleMove)
+        return () => window.removeEventListener('mousemove', handleMove)
+    }, [])
+
+    return (
+        <div>
+            Mouse: {throttledPos.x}, {throttledPos.y}
+        </div>
+    )
+}
+```
+
+**Resize tracking:**
+
+```tsx
+function ResponsiveComponent() {
+    const [width, setWidth] = useState(window.innerWidth)
+    const throttledWidth = useThrottle(width, 250)
+
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    return <div>Width: {throttledWidth}px</div>
+}
+```
+
+**API rate limiting:**
+
+```tsx
+function SearchWithThrottle() {
+    const [query, setQuery] = useState('')
+    const throttledQuery = useThrottle(query, 500)
+
+    useEffect(() => {
+        if (throttledQuery) {
+            // API call happens at most once per 500ms
+            searchAPI(throttledQuery)
+        }
+    }, [throttledQuery])
+
+    return (
+        <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search..."
+        />
+    )
+}
+```
+
+**Gaming input throttle:**
+
+```tsx
+function GameController() {
+    const [position, setPosition] = useState(0)
+    const throttledPosition = useThrottle(position, 16) // ~60fps
+
+    const handleMove = (direction: number) => {
+        setPosition((prev) => prev + direction)
+    }
+
+    return (
+        <div>
+            <button onClick={() => handleMove(-1)}>Left</button>
+            <div>Position: {throttledPosition}</div>
+            <button onClick={() => handleMove(1)}>Right</button>
+        </div>
+    )
+}
+```
+
+**Network status monitoring:**
+
+```tsx
+function NetworkMonitor() {
+    const [bandwidth, setBandwidth] = useState(0)
+    const throttledBandwidth = useThrottle(bandwidth, 1000)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Measure bandwidth frequently
+            setBandwidth(measureBandwidth())
+        }, 100)
+        return () => clearInterval(interval)
+    }, [])
+
+    return <div>Bandwidth: {throttledBandwidth} Mbps</div>
+}
+```
+
+**Canvas drawing optimization:**
+
+```tsx
+function DrawingCanvas() {
+    const [brushSize, setBrushSize] = useState(5)
+    const throttledBrushSize = useThrottle(brushSize, 50)
+
+    // Use throttledBrushSize for render-heavy operations
+    useEffect(() => {
+        updateCanvasSettings(throttledBrushSize)
+    }, [throttledBrushSize])
+
+    return (
+        <input
+            type="range"
+            min="1"
+            max="50"
+            value={brushSize}
+            onChange={(e) => setBrushSize(Number(e.target.value))}
+        />
+    )
+}
+```
+
+### When to use throttle vs debounce
+
+-   **Use throttle** when you want regular updates during continuous changes:
+    -   Scroll position tracking
+    -   Mouse movement tracking
+    -   Window resize events
+    -   Real-time gaming inputs
+    -   Progress bar updates
+-   **Use debounce** when you want to wait until changes stop:
+    -   Search input (wait for user to stop typing)
+    -   Form validation
+    -   Auto-save functionality
+    -   API calls based on user input
+
+### Tests
+
+See `src/utility/hooks/__tests__/useThrottle.test.tsx` for comprehensive tests covering basic throttling, rapid changes, timing behavior, different delays, various value types, cleanup, and edge cases.
 
 ---
 

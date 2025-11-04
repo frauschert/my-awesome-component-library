@@ -13,10 +13,12 @@ import useCopyToClipboard from './useCopyToClipboard'
 import useInterval from './useInterval'
 import useWindowSize from './useWindowSize'
 import useDebounce from './useDebounce'
+import useThrottle from './useThrottle'
 
 export {
     useDebounceEffect,
     useDebounce,
+    useThrottle,
     usePrevious,
     useLocalStorage,
     useSessionStorage,
@@ -36,6 +38,7 @@ export {
 export default {
     useDebounceEffect,
     useDebounce,
+    useThrottle,
     usePrevious,
     useLocalStorage,
     useSessionStorage,
