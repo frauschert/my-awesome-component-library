@@ -240,6 +240,7 @@ import {
     useIntersectionObserver,
     useIsFirstRender,
     useClickAway,
+    useHash,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -463,6 +464,7 @@ export {
     useIntersectionObserver,
     useIsFirstRender,
     useClickAway,
+    useHash,
     memoize,
     throttle,
     chunk,

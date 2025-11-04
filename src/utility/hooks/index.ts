@@ -35,6 +35,7 @@ import useResizeObserver from './useResizeObserver'
 import useIntersectionObserver from './useIntersectionObserver'
 import useIsFirstRender from './useIsFirstRender'
 import useClickAway from './useClickAway'
+import useHash from './useHash'
 
 export {
     useDebounceEffect,
@@ -76,6 +77,7 @@ export {
     useIntersectionObserver,
     useIsFirstRender,
     useClickAway,
+    useHash,
 }
 
 export default {
@@ -118,4 +120,5 @@ export default {
     useIntersectionObserver,
     useIsFirstRender,
     useClickAway,
+    useHash,
 }

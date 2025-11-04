@@ -21,6 +21,7 @@ Custom React hooks for common use cases in the component library.
 -   [useIntersectionObserver](#useintersectionobserver)
 -   [useIsFirstRender](#useisfirstrender)
 -   [useClickAway](#useclickaway)
+-   [useHash](#usehash)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -2766,6 +2767,283 @@ function LazyComponent() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useClickAway.test.tsx` for comprehensive tests covering single/multiple refs, custom events, handler updates, null refs, cleanup, nested elements, capture option, and all event types.
+
+---
+
+## useHash
+
+Monitor and update the URL hash (fragment identifier). Returns the current hash value (without the `#` symbol) and a function to update it. Useful for navigation, tab management, and scroll-to-section functionality.
+
+### API
+
+```tsx
+const [hash, setHash]: [string, (newHash: string) => void] = useHash()
+```
+
+### Returns
+
+A tuple containing:
+
+-   `hash` - Current hash value as a string (without `#`), empty string if no hash
+-   `setHash` - Function to update the hash. Pass empty string to remove the hash
+
+### Features
+
+-   ✅ SSR-safe (returns empty string on server)
+-   ✅ Listens to browser navigation (back/forward buttons)
+-   ✅ Automatic hash normalization (handles with/without `#` prefix)
+-   ✅ Clean hash removal (preserves pathname and search params)
+-   ✅ Syncs across multiple components
+-   ✅ TypeScript support
+-   ✅ Automatic cleanup on unmount
+
+### Usage
+
+```tsx
+import { useHash } from './utility/hooks'
+
+// Basic tab navigation
+function TabNavigation() {
+    const [hash, setHash] = useHash()
+    const activeTab = hash || 'overview'
+
+    return (
+        <div>
+            <button
+                onClick={() => setHash('overview')}
+                style={{
+                    fontWeight: activeTab === 'overview' ? 'bold' : 'normal',
+                }}
+            >
+                Overview
+            </button>
+            <button
+                onClick={() => setHash('details')}
+                style={{
+                    fontWeight: activeTab === 'details' ? 'bold' : 'normal',
+                }}
+            >
+                Details
+            </button>
+            <button
+                onClick={() => setHash('settings')}
+                style={{
+                    fontWeight: activeTab === 'settings' ? 'bold' : 'normal',
+                }}
+            >
+                Settings
+            </button>
+
+            {activeTab === 'overview' && <OverviewTab />}
+            {activeTab === 'details' && <DetailsTab />}
+            {activeTab === 'settings' && <SettingsTab />}
+        </div>
+    )
+}
+
+// Scroll to section
+function DocumentationPage() {
+    const [hash] = useHash()
+
+    useEffect(() => {
+        if (hash) {
+            const element = document.getElementById(hash)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' })
+            }
+        }
+    }, [hash])
+
+    return (
+        <div>
+            <nav>
+                <a href="#introduction">Introduction</a>
+                <a href="#getting-started">Getting Started</a>
+                <a href="#api-reference">API Reference</a>
+            </nav>
+            <section id="introduction">...</section>
+            <section id="getting-started">...</section>
+            <section id="api-reference">...</section>
+        </div>
+    )
+}
+
+// Modal routing
+function ModalRouter() {
+    const [hash, setHash] = useHash()
+
+    return (
+        <>
+            <button onClick={() => setHash('login')}>Open Login</button>
+            <button onClick={() => setHash('signup')}>Open Signup</button>
+
+            {hash === 'login' && (
+                <Modal onClose={() => setHash('')}>
+                    <LoginForm />
+                </Modal>
+            )}
+
+            {hash === 'signup' && (
+                <Modal onClose={() => setHash('')}>
+                    <SignupForm />
+                </Modal>
+            )}
+        </>
+    )
+}
+
+// Accordion with deep linking
+function AccordionWithHash() {
+    const [hash, setHash] = useHash()
+
+    const sections = ['section1', 'section2', 'section3']
+
+    return (
+        <div>
+            {sections.map((section) => (
+                <div key={section}>
+                    <button
+                        onClick={() => setHash(hash === section ? '' : section)}
+                    >
+                        {section}
+                    </button>
+                    {hash === section && <div>Content for {section}</div>}
+                </div>
+            ))}
+        </div>
+    )
+}
+
+// Clear hash
+function HashControls() {
+    const [hash, setHash] = useHash()
+
+    return (
+        <div>
+            <p>Current hash: {hash || '(none)'}</p>
+            <button onClick={() => setHash('example')}>Set Hash</button>
+            <button onClick={() => setHash('')}>Clear Hash</button>
+        </div>
+    )
+}
+
+// Multi-step form with URL state
+function MultiStepForm() {
+    const [hash, setHash] = useHash()
+    const step = parseInt(hash.replace('step-', '')) || 1
+
+    const nextStep = () => setHash(`step-${step + 1}`)
+    const prevStep = () => setHash(`step-${step - 1}`)
+
+    return (
+        <div>
+            {step === 1 && <Step1 onNext={nextStep} />}
+            {step === 2 && <Step2 onNext={nextStep} onBack={prevStep} />}
+            {step === 3 && <Step3 onBack={prevStep} />}
+        </div>
+    )
+}
+
+// Gallery with hash navigation
+function ImageGallery() {
+    const [hash, setHash] = useHash()
+    const images = ['img1', 'img2', 'img3', 'img4']
+    const currentIndex = images.indexOf(hash)
+
+    const showImage = currentIndex >= 0
+
+    return (
+        <div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+                {images.map((img) => (
+                    <img
+                        key={img}
+                        src={`/images/${img}.jpg`}
+                        onClick={() => setHash(img)}
+                        style={{
+                            width: 100,
+                            cursor: 'pointer',
+                            border: hash === img ? '2px solid blue' : 'none',
+                        }}
+                    />
+                ))}
+            </div>
+
+            {showImage && (
+                <div>
+                    <img
+                        src={`/images/${hash}.jpg`}
+                        style={{ width: '100%' }}
+                    />
+                    <button onClick={() => setHash('')}>Close</button>
+                </div>
+            )}
+        </div>
+    )
+}
+
+// Anchor navigation with highlighting
+function TableOfContents() {
+    const [hash] = useHash()
+
+    const sections = [
+        { id: 'intro', title: 'Introduction' },
+        { id: 'features', title: 'Features' },
+        { id: 'usage', title: 'Usage' },
+        { id: 'api', title: 'API' },
+    ]
+
+    return (
+        <nav>
+            {sections.map(({ id, title }) => (
+                <a
+                    key={id}
+                    href={`#${id}`}
+                    style={{
+                        fontWeight: hash === id ? 'bold' : 'normal',
+                        color: hash === id ? 'blue' : 'black',
+                    }}
+                >
+                    {title}
+                </a>
+            ))}
+        </nav>
+    )
+}
+```
+
+### How it works
+
+The hook uses `window.location.hash` to read the current hash and `window.addEventListener('hashchange')` to listen for changes (including browser navigation). When `setHash` is called, it either updates the hash via `window.location.hash = newValue` or removes it using `history.pushState` if an empty string is provided.
+
+### When to use
+
+-   **Tab navigation**: Switch between tabs with URL state
+-   **Scroll to section**: Implement anchor links with smooth scrolling
+-   **Modal routing**: Open/close modals via URL
+-   **Accordions**: Deep-link to expanded sections
+-   **Multi-step forms**: Track progress in URL
+-   **Image galleries**: Navigate images with shareable URLs
+-   **Table of contents**: Highlight current section
+-   **Filters/Views**: Remember user's view preference
+
+### Notes
+
+-   The hash is returned without the `#` symbol for convenience
+-   `setHash` accepts values with or without the `#` prefix (automatically normalized)
+-   Setting hash to empty string removes it entirely while preserving pathname and query params
+-   Changes from browser back/forward navigation are automatically detected
+-   All components using `useHash` stay synchronized
+-   SSR-safe: returns empty string when `window` is undefined
+-   The hook doesn't trigger page scrolling automatically - combine with `useEffect` for scroll-to-section behavior
+
+### Browser Support
+
+The `hashchange` event is supported in all modern browsers. For hash removal, `history.pushState` is used which is also widely supported.
+
+### Tests
+
+See `src/utility/hooks/__tests__/useHash.test.tsx` for comprehensive tests covering getting/setting hash, hash changes, browser navigation, multiple components, cleanup, special characters, and edge cases.
 
 ---
 
