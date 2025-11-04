@@ -8,6 +8,7 @@ import useEventListener from './useEventListener'
 import useSize from './useSize'
 import useTimeout from './useTimeout'
 import useMediaQuery from './useMediaQuery'
+import useWhyDidYouUpdate from './useWhyDidYouUpdate'
 
 export {
     useDebounce,
@@ -21,6 +22,7 @@ export {
     useSize,
     useTimeout,
     useMediaQuery,
+    useWhyDidYouUpdate,
 }
 
 export default {
@@ -35,4 +37,5 @@ export default {
     useSize,
     useTimeout,
     useMediaQuery,
+    useWhyDidYouUpdate,
 }

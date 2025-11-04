@@ -11,6 +11,7 @@ Custom React hooks for common use cases in the component library.
 -   [useOnClickOutside](#useonclickoutside)
 -   [useTimeout](#usetimeout)
 -   [useMediaQuery](#usemediaquery)
+-   [useWhyDidYouUpdate](#usewhydidyouupdate)
 -   [useDebounce](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -830,6 +831,243 @@ function FeatureToggle() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useMediaQuery.test.tsx` for comprehensive tests covering basic functionality, match state changes, different query types, event listener cleanup, legacy API support, SSR handling, practical use cases (breakpoints, dark mode, orientation, accessibility), and complex media queries.
+
+---
+
+## useWhyDidYouUpdate
+
+Debug hook that logs which props changed between renders to help identify the cause of unnecessary re-renders.
+
+### API
+
+```ts
+useWhyDidYouUpdate<T extends Record<string, unknown>>(
+  name: string,
+  props: T
+): void
+```
+
+### Parameters
+
+-   **name**: A descriptive name to identify the component in console logs
+-   **props**: The props object to track (typically all props or a subset you want to monitor)
+
+### Returns
+
+`void` - This hook logs to the console but doesn't return anything
+
+### Usage
+
+```tsx
+import { useWhyDidYouUpdate } from './utility/hooks'
+
+// Basic usage - track all props
+function ExpensiveComponent({ count, user, items, onUpdate }) {
+    useWhyDidYouUpdate('ExpensiveComponent', { count, user, items, onUpdate })
+
+    return <div>{/* Expensive render logic */}</div>
+}
+
+// Console output when count changes from 1 to 2:
+// [why-did-you-update] ExpensiveComponent
+//   count: 1 -> 2
+```
+
+```tsx
+// Debug object/array recreation issues
+function UserCard({ user, settings }) {
+    useWhyDidYouUpdate('UserCard', { user, settings })
+
+    return (
+        <div>
+            <h1>{user.name}</h1>
+            <p>Theme: {settings.theme}</p>
+        </div>
+    )
+}
+
+// If parent recreates objects on each render:
+// [why-did-you-update] UserCard
+//   user: {id: 1, name: 'John'} -> {id: 1, name: 'John'}
+//   settings: {theme: 'dark'} -> {theme: 'dark'}
+// This reveals that objects are being recreated even though values are the same
+```
+
+```tsx
+// Debug callback recreation
+function DataTable({ data, onSort, onFilter, onExport }) {
+    useWhyDidYouUpdate('DataTable', { data, onSort, onFilter, onExport })
+
+    return <table>{/* table implementation */}</table>
+}
+
+// Console might show:
+// [why-did-you-update] DataTable
+//   onSort: ƒ -> ƒ
+//   onFilter: ƒ -> ƒ
+// Indicates callbacks are being recreated (need useCallback)
+```
+
+```tsx
+// Track subset of props
+function Dashboard({ users, products, orders, settings, theme }) {
+    // Only track the props you suspect are causing issues
+    useWhyDidYouUpdate('Dashboard', { users, products, orders })
+
+    return <div>{/* dashboard content */}</div>
+}
+```
+
+```tsx
+// Use in development only
+function MyComponent(props) {
+    if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useWhyDidYouUpdate('MyComponent', props)
+    }
+
+    return <div>{/* content */}</div>
+}
+```
+
+```tsx
+// Track computed/derived values
+function ProductList({ products, filter, sortBy }) {
+    const filteredProducts = useMemo(
+        () => products.filter(filter),
+        [products, filter]
+    )
+
+    useWhyDidYouUpdate('ProductList', {
+        products,
+        filter,
+        sortBy,
+        filteredProducts,
+    })
+
+    return (
+        <ul>
+            {filteredProducts.map((p) => (
+                <li key={p.id}>{p.name}</li>
+            ))}
+        </ul>
+    )
+}
+```
+
+```tsx
+// Debug context-related re-renders
+function ChildComponent({ data }) {
+    const contextValue = useContext(MyContext)
+
+    useWhyDidYouUpdate('ChildComponent', { data, contextValue })
+
+    return <div>{/* content */}</div>
+}
+```
+
+### Console Output Format
+
+When props change, the hook logs:
+
+```
+[why-did-you-update] ComponentName
+  propName1: oldValue -> newValue
+  propName2: oldValue -> newValue
+```
+
+**Examples of different value types:**
+
+```
+// Primitives
+  count: 1 -> 2
+  name: 'John' -> 'Jane'
+  isActive: false -> true
+
+// Objects (shows reference change)
+  user: {id: 1} -> {id: 1}
+
+// Arrays
+  items: [1, 2, 3] -> [1, 2, 3]
+
+// Functions
+  onClick: ƒ -> ƒ
+
+// Special values
+  value: undefined -> null
+  data: null -> {id: 1}
+```
+
+### Behavior and limitations
+
+-   **Shallow comparison** - Uses `===` to compare prop values (reference equality)
+    -   Two objects with identical content but different references will show as changed
+    -   This is intentional - helps identify unnecessary object recreation
+-   **No output on first render** - Only logs on subsequent renders
+-   **Logs all changes** - If multiple props change, all are logged
+-   **Development tool** - Should typically be removed in production builds
+-   **Console only** - Output goes to `console.log` (not console.error or console.warn)
+-   **Type-safe** - Accepts any object with string keys and unknown values
+-   **No deep comparison** - Does not compare nested object properties
+
+### Common use cases
+
+-   **Performance debugging** - Identify what's causing expensive re-renders
+-   **Unnecessary re-renders** - Find components re-rendering when props haven't changed
+-   **Object recreation** - Detect when parent components recreate objects/arrays unnecessarily
+-   **Callback issues** - Identify when callbacks are being recreated without `useCallback`
+-   **Context debugging** - Track context value changes causing re-renders
+-   **useMemo/useCallback validation** - Verify memoization is working
+-   **Prop drilling issues** - Track how props change as they flow down the tree
+-   **Third-party component debugging** - Understand re-render behavior of library components
+
+### Best practices
+
+1. **Remove in production** - Wrap in `process.env.NODE_ENV === 'development'` check
+2. **Be specific** - Track only the props you're investigating, not all props
+3. **Use meaningful names** - Component names should be descriptive
+4. **Combine with React DevTools Profiler** - Use both tools together for full picture
+5. **Fix root causes** - Use insights to add `useMemo`, `useCallback`, or restructure code
+6. **Check object recreation** - Look for props that change reference but not content
+7. **Consider extraction** - If a component re-renders too much, consider splitting it
+
+### Solutions to common problems identified
+
+**Problem: Object/array recreation**
+
+```tsx
+// ❌ Bad - recreates object on every render
+<Child user={{ id: userId, name: userName }} />
+
+// ✅ Good - stable reference with useMemo
+const user = useMemo(() => ({ id: userId, name: userName }), [userId, userName])
+<Child user={user} />
+```
+
+**Problem: Callback recreation**
+
+```tsx
+// ❌ Bad - new function on every render
+<Child onUpdate={(data) => handleUpdate(data)} />
+
+// ✅ Good - stable reference with useCallback
+const handleUpdateCallback = useCallback((data) => handleUpdate(data), [handleUpdate])
+<Child onUpdate={handleUpdateCallback} />
+```
+
+**Problem: Passing all props**
+
+```tsx
+// ❌ Bad - passing entire props object
+<Child {...props} />
+
+// ✅ Good - only pass what's needed
+<Child data={props.data} onUpdate={props.onUpdate} />
+```
+
+### Tests
+
+See `src/utility/hooks/__tests__/useWhyDidYouUpdate.test.tsx` for comprehensive tests covering prop changes, object/array references, function references, added/removed props, edge cases (null, undefined, 0, empty string), and practical debugging scenarios.
 
 ---
 

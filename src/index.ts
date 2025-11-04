@@ -210,7 +210,7 @@ import {
     useAtomSelector,
     useResetAtom,
 } from './utility/hooks/useAtom'
-import { useMediaQuery } from './utility/hooks'
+import { useMediaQuery, useWhyDidYouUpdate } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
 import { chunk } from './utility/chunk'
@@ -405,6 +405,7 @@ export {
     useAtomSelector,
     useResetAtom,
     useMediaQuery,
+    useWhyDidYouUpdate,
     memoize,
     throttle,
     chunk,
