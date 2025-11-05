@@ -5160,3 +5160,503 @@ useEffect(() => {
 ## Tests
 
 See `src/utility/hooks/__tests__/useWakeLock.test.tsx` for comprehensive tests covering initial state, unsupported browsers, request/release, callbacks (onAcquire, onRelease, onError), requestOnMount option, unmount cleanup, release events from sentinel, visibility change handling, releasing before new requests, rapid requests, and error handling (17 tests).
+
+---
+
+# Hook: useShare
+
+Share content using the native Web Share API. Provides access to the system's share dialog for sharing text, URLs, and files across apps. Perfect for mobile-friendly sharing on social media, messaging apps, and more.
+
+## API
+
+```ts
+useShare(options?: UseShareOptions): UseShareReturn
+
+interface ShareData {
+    title?: string
+    text?: string
+    url?: string
+    files?: File[]
+}
+
+interface UseShareOptions {
+    onSuccess?: () => void
+    onError?: (error: Error) => void
+}
+
+interface UseShareReturn {
+    share: (data: ShareData) => Promise<void>
+    isSharing: boolean
+    isSupported: boolean
+    canShareFiles: boolean
+    canShare: (data: ShareData) => boolean
+}
+```
+
+## Parameters
+
+-   `options.onSuccess` (function, optional): Callback when share completes successfully
+-   `options.onError` (function, optional): Callback when share fails (except user cancellation)
+
+## Returns
+
+-   `share(data)`: Async function to share content via native dialog
+-   `isSharing`: Whether sharing is currently in progress
+-   `isSupported`: Whether Web Share API is available
+-   `canShareFiles`: Whether file sharing is supported
+-   `canShare(data)`: Check if specific content can be shared
+
+## Usage
+
+### Basic article sharing
+
+```tsx
+import { useShare } from 'my-awesome-component-library'
+
+function Article({ title, url }) {
+    const { share, isSupported } = useShare()
+
+    if (!isSupported) {
+        return null // Fallback to other share options
+    }
+
+    return (
+        <button
+            onClick={() =>
+                share({
+                    title,
+                    url,
+                    text: 'Check out this article!',
+                })
+            }
+        >
+            Share Article
+        </button>
+    )
+}
+```
+
+### Product sharing with image
+
+```tsx
+function ProductCard({ product }) {
+    const { share, canShareFiles } = useShare()
+
+    const handleShare = async () => {
+        if (canShareFiles && product.imageUrl) {
+            // Fetch image and create file
+            const response = await fetch(product.imageUrl)
+            const blob = await response.blob()
+            const file = new File([blob], 'product.jpg', { type: 'image/jpeg' })
+
+            await share({
+                title: product.name,
+                text: product.description,
+                url: product.url,
+                files: [file],
+            })
+        } else {
+            await share({
+                title: product.name,
+                text: product.description,
+                url: product.url,
+            })
+        }
+    }
+
+    return <button onClick={handleShare}>Share Product</button>
+}
+```
+
+### Blog post with callbacks
+
+```tsx
+function BlogPost({ post }) {
+    const { share, isSharing } = useShare({
+        onSuccess: () => {
+            console.log('Post shared successfully!')
+            // Track analytics
+        },
+        onError: (error) => {
+            console.error('Share failed:', error.message)
+        },
+    })
+
+    return (
+        <button
+            onClick={() =>
+                share({
+                    title: post.title,
+                    text: post.excerpt,
+                    url: post.url,
+                })
+            }
+            disabled={isSharing}
+        >
+            {isSharing ? 'Sharing...' : 'Share Post'}
+        </button>
+    )
+}
+```
+
+### Share current page
+
+```tsx
+function ShareCurrentPage() {
+    const { share, isSupported } = useShare()
+
+    const handleShare = () => {
+        share({
+            title: document.title,
+            url: window.location.href,
+        })
+    }
+
+    if (!isSupported) {
+        return <CopyLinkButton /> // Fallback
+    }
+
+    return <button onClick={handleShare}>Share This Page</button>
+}
+```
+
+### File sharing (images, PDFs, etc.)
+
+```tsx
+function FileSharer() {
+    const { share, canShareFiles } = useShare()
+
+    const handleFileShare = async (file: File) => {
+        if (!canShareFiles) {
+            alert('File sharing not supported')
+            return
+        }
+
+        await share({
+            title: file.name,
+            files: [file],
+        })
+    }
+
+    return (
+        <input
+            type="file"
+            onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) handleFileShare(file)
+            }}
+        />
+    )
+}
+```
+
+### Social media share with preview
+
+```tsx
+function SocialShare({ content }) {
+    const { share, canShare, isSupported } = useShare()
+
+    const shareData = {
+        title: content.title,
+        text: content.description,
+        url: content.url,
+    }
+
+    const canShareContent = canShare(shareData)
+
+    if (!isSupported) {
+        return <FallbackShareButtons />
+    }
+
+    return (
+        <div>
+            <button
+                onClick={() => share(shareData)}
+                disabled={!canShareContent}
+            >
+                Share on Social Media
+            </button>
+            {!canShareContent && <p>This content cannot be shared</p>}
+        </div>
+    )
+}
+```
+
+### Recipe sharing
+
+```tsx
+function Recipe({ recipe }) {
+    const { share } = useShare({
+        onSuccess: () => {
+            // Track share event
+            analytics.track('recipe_shared', { recipe: recipe.id })
+        },
+    })
+
+    return (
+        <button
+            onClick={() =>
+                share({
+                    title: recipe.name,
+                    text: `${
+                        recipe.description
+                    }\n\nIngredients: ${recipe.ingredients.join(', ')}`,
+                    url: recipe.url,
+                })
+            }
+        >
+            Share Recipe
+        </button>
+    )
+}
+```
+
+### Event invitation
+
+```tsx
+function EventCard({ event }) {
+    const { share, isSharing } = useShare()
+
+    const shareEvent = () => {
+        share({
+            title: event.name,
+            text: `Join me at ${event.name} on ${event.date}!`,
+            url: event.registrationUrl,
+        })
+    }
+
+    return (
+        <div>
+            <h3>{event.name}</h3>
+            <button onClick={shareEvent} disabled={isSharing}>
+                {isSharing ? 'Sharing...' : 'Invite Friends'}
+            </button>
+        </div>
+    )
+}
+```
+
+### Screenshot sharing
+
+```tsx
+function ScreenshotSharer() {
+    const { share, canShareFiles } = useShare()
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+
+    const shareScreenshot = async () => {
+        if (!canvasRef.current || !canShareFiles) return
+
+        canvasRef.current.toBlob(async (blob) => {
+            if (blob) {
+                const file = new File([blob], 'screenshot.png', {
+                    type: 'image/png',
+                })
+                await share({
+                    title: 'My Screenshot',
+                    files: [file],
+                })
+            }
+        })
+    }
+
+    return (
+        <div>
+            <canvas ref={canvasRef} />
+            <button onClick={shareScreenshot}>Share Screenshot</button>
+        </div>
+    )
+}
+```
+
+### Video sharing
+
+```tsx
+function VideoPlayer({ video }) {
+    const { share, isSupported } = useShare()
+
+    const handleShare = () => {
+        share({
+            title: video.title,
+            text: video.description,
+            url: video.shareUrl,
+        })
+    }
+
+    if (!isSupported) {
+        return null
+    }
+
+    return (
+        <div>
+            <video src={video.url} controls />
+            <button onClick={handleShare}>Share Video</button>
+        </div>
+    )
+}
+```
+
+### App download share
+
+```tsx
+function AppPromotion() {
+    const { share } = useShare()
+
+    return (
+        <button
+            onClick={() =>
+                share({
+                    title: 'Check out this awesome app!',
+                    text: 'I found this amazing app you should try',
+                    url: 'https://app-store-link.com',
+                })
+            }
+        >
+            Share App
+        </button>
+    )
+}
+```
+
+### Achievement sharing (gaming)
+
+```tsx
+function Achievement({ achievement }) {
+    const { share } = useShare({
+        onSuccess: () => {
+            // Award bonus points for sharing
+            giveBonus(achievement.id)
+        },
+    })
+
+    return (
+        <button
+            onClick={() =>
+                share({
+                    title: `Achievement Unlocked: ${achievement.name}`,
+                    text: achievement.description,
+                    url: achievement.shareUrl,
+                })
+            }
+        >
+            Share Achievement
+        </button>
+    )
+}
+```
+
+### Conditional share with fallback
+
+```tsx
+function SmartShare({ content }) {
+    const { share, isSupported } = useShare()
+    const [copied, setCopied] = useState(false)
+
+    const handleShare = async () => {
+        if (isSupported) {
+            try {
+                await share({
+                    title: content.title,
+                    url: content.url,
+                })
+            } catch (error) {
+                // User cancelled or error - fallback to copy
+                await navigator.clipboard.writeText(content.url)
+                setCopied(true)
+            }
+        } else {
+            // Fallback for unsupported browsers
+            await navigator.clipboard.writeText(content.url)
+            setCopied(true)
+        }
+    }
+
+    return (
+        <button onClick={handleShare}>
+            {copied ? 'Link Copied!' : isSupported ? 'Share' : 'Copy Link'}
+        </button>
+    )
+}
+```
+
+## How it works
+
+1. Checks for `navigator.share` API support
+2. Validates share data (at least one field required)
+3. Calls `navigator.share()` with provided data
+4. Tracks sharing state during the operation
+5. Handles success, errors, and user cancellation
+6. Uses `navigator.canShare()` to check if specific content can be shared
+7. Distinguishes between user cancellation (AbortError) and real errors
+
+## When to use
+
+-   Sharing articles, blog posts, or news
+-   Product/service promotion
+-   Social media integration
+-   File/image sharing
+-   Event invitations
+-   Mobile-first applications
+-   User-generated content sharing
+-   Achievement/score sharing in games
+-   Recipe/tutorial sharing
+-   Video/media content distribution
+
+## When NOT to use
+
+-   Desktop-only applications (limited support)
+-   When you need custom share destinations
+-   For internal app data transfer (use other APIs)
+-   If you need to track which platform user chose
+
+## Key features
+
+-   **Native integration**: Uses device's built-in share dialog
+-   **Multi-platform**: Shares to any app on user's device
+-   **File support**: Can share images, PDFs, and other files
+-   **User control**: User chooses destination (privacy-friendly)
+-   **Mobile-optimized**: Perfect UX for mobile devices
+-   **Error handling**: Gracefully handles failures and cancellations
+-   **Support detection**: Check availability before using
+-   **Content validation**: Verify shareability with `canShare`
+
+## Browser support
+
+Modern mobile browsers (Chrome 89+, Safari 12.1+, Edge 93+). Desktop support varies. Always check `isSupported`.
+
+## Notes
+
+-   Requires user gesture (button click) to work
+-   User can cancel without triggering `onError` (AbortError)
+-   At least one of `title`, `text`, `url`, or `files` is required
+-   File sharing support varies by platform
+-   Desktop browsers have limited support
+-   HTTPS required for file sharing on some platforms
+-   Share targets depend on user's installed apps
+-   `navigator.canShare()` availability varies by browser
+
+## Common patterns
+
+### Pattern 1: Basic share button
+
+```tsx
+<button onClick={() => share({ title, url })}>Share</button>
+```
+
+### Pattern 2: Share with fallback
+
+```tsx
+{
+    isSupported ? <ShareButton /> : <CopyLinkButton />
+}
+```
+
+### Pattern 3: Check before sharing
+
+```tsx
+const shareable = canShare({ title, url })
+if (shareable) await share({ title, url })
+```
+
+## Tests
+
+See `src/utility/hooks/__tests__/useShare.test.tsx` for comprehensive tests covering initial state, unsupported browsers, file sharing support, successful sharing, callbacks (onSuccess, onError), user cancellation (AbortError), validation errors, sharing different content types (title/text/url/files), canShare functionality, isSharing state, and all field combinations (20 tests).

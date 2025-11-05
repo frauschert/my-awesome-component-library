@@ -254,6 +254,7 @@ import {
     useMutationObserver,
     usePreferredLanguage,
     useWakeLock,
+    useShare,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -491,6 +492,7 @@ export {
     useMutationObserver,
     usePreferredLanguage,
     useWakeLock,
+    useShare,
     memoize,
     throttle,
     chunk,

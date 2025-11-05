@@ -48,6 +48,7 @@ import useIsMounted from './useIsMounted'
 import useMutationObserver from './useMutationObserver'
 import usePreferredLanguage from './usePreferredLanguage'
 import useWakeLock from './useWakeLock'
+import useShare from './useShare'
 
 export {
     useDebounceEffect,
@@ -103,6 +104,7 @@ export {
     useMutationObserver,
     usePreferredLanguage,
     useWakeLock,
+    useShare,
 }
 
 export default {
@@ -159,4 +161,5 @@ export default {
     useMutationObserver,
     usePreferredLanguage,
     useWakeLock,
+    useShare,
 }
