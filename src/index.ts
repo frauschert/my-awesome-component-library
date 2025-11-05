@@ -241,6 +241,7 @@ import {
     useIsFirstRender,
     useClickAway,
     useHash,
+    useSearchParam,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -465,6 +466,7 @@ export {
     useIsFirstRender,
     useClickAway,
     useHash,
+    useSearchParam,
     memoize,
     throttle,
     chunk,

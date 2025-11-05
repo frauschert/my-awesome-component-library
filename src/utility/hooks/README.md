@@ -22,6 +22,7 @@ Custom React hooks for common use cases in the component library.
 -   [useIsFirstRender](#useisfirstrender)
 -   [useClickAway](#useclickaway)
 -   [useHash](#usehash)
+-   [useSearchParam](#usesearchparam)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -3044,6 +3045,386 @@ The `hashchange` event is supported in all modern browsers. For hash removal, `h
 ### Tests
 
 See `src/utility/hooks/__tests__/useHash.test.tsx` for comprehensive tests covering getting/setting hash, hash changes, browser navigation, multiple components, cleanup, special characters, and edge cases.
+
+---
+
+## useSearchParam
+
+Monitor and update a single URL search parameter (query string). Returns the current parameter value and a function to update it. Perfect for filters, pagination, search queries, and any feature that needs URL state. Pairs perfectly with `useHash` for complete URL state management.
+
+### API
+
+```tsx
+const [value, setValue]: [string | null, (newValue: string | null) => void] =
+    useSearchParam(key)
+```
+
+### Parameters
+
+-   `key` - The search parameter key to monitor and update
+
+### Returns
+
+A tuple containing:
+
+-   `value` - Current parameter value as a string, or `null` if not present
+-   `setValue` - Function to update the parameter. Pass `null` or empty string to remove it
+
+### Features
+
+-   ✅ SSR-safe (returns null on server)
+-   ✅ Listens to browser navigation (back/forward buttons)
+-   ✅ Automatic URL encoding/decoding
+-   ✅ Preserves other parameters and hash
+-   ✅ Syncs across multiple components
+-   ✅ Clean parameter removal
+-   ✅ TypeScript support
+-   ✅ Automatic cleanup on unmount
+
+### Usage
+
+```tsx
+import { useSearchParam } from './utility/hooks'
+
+// Pagination
+function PaginatedList({ data }) {
+    const [page, setPage] = useSearchParam('page')
+    const currentPage = parseInt(page || '1')
+
+    const totalPages = Math.ceil(data.length / 10)
+
+    return (
+        <div>
+            <div>
+                {data
+                    .slice((currentPage - 1) * 10, currentPage * 10)
+                    .map((item) => (
+                        <div key={item.id}>{item.name}</div>
+                    ))}
+            </div>
+            <button
+                disabled={currentPage === 1}
+                onClick={() => setPage(String(currentPage - 1))}
+            >
+                Previous
+            </button>
+            <span>
+                Page {currentPage} of {totalPages}
+            </span>
+            <button
+                disabled={currentPage === totalPages}
+                onClick={() => setPage(String(currentPage + 1))}
+            >
+                Next
+            </button>
+        </div>
+    )
+}
+
+// Search with URL state
+function SearchBar() {
+    const [query, setQuery] = useSearchParam('q')
+    const [inputValue, setInputValue] = useState(query || '')
+
+    useEffect(() => {
+        setInputValue(query || '')
+    }, [query])
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        setQuery(inputValue || null)
+    }
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Search..."
+            />
+            <button type="submit">Search</button>
+            {query && (
+                <button type="button" onClick={() => setQuery(null)}>
+                    Clear
+                </button>
+            )}
+        </form>
+    )
+}
+
+// Filter controls
+function ProductFilters() {
+    const [category, setCategory] = useSearchParam('category')
+    const [sort, setSort] = useSearchParam('sort')
+    const [inStock, setInStock] = useSearchParam('inStock')
+
+    return (
+        <div>
+            <select
+                value={category || ''}
+                onChange={(e) => setCategory(e.target.value || null)}
+            >
+                <option value="">All Categories</option>
+                <option value="electronics">Electronics</option>
+                <option value="clothing">Clothing</option>
+                <option value="books">Books</option>
+            </select>
+
+            <select
+                value={sort || 'name'}
+                onChange={(e) => setSort(e.target.value)}
+            >
+                <option value="name">Name</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+            </select>
+
+            <label>
+                <input
+                    type="checkbox"
+                    checked={inStock === 'true'}
+                    onChange={(e) =>
+                        setInStock(e.target.checked ? 'true' : null)
+                    }
+                />
+                In Stock Only
+            </label>
+        </div>
+    )
+}
+
+// Tab navigation with URL state
+function TabsWithURL() {
+    const [activeTab, setActiveTab] = useSearchParam('tab')
+    const tab = activeTab || 'overview'
+
+    return (
+        <div>
+            <div role="tablist">
+                {['overview', 'details', 'reviews', 'specs'].map((tabName) => (
+                    <button
+                        key={tabName}
+                        role="tab"
+                        aria-selected={tab === tabName}
+                        onClick={() => setActiveTab(tabName)}
+                        style={{
+                            fontWeight: tab === tabName ? 'bold' : 'normal',
+                            borderBottom:
+                                tab === tabName ? '2px solid blue' : 'none',
+                        }}
+                    >
+                        {tabName}
+                    </button>
+                ))}
+            </div>
+            <div role="tabpanel">
+                {tab === 'overview' && <OverviewPanel />}
+                {tab === 'details' && <DetailsPanel />}
+                {tab === 'reviews' && <ReviewsPanel />}
+                {tab === 'specs' && <SpecsPanel />}
+            </div>
+        </div>
+    )
+}
+
+// Debounced search with URL sync
+function LiveSearch() {
+    const [query, setQuery] = useSearchParam('q')
+    const [inputValue, setInputValue] = useState(query || '')
+    const debouncedValue = useDebounce(inputValue, 500)
+
+    useEffect(() => {
+        setQuery(debouncedValue || null)
+    }, [debouncedValue, setQuery])
+
+    const { data, loading } = useFetch(`/api/search?q=${query || ''}`)
+
+    return (
+        <div>
+            <input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Type to search..."
+            />
+            {loading && <div>Searching...</div>}
+            {data && <SearchResults results={data} />}
+        </div>
+    )
+}
+
+// Multiple parameters for complex filtering
+function AdvancedFilters() {
+    const [search, setSearch] = useSearchParam('search')
+    const [minPrice, setMinPrice] = useSearchParam('minPrice')
+    const [maxPrice, setMaxPrice] = useSearchParam('maxPrice')
+    const [rating, setRating] = useSearchParam('rating')
+
+    const clearFilters = () => {
+        setSearch(null)
+        setMinPrice(null)
+        setMaxPrice(null)
+        setRating(null)
+    }
+
+    const hasActiveFilters = search || minPrice || maxPrice || rating
+
+    return (
+        <div>
+            <input
+                value={search || ''}
+                onChange={(e) => setSearch(e.target.value || null)}
+                placeholder="Search products..."
+            />
+
+            <div>
+                <label>
+                    Min Price:
+                    <input
+                        type="number"
+                        value={minPrice || ''}
+                        onChange={(e) => setMinPrice(e.target.value || null)}
+                    />
+                </label>
+                <label>
+                    Max Price:
+                    <input
+                        type="number"
+                        value={maxPrice || ''}
+                        onChange={(e) => setMaxPrice(e.target.value || null)}
+                    />
+                </label>
+            </div>
+
+            <select
+                value={rating || ''}
+                onChange={(e) => setRating(e.target.value || null)}
+            >
+                <option value="">Any Rating</option>
+                <option value="4">4+ Stars</option>
+                <option value="3">3+ Stars</option>
+            </select>
+
+            {hasActiveFilters && (
+                <button onClick={clearFilters}>Clear All Filters</button>
+            )}
+        </div>
+    )
+}
+
+// Data fetching based on URL parameter
+function UserProfile() {
+    const [userId, setUserId] = useSearchParam('userId')
+    const {
+        data: user,
+        loading,
+        error,
+    } = useFetch(userId ? `/api/users/${userId}` : null)
+
+    if (!userId) {
+        return <div>Select a user to view profile</div>
+    }
+
+    if (loading) return <div>Loading...</div>
+    if (error) return <div>Error loading user</div>
+
+    return (
+        <div>
+            <h2>{user.name}</h2>
+            <p>{user.email}</p>
+            <button onClick={() => setUserId(null)}>Close Profile</button>
+        </div>
+    )
+}
+
+// Shareable filtered views
+function ShareableView() {
+    const [view, setView] = useSearchParam('view')
+    const [filter, setFilter] = useSearchParam('filter')
+
+    const shareUrl = `${window.location.origin}${
+        window.location.pathname
+    }?view=${view || 'grid'}&filter=${filter || 'all'}`
+
+    const copyShareLink = () => {
+        navigator.clipboard.writeText(shareUrl)
+        alert('Link copied!')
+    }
+
+    return (
+        <div>
+            <div>
+                <button onClick={() => setView('grid')}>Grid View</button>
+                <button onClick={() => setView('list')}>List View</button>
+            </div>
+            <button onClick={copyShareLink}>Share This View</button>
+        </div>
+    )
+}
+
+// Modal with URL state
+function ModalWithURL() {
+    const [modal, setModal] = useSearchParam('modal')
+
+    return (
+        <div>
+            <button onClick={() => setModal('login')}>Open Login</button>
+            <button onClick={() => setModal('signup')}>Open Signup</button>
+
+            {modal === 'login' && (
+                <Modal onClose={() => setModal(null)}>
+                    <LoginForm />
+                </Modal>
+            )}
+
+            {modal === 'signup' && (
+                <Modal onClose={() => setModal(null)}>
+                    <SignupForm />
+                </Modal>
+            )}
+        </div>
+    )
+}
+```
+
+### How it works
+
+The hook uses the browser's `URLSearchParams` API to read and manipulate query strings. It listens to `popstate` events to detect browser navigation and manually dispatches `popstate` events when updating parameters to keep all hook instances synchronized. The hook uses `history.pushState` to update the URL without triggering a page reload.
+
+### When to use
+
+-   **Pagination**: Track current page in URL
+-   **Search**: Make search queries shareable
+-   **Filters**: Persist filter selections in URL
+-   **Sorting**: Remember sort preferences
+-   **Tabs**: Deep-link to specific tabs
+-   **Modals**: Open modals via URL (shareable links)
+-   **Forms**: Track multi-step form progress
+-   **Views**: Remember grid/list view preferences
+-   **Any state** that should be shareable or bookmarkable
+
+### Notes
+
+-   Parameter values are always strings or `null` - convert to numbers/booleans as needed
+-   Setting a parameter to `null` or empty string removes it from the URL
+-   All other parameters and the hash fragment are preserved when updating
+-   Multiple components using the same parameter key stay synchronized
+-   The hook automatically encodes/decodes special characters
+-   SSR-safe: returns `null` when `window` is undefined
+-   Changes trigger `popstate` events for synchronization across instances
+
+### Comparison with useHash
+
+-   **useHash**: For fragment identifiers (`#section1`)
+-   **useSearchParam**: For query parameters (`?page=1&sort=asc`)
+-   Use together for complete URL state management
+
+### Browser Support
+
+`URLSearchParams` and `history.pushState` are supported in all modern browsers.
+
+### Tests
+
+See `src/utility/hooks/__tests__/useSearchParam.test.tsx` for comprehensive tests covering getting/setting parameters, removal, preservation of other params, browser navigation, multiple components, URL encoding, and edge cases.
 
 ---
 

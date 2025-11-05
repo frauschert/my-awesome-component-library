@@ -36,6 +36,7 @@ import useIntersectionObserver from './useIntersectionObserver'
 import useIsFirstRender from './useIsFirstRender'
 import useClickAway from './useClickAway'
 import useHash from './useHash'
+import useSearchParam from './useSearchParam'
 
 export {
     useDebounceEffect,
@@ -78,6 +79,7 @@ export {
     useIsFirstRender,
     useClickAway,
     useHash,
+    useSearchParam,
 }
 
 export default {
@@ -121,4 +123,5 @@ export default {
     useIsFirstRender,
     useClickAway,
     useHash,
+    useSearchParam,
 }
