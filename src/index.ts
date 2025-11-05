@@ -260,6 +260,7 @@ import {
     useEvent,
     useTitle,
     useFavicon,
+    useFocusWithin,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -503,6 +504,7 @@ export {
     useEvent,
     useTitle,
     useFavicon,
+    useFocusWithin,
     memoize,
     throttle,
     chunk,

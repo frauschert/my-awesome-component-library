@@ -7375,3 +7375,357 @@ All modern browsers (uses standard DOM APIs)
 ## Tests
 
 See `src/utility/hooks/__tests__/useFavicon.test.tsx` for comprehensive tests covering basic favicon setting, updates, restore on unmount, custom rel/type attributes, data URLs, SVG favicons, creating non-existent links, multiple changes, and edge cases (13 tests).
+
+---
+
+# Hook: useFocusWithin
+
+Detects when focus is within an element or any of its descendants (like CSS `:focus-within` pseudo-class). Perfect for form validation, accessibility features, and focus-aware UI states.
+
+## API
+
+```ts
+useFocusWithin<T extends HTMLElement = HTMLElement>(
+    ref: RefObject<T>
+): boolean
+```
+
+## Parameters
+
+-   `ref` (RefObject<T>): React ref pointing to the element to monitor
+
+## Returns
+
+`boolean` - `true` if the element or any descendant has focus, `false` otherwise
+
+## Usage
+
+```tsx
+import { useFocusWithin } from 'my-awesome-component-library'
+import { useRef } from 'react'
+
+// Basic focus detection
+function FormSection() {
+    const formRef = useRef(null)
+    const isFocused = useFocusWithin(formRef)
+
+    return (
+        <div ref={formRef} className={isFocused ? 'focused' : ''}>
+            <h2>Contact Form</h2>
+            <input type="text" placeholder="Name" />
+            <input type="email" placeholder="Email" />
+            {isFocused && <p>Form is active</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Form validation indicator
+function ValidatingForm() {
+    const formRef = useRef(null)
+    const isFocused = useFocusWithin(formRef)
+    const [errors, setErrors] = useState([])
+
+    return (
+        <form ref={formRef}>
+            <input type="email" />
+            <input type="password" />
+            {isFocused && errors.length > 0 && (
+                <div className="error-panel">
+                    {errors.map((err) => (
+                        <p key={err}>{err}</p>
+                    ))}
+                </div>
+            )}
+        </form>
+    )
+}
+```
+
+```tsx
+// Search box with results
+function SearchBox() {
+    const containerRef = useRef(null)
+    const isFocused = useFocusWithin(containerRef)
+    const [query, setQuery] = useState('')
+    const [results, setResults] = useState([])
+
+    return (
+        <div ref={containerRef} className="search-container">
+            <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search..."
+            />
+            {isFocused && query && (
+                <div className="search-results">
+                    {results.map((result) => (
+                        <button key={result.id}>{result.name}</button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Dropdown menu
+function Dropdown({ options }) {
+    const dropdownRef = useRef(null)
+    const isFocused = useFocusWithin(dropdownRef)
+
+    return (
+        <div ref={dropdownRef} className="dropdown">
+            <button>Select option</button>
+            {isFocused && (
+                <ul className="dropdown-menu">
+                    {options.map((opt) => (
+                        <li key={opt}>
+                            <button>{opt}</button>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Accessible tooltip
+function TooltipContainer({ children, tooltip }) {
+    const containerRef = useRef(null)
+    const isFocused = useFocusWithin(containerRef)
+
+    return (
+        <div ref={containerRef} className="tooltip-container">
+            {children}
+            {isFocused && (
+                <div className="tooltip" role="tooltip">
+                    {tooltip}
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Card with expanded details on focus
+function InfoCard({ title, details }) {
+    const cardRef = useRef(null)
+    const isFocused = useFocusWithin(cardRef)
+
+    return (
+        <div ref={cardRef} className={`card ${isFocused ? 'expanded' : ''}`}>
+            <h3>{title}</h3>
+            <button>Edit</button>
+            <button>Delete</button>
+            {isFocused && (
+                <div className="card-details">
+                    <p>{details}</p>
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Navigation menu with submenu
+function NavMenu() {
+    const navRef = useRef(null)
+    const isFocused = useFocusWithin(navRef)
+
+    return (
+        <nav ref={navRef}>
+            <button>File</button>
+            {isFocused && (
+                <div className="submenu">
+                    <button>New</button>
+                    <button>Open</button>
+                    <button>Save</button>
+                </div>
+            )}
+        </nav>
+    )
+}
+```
+
+```tsx
+// Multi-input address form
+function AddressForm() {
+    const addressRef = useRef(null)
+    const isFocused = useFocusWithin(addressRef)
+    const [showMap, setShowMap] = useState(false)
+
+    return (
+        <fieldset ref={addressRef}>
+            <legend>Address</legend>
+            <input placeholder="Street" />
+            <input placeholder="City" />
+            <input placeholder="ZIP" />
+            {isFocused && (
+                <button onClick={() => setShowMap(!showMap)}>
+                    {showMap ? 'Hide' : 'Show'} Map
+                </button>
+            )}
+        </fieldset>
+    )
+}
+```
+
+```tsx
+// Sidebar with conditional content
+function Sidebar() {
+    const sidebarRef = useRef(null)
+    const isFocused = useFocusWithin(sidebarRef)
+
+    return (
+        <aside ref={sidebarRef} className={isFocused ? 'active' : 'inactive'}>
+            <button>Settings</button>
+            <button>Profile</button>
+            <button>Logout</button>
+            {isFocused && (
+                <div className="sidebar-footer">
+                    <p>Last login: Today</p>
+                </div>
+            )}
+        </aside>
+    )
+}
+```
+
+```tsx
+// Toolbar with context-sensitive help
+function Toolbar() {
+    const toolbarRef = useRef(null)
+    const isFocused = useFocusWithin(toolbarRef)
+    const [activeHelp, setActiveHelp] = useState('')
+
+    return (
+        <div ref={toolbarRef} className="toolbar">
+            <button onFocus={() => setActiveHelp('Bold text')}>B</button>
+            <button onFocus={() => setActiveHelp('Italic text')}>I</button>
+            <button onFocus={() => setActiveHelp('Underline')}>U</button>
+            {isFocused && activeHelp && (
+                <div className="help-text">{activeHelp}</div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Complex nested form
+function AccountSettings() {
+    const sectionRef = useRef(null)
+    const isFocused = useFocusWithin(sectionRef)
+
+    return (
+        <section ref={sectionRef}>
+            <h2>Account Settings</h2>
+            <div>
+                <label>Username</label>
+                <input type="text" />
+            </div>
+            <div>
+                <label>Email</label>
+                <input type="email" />
+            </div>
+            {isFocused && (
+                <div className="save-reminder">
+                    <p>Remember to save your changes</p>
+                </div>
+            )}
+        </section>
+    )
+}
+```
+
+```tsx
+// Filter panel with preview
+function FilterPanel() {
+    const panelRef = useRef(null)
+    const isFocused = useFocusWithin(panelRef)
+    const [filters, setFilters] = useState({})
+
+    return (
+        <div ref={panelRef} className="filter-panel">
+            <select
+                onChange={(e) =>
+                    setFilters({ ...filters, category: e.target.value })
+                }
+            >
+                <option>All</option>
+                <option>Active</option>
+                <option>Archived</option>
+            </select>
+            <input
+                type="text"
+                placeholder="Search..."
+                onChange={(e) =>
+                    setFilters({ ...filters, query: e.target.value })
+                }
+            />
+            {isFocused && (
+                <div className="filter-preview">
+                    Applied filters: {Object.keys(filters).length}
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+## How it works
+
+-   Uses `focusin` and `focusout` events (which bubble, unlike `focus`/`blur`)
+-   `focusin`: Sets focus state to `true`
+-   `focusout`: Checks if `relatedTarget` (new focus) is outside the element
+-   Checks initial focus state on mount
+-   Cleans up event listeners on unmount
+-   Updates state synchronously when focus changes
+
+## When to use
+
+-   Form validation and error display
+-   Dropdown/popover visibility
+-   Search results display
+-   Tooltips and help text
+-   Context menus
+-   Expandable cards/sections
+-   Navigation submenus
+-   Toolbar help text
+-   Sidebar active states
+-   Focus-aware animations
+-   Accessibility enhancements
+
+## When NOT to use
+
+-   Simple single-element focus (use `:focus` CSS or `onFocus` event)
+-   When you need to prevent focus (use `useFocusTrap` instead)
+-   Global focus detection (use `document.activeElement` directly)
+
+## Notes
+
+-   Uses `focusin`/`focusout` events (bubble, unlike `focus`/`blur`)
+-   Checks `relatedTarget` to determine if focus left the element
+-   Works with all focusable elements (inputs, buttons, links, etc.)
+-   Includes elements with `tabIndex`
+-   Works with nested/deeply nested elements
+-   Handles focus switching between children correctly
+-   Initial focus state is detected on mount
+-   Returns `false` when `ref.current` is `null`
+-   Event listeners are properly cleaned up
+-   More reliable than CSS `:focus-within` for programmatic use
+
+## Browser support
+
+All modern browsers (uses standard `focusin`/`focusout` events)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useFocusWithin.test.tsx` for comprehensive tests covering initial state, element focus, child focus, focus switching, external focus, nested elements, ref changes, event listener cleanup, rapid changes, form elements, and edge cases (16 tests).

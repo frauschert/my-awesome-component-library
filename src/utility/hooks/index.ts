@@ -54,6 +54,7 @@ import useSet from './useSet'
 import useEvent from './useEvent'
 import useTitle from './useTitle'
 import useFavicon from './useFavicon'
+import useFocusWithin from './useFocusWithin'
 
 export {
     useDebounceEffect,
@@ -115,6 +116,7 @@ export {
     useEvent,
     useTitle,
     useFavicon,
+    useFocusWithin,
 }
 
 export type { UseSetActions } from './useSet'
@@ -179,4 +181,5 @@ export default {
     useEvent,
     useTitle,
     useFavicon,
+    useFocusWithin,
 }
