@@ -252,6 +252,7 @@ import {
     useHotkeysMap,
     useIsMounted,
     useMutationObserver,
+    usePreferredLanguage,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -487,6 +488,7 @@ export {
     useHotkeysMap,
     useIsMounted,
     useMutationObserver,
+    usePreferredLanguage,
     memoize,
     throttle,
     chunk,

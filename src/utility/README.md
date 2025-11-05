@@ -4302,3 +4302,391 @@ All modern browsers (IE11+, uses native MutationObserver API)
 ## Tests
 
 See `src/utility/hooks/__tests__/useMutationObserver.test.tsx` for comprehensive tests covering child list mutations, attribute mutations, character data mutations, attribute filtering, subtree observation, enable/disable, callback updates, disconnection, null refs, ref changes, multiple mutation types, observer instance, useRef integration, and dynamic enable/disable toggle (14 tests).
+
+---
+
+# Hook: usePreferredLanguage
+
+Returns the user's preferred language from the browser. Automatically updates when the browser language changes. Perfect for internationalization (i18n) and localization (l10n) features.
+
+## API
+
+```ts
+usePreferredLanguage(): string
+```
+
+## Returns
+
+The user's preferred language code (e.g., 'en-US', 'fr', 'es-ES', 'zh-CN'). Defaults to 'en-US' if unavailable.
+
+## Usage
+
+### Basic usage
+
+```tsx
+import { usePreferredLanguage } from 'my-awesome-component-library'
+
+function LanguageDisplay() {
+    const language = usePreferredLanguage()
+
+    return <p>Your language: {language}</p>
+}
+```
+
+### Dynamic content localization
+
+```tsx
+function LocalizedGreeting() {
+    const language = usePreferredLanguage()
+
+    const greetings: Record<string, string> = {
+        en: 'Hello',
+        'en-US': 'Hello',
+        'en-GB': 'Hello',
+        fr: 'Bonjour',
+        'fr-FR': 'Bonjour',
+        es: 'Hola',
+        'es-ES': 'Hola',
+        de: 'Guten Tag',
+        'de-DE': 'Guten Tag',
+        it: 'Ciao',
+        ja: 'こんにちは',
+        zh: '你好',
+        ko: '안녕하세요',
+    }
+
+    const greeting =
+        greetings[language] || greetings[language.split('-')[0]] || 'Hello'
+
+    return <h1>{greeting}!</h1>
+}
+```
+
+### Language-based content switching
+
+```tsx
+function LocalizedContent() {
+    const language = usePreferredLanguage()
+    const langCode = language.split('-')[0] // Get base language code
+
+    const content = {
+        en: {
+            title: 'Welcome',
+            description: 'This is an English description',
+        },
+        fr: {
+            title: 'Bienvenue',
+            description: 'Ceci est une description en français',
+        },
+        es: {
+            title: 'Bienvenido',
+            description: 'Esta es una descripción en español',
+        },
+    }
+
+    const text = content[langCode as keyof typeof content] || content.en
+
+    return (
+        <div>
+            <h1>{text.title}</h1>
+            <p>{text.description}</p>
+        </div>
+    )
+}
+```
+
+### Integration with i18n library
+
+```tsx
+import { useEffect } from 'react'
+import i18n from 'i18next'
+
+function App() {
+    const language = usePreferredLanguage()
+
+    useEffect(() => {
+        // Update i18n when browser language changes
+        i18n.changeLanguage(language.split('-')[0])
+    }, [language])
+
+    return <YourApp />
+}
+```
+
+### Display language selector with detected language
+
+```tsx
+function LanguageSelector() {
+    const detectedLanguage = usePreferredLanguage()
+    const [selectedLanguage, setSelectedLanguage] = useState(detectedLanguage)
+
+    const languages = [
+        { code: 'en-US', name: 'English (US)' },
+        { code: 'en-GB', name: 'English (UK)' },
+        { code: 'fr-FR', name: 'Français' },
+        { code: 'es-ES', name: 'Español' },
+        { code: 'de-DE', name: 'Deutsch' },
+        { code: 'ja-JP', name: '日本語' },
+        { code: 'zh-CN', name: '中文' },
+    ]
+
+    return (
+        <div>
+            <p>Detected: {detectedLanguage}</p>
+            <select
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+            >
+                {languages.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                        {lang.name}
+                    </option>
+                ))}
+            </select>
+        </div>
+    )
+}
+```
+
+### Format dates based on language
+
+```tsx
+function LocalizedDate({ date }: { date: Date }) {
+    const language = usePreferredLanguage()
+
+    const formattedDate = new Intl.DateTimeFormat(language, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    }).format(date)
+
+    return <p>{formattedDate}</p>
+}
+```
+
+### Format numbers based on language
+
+```tsx
+function LocalizedNumber({ value }: { value: number }) {
+    const language = usePreferredLanguage()
+
+    const formattedNumber = new Intl.NumberFormat(language).format(value)
+
+    return <p>{formattedNumber}</p>
+}
+```
+
+### Currency formatting
+
+```tsx
+function LocalizedPrice({
+    amount,
+    currency,
+}: {
+    amount: number
+    currency: string
+}) {
+    const language = usePreferredLanguage()
+
+    const formattedPrice = new Intl.NumberFormat(language, {
+        style: 'currency',
+        currency,
+    }).format(amount)
+
+    return <p>{formattedPrice}</p>
+}
+```
+
+### Language-aware text direction
+
+```tsx
+function LocalizedLayout() {
+    const language = usePreferredLanguage()
+
+    // Right-to-left languages
+    const rtlLanguages = ['ar', 'he', 'fa', 'ur']
+    const langCode = language.split('-')[0]
+    const isRTL = rtlLanguages.includes(langCode)
+
+    return (
+        <div dir={isRTL ? 'rtl' : 'ltr'} lang={language}>
+            <p>Content flows in the correct direction</p>
+        </div>
+    )
+}
+```
+
+### Load language-specific resources
+
+```tsx
+function LocalizedApp() {
+    const language = usePreferredLanguage()
+    const [translations, setTranslations] = useState<Record<
+        string,
+        string
+    > | null>(null)
+
+    useEffect(() => {
+        const langCode = language.split('-')[0]
+
+        // Load translations for the detected language
+        import(`./translations/${langCode}.json`)
+            .then((module) => setTranslations(module.default))
+            .catch(() => {
+                // Fallback to English
+                import('./translations/en.json').then((module) =>
+                    setTranslations(module.default)
+                )
+            })
+    }, [language])
+
+    if (!translations) {
+        return <div>Loading...</div>
+    }
+
+    return <div>{translations.welcome}</div>
+}
+```
+
+### Automatic language detection with fallback
+
+```tsx
+function SmartLocalizedContent() {
+    const preferredLanguage = usePreferredLanguage()
+
+    const getContent = (langCode: string) => {
+        // Try exact match (e.g., 'en-US')
+        if (content[langCode]) {
+            return content[langCode]
+        }
+
+        // Try base language (e.g., 'en')
+        const baseCode = langCode.split('-')[0]
+        if (content[baseCode]) {
+            return content[baseCode]
+        }
+
+        // Fallback to English
+        return content['en']
+    }
+
+    const content: Record<string, { title: string; text: string }> = {
+        en: { title: 'Hello', text: 'Welcome' },
+        'en-US': { title: 'Hello', text: 'Welcome to our site' },
+        fr: { title: 'Bonjour', text: 'Bienvenue' },
+        es: { title: 'Hola', text: 'Bienvenido' },
+    }
+
+    const localizedContent = getContent(preferredLanguage)
+
+    return (
+        <div>
+            <h1>{localizedContent.title}</h1>
+            <p>{localizedContent.text}</p>
+        </div>
+    )
+}
+```
+
+### Language-specific font loading
+
+```tsx
+function LocalizedText() {
+    const language = usePreferredLanguage()
+    const langCode = language.split('-')[0]
+
+    // Different fonts for different scripts
+    const fontFamily =
+        {
+            en: 'Roboto, sans-serif',
+            zh: 'Noto Sans SC, sans-serif',
+            ja: 'Noto Sans JP, sans-serif',
+            ko: 'Noto Sans KR, sans-serif',
+            ar: 'Noto Sans Arabic, sans-serif',
+        }[langCode] || 'Roboto, sans-serif'
+
+    return <div style={{ fontFamily }}>Localized content</div>
+}
+```
+
+## Key features
+
+-   **Browser language detection**: Reads `navigator.language`
+-   **Automatic updates**: Listens to `languagechange` event
+-   **SSR-safe**: Returns default value server-side
+-   **Standard format**: Returns BCP 47 language tags
+-   **Fallback support**: Returns 'en-US' if unavailable
+-   **Zero dependencies**: Pure React implementation
+-   **TypeScript support**: Fully typed return value
+-   **Automatic cleanup**: Removes event listener on unmount
+
+## Language code formats
+
+The hook returns standard BCP 47 language tags:
+
+-   **Base language**: `en`, `fr`, `es`, `de`, `ja`, `zh`
+-   **Language + Region**: `en-US`, `en-GB`, `fr-FR`, `es-ES`
+-   **With script**: `zh-Hans`, `zh-Hant`, `sr-Cyrl`, `sr-Latn`
+-   **Full format**: `zh-Hans-CN`, `sr-Latn-RS`
+
+## Common patterns
+
+### Pattern 1: Base language extraction
+
+```tsx
+const language = usePreferredLanguage()
+const baseLanguage = language.split('-')[0] // 'en-US' -> 'en'
+```
+
+### Pattern 2: Fallback chain
+
+```tsx
+const text =
+    translations[language] ||
+    translations[language.split('-')[0]] ||
+    translations['en']
+```
+
+### Pattern 3: React-Intl integration
+
+```tsx
+const language = usePreferredLanguage()
+return (
+    <IntlProvider locale={language} messages={messages[language]}>
+        ...
+    </IntlProvider>
+)
+```
+
+## When to use
+
+-   Internationalization (i18n) implementations
+-   Automatic language detection for multi-language apps
+-   Locale-aware formatting (dates, numbers, currency)
+-   Language-specific resource loading
+-   Content localization
+-   Text direction (LTR/RTL) detection
+-   Language preferences without server
+-   Client-side translation systems
+
+## When NOT to use
+
+-   When language preference is stored server-side
+-   When you need all browser languages (use `navigator.languages`)
+-   For user-selected language persistence (combine with localStorage)
+
+## Browser support
+
+All modern browsers (uses `navigator.language` and `languagechange` event)
+
+## Notes
+
+-   Returns the first language from browser preferences
+-   Updates automatically when user changes browser language
+-   SSR returns 'en-US' by default
+-   Language format follows BCP 47 standard
+-   Consider combining with localStorage for persistence
+
+## Tests
+
+See `src/utility/hooks/__tests__/usePreferredLanguage.test.tsx` for comprehensive tests covering browser language detection, different language codes, languages without region, language change events, multiple changes, event listener cleanup, default fallback, common language codes, stable references, script subtags, lowercase codes, and various language formats (14 tests).
