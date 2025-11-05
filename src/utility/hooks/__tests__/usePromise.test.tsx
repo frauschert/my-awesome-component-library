@@ -57,6 +57,7 @@ describe('usePromise', () => {
         await act(async () => {
             try {
                 await executePromise
+                // eslint-disable-next-line no-unused-vars
             } catch (e) {
                 // Expected to throw
             }
@@ -171,6 +172,7 @@ describe('usePromise', () => {
         await act(async () => {
             try {
                 await result.current.execute()
+                // eslint-disable-next-line no-unused-vars
             } catch (e) {
                 // Expected
             }
@@ -250,6 +252,7 @@ describe('usePromise', () => {
         await act(async () => {
             try {
                 await result.current.execute()
+                // eslint-disable-next-line no-unused-vars
             } catch (e) {
                 // Expected
             }
