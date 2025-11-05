@@ -248,6 +248,8 @@ import {
     useWebSocket,
     usePromise,
     useList,
+    useHotkeys,
+    useHotkeysMap,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -479,6 +481,8 @@ export {
     useWebSocket,
     usePromise,
     useList,
+    useHotkeys,
+    useHotkeysMap,
     memoize,
     throttle,
     chunk,

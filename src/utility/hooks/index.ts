@@ -43,6 +43,7 @@ import useColorScheme from './useColorScheme'
 import useWebSocket from './useWebSocket'
 import usePromise from './usePromise'
 import useList from './useList'
+import useHotkeys, { useHotkeysMap } from './useHotkeys'
 
 export {
     useDebounceEffect,
@@ -92,6 +93,8 @@ export {
     useWebSocket,
     usePromise,
     useList,
+    useHotkeys,
+    useHotkeysMap,
 }
 
 export default {
@@ -142,4 +145,6 @@ export default {
     useWebSocket,
     usePromise,
     useList,
+    useHotkeys,
+    useHotkeysMap,
 }

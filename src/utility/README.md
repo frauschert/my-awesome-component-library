@@ -3099,3 +3099,346 @@ All modern browsers (uses standard array methods)
 
 See `src/utility/hooks/__tests__/useList.test.tsx` for comprehensive tests covering initialization, push, pop, shift, unshift, insert, update, remove, filter, sort, reverse, map, concat, reset, complex objects, chained operations, stable references, empty lists, and single item operations (32 tests).
 
+
+---
+
+# Hook: useHotkeys
+
+Manages keyboard shortcuts with support for modifier keys (ctrl, shift, alt, meta). Perfect for implementing keyboard navigation, shortcuts, and accessibility features.
+
+## API
+
+```ts
+useHotkeys(
+    hotkey: string,
+    callback: (event: KeyboardEvent) => void,
+    options?: UseHotkeysOptions
+): void
+
+useHotkeysMap(
+    hotkeys: Record<string, (event: KeyboardEvent) => void>,
+    options?: UseHotkeysOptions
+): void
+
+interface UseHotkeysOptions {
+    enabled?: boolean // default: true
+    enableOnFormTags?: boolean // default: false
+    enableOnContentEditable?: boolean // default: false
+    preventDefault?: boolean // default: true
+    stopPropagation?: boolean // default: false
+    description?: string
+}
+```
+
+## Parameters
+
+- `hotkey` (string): Hotkey combination (e.g., "ctrl+s", "shift+alt+k")
+- `callback` ((event: KeyboardEvent) => void): Function called when hotkey is pressed
+- `options` (UseHotkeysOptions, optional): Configuration options
+
+## Options
+
+- `enabled`: Enable/disable the hotkey
+- `enableOnFormTags`: Allow hotkey in input/textarea/select elements
+- `enableOnContentEditable`: Allow hotkey in contentEditable elements
+- `preventDefault`: Prevent default browser behavior
+- `stopPropagation`: Stop event propagation
+- `description`: Optional description for documentation
+
+## Usage
+
+```tsx
+import { useHotkeys, useHotkeysMap } from 'my-awesome-component-library'
+
+// Basic save shortcut
+function Editor() {
+    useHotkeys('ctrl+s', () => {
+        console.log('Save!')
+    })
+    
+    return <textarea />
+}
+```
+
+```tsx
+// Multiple modifiers
+function App() {
+    useHotkeys('ctrl+shift+p', () => {
+        console.log('Open command palette')
+    })
+    
+    useHotkeys('alt+f4', () => {
+        console.log('Close window')
+    })
+    
+    return <div>Press Ctrl+Shift+P</div>
+}
+```
+
+```tsx
+// Keyboard navigation
+function List({ items }) {
+    const [selected, setSelected] = useState(0)
+    
+    useHotkeys('up', () => {
+        setSelected(Math.max(0, selected - 1))
+    })
+    
+    useHotkeys('down', () => {
+        setSelected(Math.min(items.length - 1, selected + 1))
+    })
+    
+    useHotkeys('enter', () => {
+        console.log('Selected:', items[selected])
+    })
+    
+    return (
+        <ul>
+            {items.map((item, i) => (
+                <li key={i} className={i === selected ? 'selected' : ''}>
+                    {item}
+                </li>
+            ))}
+        </ul>
+    )
+}
+```
+
+```tsx
+// Enable on form inputs
+function SearchBox() {
+    const inputRef = useRef()
+    
+    useHotkeys(
+        'ctrl+f',
+        () => {
+            inputRef.current?.focus()
+        },
+        { enableOnFormTags: true }
+    )
+    
+    return <input ref={inputRef} placeholder="Search..." />
+}
+```
+
+```tsx
+// Conditional hotkeys
+function Modal({ isOpen, onClose }) {
+    useHotkeys('esc', onClose, { enabled: isOpen })
+    
+    if (!isOpen) return null
+    
+    return (
+        <div className="modal">
+            <p>Press Esc to close</p>
+            <button onClick={onClose}>Close</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Multiple hotkeys with useHotkeysMap
+function TextEditor() {
+    const [content, setContent] = useState('')
+    
+    useHotkeysMap({
+        'ctrl+s': () => console.log('Save'),
+        'ctrl+o': () => console.log('Open'),
+        'ctrl+p': () => console.log('Print'),
+        'ctrl+z': () => console.log('Undo'),
+        'ctrl+y': () => console.log('Redo'),
+        'ctrl+b': () => console.log('Bold'),
+        'ctrl+i': () => console.log('Italic'),
+        'ctrl+u': () => console.log('Underline'),
+    })
+    
+    return <textarea value={content} onChange={e => setContent(e.target.value)} />
+}
+```
+
+```tsx
+// Custom action shortcuts
+function CommandPalette() {
+    const [open, setOpen] = useState(false)
+    
+    useHotkeys('ctrl+k', () => {
+        setOpen(!open)
+    })
+    
+    useHotkeysMap(
+        {
+            'escape': () => setOpen(false),
+            'enter': () => {
+                console.log('Execute command')
+                setOpen(false)
+            },
+        },
+        { enabled: open }
+    )
+    
+    if (!open) return null
+    
+    return (
+        <div className="command-palette">
+            <input placeholder="Type a command..." />
+        </div>
+    )
+}
+```
+
+```tsx
+// Special keys
+function Game() {
+    useHotkeysMap({
+        'space': () => console.log('Jump'),
+        'enter': () => console.log('Interact'),
+        'escape': () => console.log('Pause'),
+        'up': () => console.log('Move up'),
+        'down': () => console.log('Move down'),
+        'left': () => console.log('Move left'),
+        'right': () => console.log('Move right'),
+    })
+    
+    return <canvas />
+}
+```
+
+```tsx
+// Prevent default vs allow default
+function Form() {
+    // Prevent Ctrl+S from showing save dialog
+    useHotkeys('ctrl+s', () => {
+        console.log('Custom save')
+    }, { preventDefault: true })
+    
+    // Allow browser's Ctrl+F
+    useHotkeys('ctrl+shift+f', () => {
+        console.log('App search')
+    }, { preventDefault: false })
+    
+    return <form />
+}
+```
+
+```tsx
+// Global shortcuts with descriptions
+function App() {
+    const shortcuts = [
+        { key: 'ctrl+s', action: 'Save', handler: () => console.log('Save') },
+        { key: 'ctrl+o', action: 'Open', handler: () => console.log('Open') },
+        { key: 'ctrl+p', action: 'Print', handler: () => console.log('Print') },
+    ]
+    
+    shortcuts.forEach(({ key, handler, action }) => {
+        useHotkeys(key, handler, {
+            description: action,
+        })
+    })
+    
+    return (
+        <div>
+            <h2>Keyboard Shortcuts</h2>
+            <ul>
+                {shortcuts.map(({ key, action }) => (
+                    <li key={key}>
+                        <kbd>{key}</kbd>: {action}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+```
+
+```tsx
+// Tab navigation
+function TabbedInterface() {
+    const [tab, setTab] = useState(0)
+    
+    useHotkeysMap({
+        'ctrl+1': () => setTab(0),
+        'ctrl+2': () => setTab(1),
+        'ctrl+3': () => setTab(2),
+        'ctrl+tab': () => setTab((tab + 1) % 3),
+        'ctrl+shift+tab': () => setTab((tab + 2) % 3),
+    })
+    
+    return (
+        <div>
+            <nav>
+                <button onClick={() => setTab(0)}>Tab 1 (Ctrl+1)</button>
+                <button onClick={() => setTab(1)}>Tab 2 (Ctrl+2)</button>
+                <button onClick={() => setTab(2)}>Tab 3 (Ctrl+3)</button>
+            </nav>
+            <div>{`Content ${tab + 1}`}</div>
+        </div>
+    )
+}
+```
+
+## Supported Keys
+
+- **Modifiers**: `ctrl`, `shift`, `alt`, `meta` (cmd on Mac)
+- **Letters**: `a-z`
+- **Numbers**: `0-9`
+- **Special**: `enter`, `escape` (or `esc`), `space`, `tab`
+- **Arrows**: `up`, `down`, `left`, `right`
+- **Function**: `f1`-`f12`
+- **Symbols**: Any key that produces a character
+
+## Key Aliases
+
+- `return` → `enter`
+- `esc` → `escape`
+- `spacebar` → `space`
+- `control` → `ctrl`
+- `cmd`/`command` → `meta`
+
+## How it works
+
+- Parses hotkey string into modifier + key combination
+- Registers window-level `keydown` listener
+- Matches event against parsed hotkey
+- Filters based on target element (form tags, contentEditable)
+- Calls callback if match found
+- Prevents default and stops propagation if configured
+- Cleans up listener on unmount
+- Updates callback without re-registering listener
+
+## When to use
+
+- Application-wide keyboard shortcuts
+- Editor keyboard bindings
+- Keyboard navigation
+- Accessibility features
+- Modal/dialog close on Escape
+- Form submission on Ctrl+Enter
+- Game controls
+- Command palettes
+- Quick actions
+- Tab/window management
+- Custom keyboard interfaces
+
+## Notes
+
+- Hotkeys are case-insensitive ("CTRL+S" = "ctrl+s")
+- Multiple modifiers can be combined in any order
+- By default, ignores events from input/textarea/select elements
+- Set `enableOnFormTags: true` to allow hotkeys in form elements
+- Set `preventDefault: false` to allow default browser behavior
+- `useHotkeysMap` triggers only the first matching hotkey
+- Callback updates don't re-register the listener (performance)
+- Works with any key that produces a character
+- Modifier keys must match exactly (no extra modifiers allowed)
+- Uses window-level listener (captures all keyboard events)
+- Safe to use multiple times in same component
+
+## Browser support
+
+All modern browsers (uses standard KeyboardEvent API)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useHotkeys.test.tsx` for comprehensive tests covering single/multiple modifiers, special keys, key normalization, enable/disable, form element filtering, contentEditable filtering, preventDefault, callback updates, hotkey updates, cleanup, case insensitivity, and multiple hotkeys with useHotkeysMap (30 tests).
+
