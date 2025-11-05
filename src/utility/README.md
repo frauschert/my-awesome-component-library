@@ -8190,3 +8190,432 @@ All modern browsers with IndexedDB support (IE10+, Chrome, Firefox, Safari, Edge
 ## Tests
 
 See `src/utility/hooks/__tests__/useIndexedDB.test.tsx` for comprehensive tests covering initial load, set/get/remove/clear operations, custom databases/stores, complex objects, multiple keys, error handling, data type support, rapid operations, and edge cases (23 tests).
+
+---
+
+# Hook: useWorker
+
+Hook for integrating Web Workers with React for offloading heavy computations to background threads. Manages worker lifecycle, message passing, error handling, and cleanup automatically.
+
+## API
+
+```ts
+useWorker<T = unknown, P = unknown>(
+    workerFn: ((data: P) => T) | (() => Worker) | Worker,
+    options?: UseWorkerOptions
+): UseWorkerReturn<T>
+
+interface UseWorkerOptions {
+    autoTerminate?: boolean  // default: true
+    timeout?: number         // optional timeout in ms
+}
+
+interface UseWorkerReturn<T> {
+    data: T | null
+    error: Error | null
+    loading: boolean
+    postMessage: (message: unknown) => void
+    terminate: () => void
+}
+```
+
+## Parameters
+
+-   `workerFn` - Worker function, factory function, or Worker instance
+    -   `(data: P) => T` - Computation function to run in worker
+    -   `() => Worker` - Factory function that returns a Worker
+    -   `Worker` - Existing Worker instance
+-   `options` (UseWorkerOptions, optional) - Configuration options
+
+## Options
+
+-   `autoTerminate`: Automatically terminate worker on unmount (default: true)
+-   `timeout`: Optional timeout in milliseconds for worker responses
+
+## Return Value
+
+-   `data`: Result from worker (null until first response)
+-   `error`: Error object if worker fails (null otherwise)
+-   `loading`: True while waiting for worker response
+-   `postMessage`: Function to send data to worker
+-   `terminate`: Function to manually terminate worker
+
+## Usage
+
+```tsx
+import { useWorker } from 'my-awesome-component-library'
+
+// Basic heavy computation
+function DataProcessor() {
+    const worker = useWorker((data: number[]) => {
+        // Heavy computation runs in background thread
+        return data.map((x) => x * x).reduce((a, b) => a + b, 0)
+    })
+
+    const calculate = () => {
+        worker.postMessage([1, 2, 3, 4, 5])
+    }
+
+    return (
+        <div>
+            <button onClick={calculate}>Calculate</button>
+            {worker.loading && <p>Computing...</p>}
+            {worker.data && <p>Result: {worker.data}</p>}
+            {worker.error && <p>Error: {worker.error.message}</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Image processing
+function ImageProcessor() {
+    const worker = useWorker((imageData: ImageData) => {
+        // Apply grayscale filter
+        const data = imageData.data
+        for (let i = 0; i < data.length; i += 4) {
+            const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
+            data[i] = data[i + 1] = data[i + 2] = avg
+        }
+        return imageData
+    })
+
+    const processImage = (canvas: HTMLCanvasElement) => {
+        const ctx = canvas.getContext('2d')
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        worker.postMessage(imageData)
+    }
+
+    useEffect(() => {
+        if (worker.data) {
+            // Draw processed image back to canvas
+            console.log('Image processed')
+        }
+    }, [worker.data])
+
+    return (
+        <button onClick={() => processImage(canvasRef.current)}>Process</button>
+    )
+}
+```
+
+```tsx
+// Array sorting with large dataset
+function LargeSorter() {
+    const [array, setArray] = useState<number[]>([])
+
+    const worker = useWorker((arr: number[]) => {
+        // Sort large array in background
+        return arr.sort((a, b) => a - b)
+    })
+
+    const generateAndSort = () => {
+        const largeArray = Array.from({ length: 1000000 }, () =>
+            Math.floor(Math.random() * 1000)
+        )
+        setArray(largeArray)
+        worker.postMessage(largeArray)
+    }
+
+    return (
+        <div>
+            <button onClick={generateAndSort}>
+                Generate & Sort 1M numbers
+            </button>
+            {worker.loading && <div>Sorting...</div>}
+            {worker.data && <div>Sorted {worker.data.length} items</div>}
+        </div>
+    )
+}
+```
+
+```tsx
+// JSON parsing with timeout
+function JSONParser() {
+    const worker = useWorker((text: string) => JSON.parse(text), {
+        timeout: 5000,
+    })
+
+    const parseJSON = (text: string) => {
+        worker.postMessage(text)
+    }
+
+    return (
+        <div>
+            <textarea onChange={(e) => parseJSON(e.target.value)} />
+            {worker.loading && <p>Parsing...</p>}
+            {worker.data && <pre>{JSON.stringify(worker.data, null, 2)}</pre>}
+            {worker.error && <p>Parse error: {worker.error.message}</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Custom Worker instance
+function CustomWorkerExample() {
+    const worker = useWorker(() => new Worker('/workers/custom.js'))
+
+    useEffect(() => {
+        worker.postMessage({ action: 'start', config: { threads: 4 } })
+    }, [])
+
+    return (
+        <div>
+            {worker.data && (
+                <div>Worker response: {JSON.stringify(worker.data)}</div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Existing Worker instance
+function ExistingWorkerExample() {
+    const workerInstance = useMemo(() => new Worker('/worker.js'), [])
+
+    const worker = useWorker(workerInstance, { autoTerminate: false })
+
+    return (
+        <div>
+            <button onClick={() => worker.postMessage('hello')}>Send</button>
+            {worker.data && <p>Response: {worker.data}</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Manual worker termination
+function ControlledWorker() {
+    const worker = useWorker(
+        (n: number) => {
+            let result = 0
+            for (let i = 0; i < n; i++) {
+                result += Math.sqrt(i)
+            }
+            return result
+        },
+        { autoTerminate: false }
+    )
+
+    const start = () => worker.postMessage(10000000)
+    const stop = () => worker.terminate()
+
+    return (
+        <div>
+            <button onClick={start}>Start Computation</button>
+            <button onClick={stop}>Stop</button>
+            {worker.loading && <p>Computing...</p>}
+            {worker.data && <p>Result: {worker.data}</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Complex data transformation
+interface DataPoint {
+    x: number
+    y: number
+    value: number
+}
+
+function DataTransformer() {
+    const worker = useWorker<DataPoint[], DataPoint[]>((data) => {
+        return data
+            .filter((p) => p.value > 0)
+            .map((p) => ({
+                ...p,
+                value: p.value * 2,
+                distance: Math.sqrt(p.x * p.x + p.y * p.y),
+            }))
+            .sort((a, b) => b.distance - a.distance)
+    })
+
+    const transform = (data: DataPoint[]) => {
+        worker.postMessage(data)
+    }
+
+    return (
+        <div>
+            <button onClick={() => transform(largeDataset)}>
+                Transform Data
+            </button>
+            {worker.loading && (
+                <div>Processing {largeDataset.length} points...</div>
+            )}
+            {worker.data && <div>Processed: {worker.data.length} points</div>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Multiple workers
+function MultiWorker() {
+    const mathWorker = useWorker((n: number) => {
+        let sum = 0
+        for (let i = 0; i < n; i++) sum += i
+        return sum
+    })
+
+    const textWorker = useWorker((text: string) => {
+        return text.split(' ').reverse().join(' ')
+    })
+
+    return (
+        <div>
+            <button onClick={() => mathWorker.postMessage(1000000)}>
+                Math Task
+            </button>
+            <button onClick={() => textWorker.postMessage('Hello World')}>
+                Text Task
+            </button>
+
+            {mathWorker.loading && <p>Math computing...</p>}
+            {mathWorker.data && <p>Math result: {mathWorker.data}</p>}
+
+            {textWorker.loading && <p>Text processing...</p>}
+            {textWorker.data && <p>Text result: {textWorker.data}</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Error handling
+function SafeWorker() {
+    const worker = useWorker((data: string) => {
+        if (!data) throw new Error('Data is required')
+        return data.toUpperCase()
+    })
+
+    const process = (input: string) => {
+        worker.postMessage(input)
+    }
+
+    if (worker.error) {
+        return <div className="error">Worker error: {worker.error.message}</div>
+    }
+
+    return (
+        <div>
+            <input onChange={(e) => process(e.target.value)} />
+            {worker.loading && <span>Processing...</span>}
+            {worker.data && <p>Result: {worker.data}</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Progress tracking
+function ProgressWorker() {
+    const [progress, setProgress] = useState(0)
+
+    const worker = useWorker(() => {
+        const w = new Worker('/workers/progress.js')
+        w.onmessage = (e) => {
+            if (e.data.type === 'progress') {
+                setProgress(e.data.value)
+            }
+        }
+        return w
+    })
+
+    return (
+        <div>
+            <button onClick={() => worker.postMessage('start')}>Start</button>
+            <progress value={progress} max={100} />
+            {worker.data && <p>Complete!</p>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Crypto operations
+function CryptoWorker() {
+    const worker = useWorker((password: string) => {
+        // Heavy crypto operation in background
+        let hash = password
+        for (let i = 0; i < 100000; i++) {
+            hash = btoa(hash)
+        }
+        return hash
+    })
+
+    const hashPassword = (pwd: string) => {
+        worker.postMessage(pwd)
+    }
+
+    return (
+        <div>
+            <input
+                type="password"
+                onChange={(e) => hashPassword(e.target.value)}
+            />
+            {worker.loading && <p>Hashing...</p>}
+            {worker.data && <p>Hash ready</p>}
+        </div>
+    )
+}
+```
+
+## How it works
+
+-   Creates Worker from inline function using Blob and URL.createObjectURL
+-   Automatically sets up message and error handlers
+-   Updates loading state during computation
+-   Handles structured messages (`{ type: 'success', data }` or `{ type: 'error', error }`)
+-   Falls back to raw message data if not structured
+-   Terminates worker on unmount if `autoTerminate: true`
+-   Clears timeouts on response or unmount
+-   Prevents state updates after unmount
+
+## When to use
+
+-   Heavy computations (sorting, filtering large arrays)
+-   Image/video processing
+-   Complex mathematical calculations
+-   Data transformations on large datasets
+-   JSON parsing of large files
+-   Cryptographic operations
+-   Text processing (search, analysis)
+-   Real-time data analysis
+-   Machine learning inference
+-   Keeping UI responsive during heavy work
+
+## When NOT to use
+
+-   Simple, fast operations (overhead of worker not worth it)
+-   Operations requiring DOM access (workers can't access DOM)
+-   Small datasets (< 100KB typically)
+-   Operations that need immediate results (< 16ms)
+-   When you need to access React state/context from worker
+-   Server-side rendering (workers are browser-only)
+
+## Notes
+
+-   Workers run in separate thread (no access to DOM or window)
+-   Data is serialized when passing to/from worker (uses structured clone)
+-   Worker creation has overhead (~10ms)
+-   Best for operations > 50ms
+-   Functions are converted to strings (can't use closures or external vars)
+-   Use factory function or Worker instance for external worker files
+-   `autoTerminate: true` cleans up worker on unmount
+-   `autoTerminate: false` keeps worker alive (manual cleanup required)
+-   Timeout terminates worker if no response within specified time
+-   Error handling includes worker errors and timeout errors
+-   Multiple `postMessage` calls queue up (processed sequentially)
+-   Worker can only use pure functions (no imports or external dependencies)
+
+## Browser support
+
+All modern browsers with Web Worker support (IE10+, Chrome, Firefox, Safari, Edge)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useWorker.test.tsx` for comprehensive tests covering basic usage, Worker instances, factory functions, error handling, timeouts, message handling, manual termination, auto-termination, complex data types, loading states, and edge cases (22 tests).
