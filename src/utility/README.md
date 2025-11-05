@@ -1287,3 +1287,220 @@ const sortOrder = [1, 2, 3, 4].map(() => toggleSort())
 
 See `src/utility/__tests__/toggle.test.ts` for comprehensive tests covering basic functionality, data types, independence, edge cases, practical use cases, composition, type inference, and performance.
 ````
+
+---
+
+# Hook: useIdle
+
+Detects when the user has been idle (no interaction) for a specified duration. Tracks mouse, keyboard, touch, and scroll events to determine activity.
+
+## API
+
+```ts
+useIdle(timeout: number, options?: UseIdleOptions): boolean
+
+interface UseIdleOptions {
+    events?: string[]
+    initialState?: boolean
+}
+```
+
+## Parameters
+
+- `timeout` (number): Time in milliseconds of inactivity before considered idle
+- `options` (UseIdleOptions, optional):
+  - `events`: Array of event names to track (default: `['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'wheel']`)
+  - `initialState`: Initial idle state (default: `false`)
+
+## Returns
+
+- `boolean`: `true` when user has been idle for the specified timeout, `false` when active
+
+## Usage
+
+```tsx
+import { useIdle } from 'my-awesome-component-library'
+
+// Basic idle detection (5 minutes)
+function AutoSaveComponent() {
+    const isIdle = useIdle(5 * 60 * 1000)
+    
+    useEffect(() => {
+        if (isIdle) {
+            console.log('User is idle, auto-saving...')
+            saveDraft()
+        }
+    }, [isIdle])
+    
+    return <div>Editing... {isIdle && <span>Auto-saved</span>}</div>
+}
+```
+
+```tsx
+// Session timeout warning
+function SessionManager() {
+    const isIdle = useIdle(10 * 60 * 1000) // 10 minutes
+    
+    if (isIdle) {
+        return (
+            <Modal>
+                <h2>Session Timeout Warning</h2>
+                <p>You've been inactive. Your session will expire in 5 minutes.</p>
+                <button onClick={() => window.location.reload()}>Stay Logged In</button>
+            </Modal>
+        )
+    }
+    
+    return <App />
+}
+```
+
+```tsx
+// Auto-pause video when idle
+function VideoPlayer({ src }) {
+    const isIdle = useIdle(30 * 1000) // 30 seconds
+    const videoRef = useRef<HTMLVideoElement>(null)
+    
+    useEffect(() => {
+        if (isIdle && videoRef.current && !videoRef.current.paused) {
+            videoRef.current.pause()
+            toast.info('Video paused due to inactivity')
+        }
+    }, [isIdle])
+    
+    return <video ref={videoRef} src={src} controls />
+}
+```
+
+```tsx
+// Dim screen when idle
+function IdleScreenDimmer() {
+    const isIdle = useIdle(15 * 1000) // 15 seconds
+    
+    return (
+        <div className={isIdle ? 'dimmed' : ''}>
+            <AppContent />
+            {isIdle && <div className="idle-overlay">Move mouse to continue</div>}
+        </div>
+    )
+}
+```
+
+```tsx
+// Custom events (track only mouse movement)
+function MouseIdleTracker() {
+    const isIdle = useIdle(5000, {
+        events: ['mousemove']
+    })
+    
+    return <div>Mouse idle: {isIdle ? 'Yes' : 'No'}</div>
+}
+```
+
+```tsx
+// Start as idle
+function IdleIndicator() {
+    const isIdle = useIdle(3000, {
+        initialState: true // Starts as idle until first interaction
+    })
+    
+    return (
+        <div className={isIdle ? 'status-idle' : 'status-active'}>
+            {isIdle ? 'í²¤ Idle' : 'âœ… Active'}
+        </div>
+    )
+}
+```
+
+```tsx
+// Analytics tracking
+function IdleAnalytics() {
+    const isIdle = useIdle(60 * 1000) // 1 minute
+    
+    useEffect(() => {
+        if (isIdle) {
+            analytics.track('user_idle', {
+                timestamp: Date.now(),
+                page: window.location.pathname
+            })
+        } else {
+            analytics.track('user_active')
+        }
+    }, [isIdle])
+    
+    return null
+}
+```
+
+```tsx
+// Complex idle workflow
+function IdleWorkflow() {
+    const isIdle = useIdle(2 * 60 * 1000) // 2 minutes
+    const [showWarning, setShowWarning] = useState(false)
+    
+    useEffect(() => {
+        if (isIdle) {
+            setShowWarning(true)
+            const timer = setTimeout(() => {
+                logout()
+            }, 60 * 1000) // Logout after 1 more minute
+            
+            return () => clearTimeout(timer)
+        } else {
+            setShowWarning(false)
+        }
+    }, [isIdle])
+    
+    return (
+        <>
+            {showWarning && (
+                <Banner>
+                    You'll be logged out in 1 minute due to inactivity
+                </Banner>
+            )}
+            <AppContent />
+        </>
+    )
+}
+```
+
+## How it works
+
+- Sets up event listeners on the `window` object for the specified events
+- Starts a timeout when the component mounts
+- Resets the timeout whenever any tracked event fires
+- Sets idle state to `true` when timeout expires without activity
+- Sets idle state to `false` when activity is detected after becoming idle
+- Cleans up event listeners and timeout on unmount
+
+## When to use
+
+- Session timeout warnings and auto-logout
+- Auto-save drafts when user stops typing/interacting
+- Auto-pause media content
+- Analytics and user engagement tracking
+- Screen dimming or screensaver activation
+- Hiding UI elements during inactivity
+- Reducing resource consumption during idle periods
+- Warning before background task execution
+- Gaming AFK (away from keyboard) detection
+- Chat/messaging away status
+
+## Notes
+
+- Works in browser environments only (SSR-safe with `typeof window` check)
+- Uses capture phase for event listeners to catch all activity
+- All event listeners are passive and don't affect page performance
+- Timeout resets on any activity, not just significant interactions
+- Custom events must be valid DOM event names
+- Consider longer timeouts for mobile devices (touch-based interaction)
+- Be mindful of accessibility - avoid auto-logout with short timeouts
+- Combines well with `useLocalStorage` to persist idle state across sessions
+
+## Browser support
+
+All modern browsers (uses `setTimeout`, `addEventListener`, and standard DOM events)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useIdle.test.tsx` for comprehensive tests covering initialization, timeout behavior, event resets, custom events, rapid activity, dynamic timeouts, cleanup, and edge cases.

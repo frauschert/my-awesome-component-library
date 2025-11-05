@@ -243,6 +243,7 @@ import {
     useHash,
     useSearchParam,
     useFullscreen,
+    useIdle,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -469,6 +470,7 @@ export {
     useHash,
     useSearchParam,
     useFullscreen,
+    useIdle,
     memoize,
     throttle,
     chunk,
