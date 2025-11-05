@@ -250,6 +250,7 @@ import {
     useList,
     useHotkeys,
     useHotkeysMap,
+    useIsMounted,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -483,6 +484,7 @@ export {
     useList,
     useHotkeys,
     useHotkeysMap,
+    useIsMounted,
     memoize,
     throttle,
     chunk,

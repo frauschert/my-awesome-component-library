@@ -44,6 +44,7 @@ import useWebSocket from './useWebSocket'
 import usePromise from './usePromise'
 import useList from './useList'
 import useHotkeys, { useHotkeysMap } from './useHotkeys'
+import useIsMounted from './useIsMounted'
 
 export {
     useDebounceEffect,
@@ -95,6 +96,7 @@ export {
     useList,
     useHotkeys,
     useHotkeysMap,
+    useIsMounted,
 }
 
 export default {
@@ -147,4 +149,5 @@ export default {
     useList,
     useHotkeys,
     useHotkeysMap,
+    useIsMounted,
 }

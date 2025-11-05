@@ -1307,14 +1307,14 @@ interface UseIdleOptions {
 
 ## Parameters
 
-- `timeout` (number): Time in milliseconds of inactivity before considered idle
-- `options` (UseIdleOptions, optional):
-  - `events`: Array of event names to track (default: `['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'wheel']`)
-  - `initialState`: Initial idle state (default: `false`)
+-   `timeout` (number): Time in milliseconds of inactivity before considered idle
+-   `options` (UseIdleOptions, optional):
+    -   `events`: Array of event names to track (default: `['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'wheel']`)
+    -   `initialState`: Initial idle state (default: `false`)
 
 ## Returns
 
-- `boolean`: `true` when user has been idle for the specified timeout, `false` when active
+-   `boolean`: `true` when user has been idle for the specified timeout, `false` when active
 
 ## Usage
 
@@ -1324,14 +1324,14 @@ import { useIdle } from 'my-awesome-component-library'
 // Basic idle detection (5 minutes)
 function AutoSaveComponent() {
     const isIdle = useIdle(5 * 60 * 1000)
-    
+
     useEffect(() => {
         if (isIdle) {
             console.log('User is idle, auto-saving...')
             saveDraft()
         }
     }, [isIdle])
-    
+
     return <div>Editing... {isIdle && <span>Auto-saved</span>}</div>
 }
 ```
@@ -1340,17 +1340,21 @@ function AutoSaveComponent() {
 // Session timeout warning
 function SessionManager() {
     const isIdle = useIdle(10 * 60 * 1000) // 10 minutes
-    
+
     if (isIdle) {
         return (
             <Modal>
                 <h2>Session Timeout Warning</h2>
-                <p>You've been inactive. Your session will expire in 5 minutes.</p>
-                <button onClick={() => window.location.reload()}>Stay Logged In</button>
+                <p>
+                    You've been inactive. Your session will expire in 5 minutes.
+                </p>
+                <button onClick={() => window.location.reload()}>
+                    Stay Logged In
+                </button>
             </Modal>
         )
     }
-    
+
     return <App />
 }
 ```
@@ -1360,14 +1364,14 @@ function SessionManager() {
 function VideoPlayer({ src }) {
     const isIdle = useIdle(30 * 1000) // 30 seconds
     const videoRef = useRef<HTMLVideoElement>(null)
-    
+
     useEffect(() => {
         if (isIdle && videoRef.current && !videoRef.current.paused) {
             videoRef.current.pause()
             toast.info('Video paused due to inactivity')
         }
     }, [isIdle])
-    
+
     return <video ref={videoRef} src={src} controls />
 }
 ```
@@ -1376,11 +1380,13 @@ function VideoPlayer({ src }) {
 // Dim screen when idle
 function IdleScreenDimmer() {
     const isIdle = useIdle(15 * 1000) // 15 seconds
-    
+
     return (
         <div className={isIdle ? 'dimmed' : ''}>
             <AppContent />
-            {isIdle && <div className="idle-overlay">Move mouse to continue</div>}
+            {isIdle && (
+                <div className="idle-overlay">Move mouse to continue</div>
+            )}
         </div>
     )
 }
@@ -1390,9 +1396,9 @@ function IdleScreenDimmer() {
 // Custom events (track only mouse movement)
 function MouseIdleTracker() {
     const isIdle = useIdle(5000, {
-        events: ['mousemove']
+        events: ['mousemove'],
     })
-    
+
     return <div>Mouse idle: {isIdle ? 'Yes' : 'No'}</div>
 }
 ```
@@ -1401,12 +1407,12 @@ function MouseIdleTracker() {
 // Start as idle
 function IdleIndicator() {
     const isIdle = useIdle(3000, {
-        initialState: true // Starts as idle until first interaction
+        initialState: true, // Starts as idle until first interaction
     })
-    
+
     return (
         <div className={isIdle ? 'status-idle' : 'status-active'}>
-            {isIdle ? '��� Idle' : '✅ Active'}
+            {isIdle ? '��� Idle' : '✅ Active'}
         </div>
     )
 }
@@ -1416,18 +1422,18 @@ function IdleIndicator() {
 // Analytics tracking
 function IdleAnalytics() {
     const isIdle = useIdle(60 * 1000) // 1 minute
-    
+
     useEffect(() => {
         if (isIdle) {
             analytics.track('user_idle', {
                 timestamp: Date.now(),
-                page: window.location.pathname
+                page: window.location.pathname,
             })
         } else {
             analytics.track('user_active')
         }
     }, [isIdle])
-    
+
     return null
 }
 ```
@@ -1437,20 +1443,20 @@ function IdleAnalytics() {
 function IdleWorkflow() {
     const isIdle = useIdle(2 * 60 * 1000) // 2 minutes
     const [showWarning, setShowWarning] = useState(false)
-    
+
     useEffect(() => {
         if (isIdle) {
             setShowWarning(true)
             const timer = setTimeout(() => {
                 logout()
             }, 60 * 1000) // Logout after 1 more minute
-            
+
             return () => clearTimeout(timer)
         } else {
             setShowWarning(false)
         }
     }, [isIdle])
-    
+
     return (
         <>
             {showWarning && (
@@ -1466,36 +1472,36 @@ function IdleWorkflow() {
 
 ## How it works
 
-- Sets up event listeners on the `window` object for the specified events
-- Starts a timeout when the component mounts
-- Resets the timeout whenever any tracked event fires
-- Sets idle state to `true` when timeout expires without activity
-- Sets idle state to `false` when activity is detected after becoming idle
-- Cleans up event listeners and timeout on unmount
+-   Sets up event listeners on the `window` object for the specified events
+-   Starts a timeout when the component mounts
+-   Resets the timeout whenever any tracked event fires
+-   Sets idle state to `true` when timeout expires without activity
+-   Sets idle state to `false` when activity is detected after becoming idle
+-   Cleans up event listeners and timeout on unmount
 
 ## When to use
 
-- Session timeout warnings and auto-logout
-- Auto-save drafts when user stops typing/interacting
-- Auto-pause media content
-- Analytics and user engagement tracking
-- Screen dimming or screensaver activation
-- Hiding UI elements during inactivity
-- Reducing resource consumption during idle periods
-- Warning before background task execution
-- Gaming AFK (away from keyboard) detection
-- Chat/messaging away status
+-   Session timeout warnings and auto-logout
+-   Auto-save drafts when user stops typing/interacting
+-   Auto-pause media content
+-   Analytics and user engagement tracking
+-   Screen dimming or screensaver activation
+-   Hiding UI elements during inactivity
+-   Reducing resource consumption during idle periods
+-   Warning before background task execution
+-   Gaming AFK (away from keyboard) detection
+-   Chat/messaging away status
 
 ## Notes
 
-- Works in browser environments only (SSR-safe with `typeof window` check)
-- Uses capture phase for event listeners to catch all activity
-- All event listeners are passive and don't affect page performance
-- Timeout resets on any activity, not just significant interactions
-- Custom events must be valid DOM event names
-- Consider longer timeouts for mobile devices (touch-based interaction)
-- Be mindful of accessibility - avoid auto-logout with short timeouts
-- Combines well with `useLocalStorage` to persist idle state across sessions
+-   Works in browser environments only (SSR-safe with `typeof window` check)
+-   Uses capture phase for event listeners to catch all activity
+-   All event listeners are passive and don't affect page performance
+-   Timeout resets on any activity, not just significant interactions
+-   Custom events must be valid DOM event names
+-   Consider longer timeouts for mobile devices (touch-based interaction)
+-   Be mindful of accessibility - avoid auto-logout with short timeouts
+-   Combines well with `useLocalStorage` to persist idle state across sessions
 
 ## Browser support
 
@@ -1521,7 +1527,7 @@ type ColorScheme = 'light' | 'dark'
 
 ## Returns
 
-- `ColorScheme`: The current color scheme - either `'light'` or `'dark'`
+-   `ColorScheme`: The current color scheme - either `'light'` or `'dark'`
 
 ## Usage
 
@@ -1531,7 +1537,7 @@ import { useColorScheme } from 'my-awesome-component-library'
 // Basic theme detection
 function ThemeDisplay() {
     const colorScheme = useColorScheme()
-    
+
     return (
         <div className={colorScheme === 'dark' ? 'dark-theme' : 'light-theme'}>
             Current theme: {colorScheme}
@@ -1544,11 +1550,11 @@ function ThemeDisplay() {
 // Apply theme class to entire app
 function App() {
     const colorScheme = useColorScheme()
-    
+
     useEffect(() => {
         document.body.className = colorScheme
     }, [colorScheme])
-    
+
     return <AppContent />
 }
 ```
@@ -1557,7 +1563,7 @@ function App() {
 // Conditional rendering based on theme
 function ThemedIcon() {
     const colorScheme = useColorScheme()
-    
+
     return colorScheme === 'dark' ? <MoonIcon /> : <SunIcon />
 }
 ```
@@ -1566,13 +1572,8 @@ function ThemedIcon() {
 // Load different stylesheets
 function ThemeStylesheet() {
     const colorScheme = useColorScheme()
-    
-    return (
-        <link
-            rel="stylesheet"
-            href={`/styles/${colorScheme}.css`}
-        />
-    )
+
+    return <link rel="stylesheet" href={`/styles/${colorScheme}.css`} />
 }
 ```
 
@@ -1581,7 +1582,7 @@ function ThemeStylesheet() {
 function ThemeManager() {
     const systemScheme = useColorScheme()
     const [theme, setTheme] = useState(systemScheme)
-    
+
     useEffect(() => {
         // Respect user override or fall back to system
         const savedTheme = localStorage.getItem('theme')
@@ -1589,7 +1590,7 @@ function ThemeManager() {
             setTheme(systemScheme)
         }
     }, [systemScheme])
-    
+
     return (
         <ThemeContext.Provider value={{ theme, setTheme }}>
             <App />
@@ -1603,13 +1604,13 @@ function ThemeManager() {
 function ThemeChangeNotifier() {
     const colorScheme = useColorScheme()
     const prevScheme = usePrevious(colorScheme)
-    
+
     useEffect(() => {
         if (prevScheme && prevScheme !== colorScheme) {
             toast.info(`Switched to ${colorScheme} mode`)
         }
     }, [colorScheme, prevScheme])
-    
+
     return null
 }
 ```
@@ -1618,13 +1619,13 @@ function ThemeChangeNotifier() {
 // Adjust component styling
 function Card({ children }) {
     const colorScheme = useColorScheme()
-    
+
     const styles = {
         backgroundColor: colorScheme === 'dark' ? '#333' : '#fff',
         color: colorScheme === 'dark' ? '#fff' : '#000',
-        border: `1px solid ${colorScheme === 'dark' ? '#555' : '#ddd'}`
+        border: `1px solid ${colorScheme === 'dark' ? '#555' : '#ddd'}`,
     }
-    
+
     return <div style={styles}>{children}</div>
 }
 ```
@@ -1633,13 +1634,8 @@ function Card({ children }) {
 // Preload images based on theme
 function ThemedImage({ lightSrc, darkSrc, alt }) {
     const colorScheme = useColorScheme()
-    
-    return (
-        <img
-            src={colorScheme === 'dark' ? darkSrc : lightSrc}
-            alt={alt}
-        />
-    )
+
+    return <img src={colorScheme === 'dark' ? darkSrc : lightSrc} alt={alt} />
 }
 ```
 
@@ -1647,14 +1643,14 @@ function ThemedImage({ lightSrc, darkSrc, alt }) {
 // Analytics tracking
 function ThemeAnalytics() {
     const colorScheme = useColorScheme()
-    
+
     useEffect(() => {
         analytics.track('color_scheme_detected', {
             scheme: colorScheme,
-            timestamp: Date.now()
+            timestamp: Date.now(),
         })
     }, [colorScheme])
-    
+
     return null
 }
 ```
@@ -1663,17 +1659,22 @@ function ThemeAnalytics() {
 // Complex theme system with localStorage override
 function AdvancedThemeProvider() {
     const systemScheme = useColorScheme()
-    const [userPreference, setUserPreference] = useLocalStorage<'light' | 'dark' | 'auto'>('theme', 'auto')
-    
-    const effectiveTheme = userPreference === 'auto' ? systemScheme : userPreference
-    
+    const [userPreference, setUserPreference] = useLocalStorage<
+        'light' | 'dark' | 'auto'
+    >('theme', 'auto')
+
+    const effectiveTheme =
+        userPreference === 'auto' ? systemScheme : userPreference
+
     return (
-        <ThemeContext.Provider value={{ 
-            theme: effectiveTheme, 
-            userPreference,
-            setUserPreference,
-            systemScheme 
-        }}>
+        <ThemeContext.Provider
+            value={{
+                theme: effectiveTheme,
+                userPreference,
+                setUserPreference,
+                systemScheme,
+            }}
+        >
             <div data-theme={effectiveTheme}>
                 <App />
             </div>
@@ -1684,46 +1685,47 @@ function AdvancedThemeProvider() {
 
 ## How it works
 
-- Queries `window.matchMedia('(prefers-color-scheme: dark)')` to detect initial preference
-- Returns `'dark'` if the media query matches, otherwise `'light'`
-- Sets up an event listener for changes to the color scheme preference
-- Automatically updates when the user changes their system/browser theme
-- Supports both modern (`addEventListener`) and legacy (`addListener`) APIs for maximum compatibility
-- Cleans up event listener on unmount
+-   Queries `window.matchMedia('(prefers-color-scheme: dark)')` to detect initial preference
+-   Returns `'dark'` if the media query matches, otherwise `'light'`
+-   Sets up an event listener for changes to the color scheme preference
+-   Automatically updates when the user changes their system/browser theme
+-   Supports both modern (`addEventListener`) and legacy (`addListener`) APIs for maximum compatibility
+-   Cleans up event listener on unmount
 
 ## When to use
 
-- Respecting user's system theme preference
-- Auto-switching between light and dark themes
-- Loading theme-appropriate resources (images, stylesheets)
-- Providing seamless theme experience without manual toggle
-- Analytics on user theme preferences
-- Conditional rendering based on theme
-- Initial theme detection for theme systems
-- Combining with manual theme toggles (system as fallback)
+-   Respecting user's system theme preference
+-   Auto-switching between light and dark themes
+-   Loading theme-appropriate resources (images, stylesheets)
+-   Providing seamless theme experience without manual toggle
+-   Analytics on user theme preferences
+-   Conditional rendering based on theme
+-   Initial theme detection for theme systems
+-   Combining with manual theme toggles (system as fallback)
 
 ## Notes
 
-- Works in browser environments only (SSR-safe with `typeof window` check)
-- Returns `'light'` as default in SSR or when `matchMedia` is not supported
-- Detects system-level preference (OS setting) not just browser theme
-- Changes are detected automatically - no polling required
-- Works alongside CSS `prefers-color-scheme` media queries
-- Consider combining with `useLocalStorage` for user overrides
-- Initial value is available immediately (no flash of wrong theme)
-- Does not automatically apply themes - returns preference only
-- Use CSS variables or class names to apply actual theme styling
-- On iOS/macOS, detects Light/Dark appearance setting
-- On Windows 10/11, detects Light/Dark mode in Settings
+-   Works in browser environments only (SSR-safe with `typeof window` check)
+-   Returns `'light'` as default in SSR or when `matchMedia` is not supported
+-   Detects system-level preference (OS setting) not just browser theme
+-   Changes are detected automatically - no polling required
+-   Works alongside CSS `prefers-color-scheme` media queries
+-   Consider combining with `useLocalStorage` for user overrides
+-   Initial value is available immediately (no flash of wrong theme)
+-   Does not automatically apply themes - returns preference only
+-   Use CSS variables or class names to apply actual theme styling
+-   On iOS/macOS, detects Light/Dark appearance setting
+-   On Windows 10/11, detects Light/Dark mode in Settings
 
 ## Browser support
 
 All modern browsers supporting `prefers-color-scheme` media query:
-- Chrome 76+
-- Firefox 67+
-- Safari 12.1+
-- Edge 79+
-- Opera 63+
+
+-   Chrome 76+
+-   Firefox 67+
+-   Safari 12.1+
+-   Edge 79+
+-   Opera 63+
 
 Gracefully falls back to `'light'` in older browsers.
 
@@ -1767,17 +1769,17 @@ interface UseWebSocketReturn {
 
 ## Parameters
 
-- `url` (string | null): WebSocket URL to connect to (ws:// or wss://)
-- `options` (UseWebSocketOptions, optional):
-  - `protocols`: WebSocket sub-protocols
-  - `autoConnect`: Automatically connect on mount (default: true)
-  - `reconnect`: Enable automatic reconnection (default: false)
-  - `reconnectAttempts`: Max reconnection attempts, 0 for infinite (default: 0)
-  - `reconnectInterval`: Delay between reconnection attempts in ms (default: 3000)
-  - `onOpen`: Callback when connection opens
-  - `onClose`: Callback when connection closes
-  - `onError`: Callback when error occurs
-  - `onMessage`: Callback when message is received
+-   `url` (string | null): WebSocket URL to connect to (ws:// or wss://)
+-   `options` (UseWebSocketOptions, optional):
+    -   `protocols`: WebSocket sub-protocols
+    -   `autoConnect`: Automatically connect on mount (default: true)
+    -   `reconnect`: Enable automatic reconnection (default: false)
+    -   `reconnectAttempts`: Max reconnection attempts, 0 for infinite (default: 0)
+    -   `reconnectInterval`: Delay between reconnection attempts in ms (default: 3000)
+    -   `onOpen`: Callback when connection opens
+    -   `onClose`: Callback when connection closes
+    -   `onError`: Callback when error occurs
+    -   `onMessage`: Callback when message is received
 
 ## Returns
 
@@ -1793,11 +1795,11 @@ function ChatComponent() {
     const { lastMessage, sendMessage, readyState } = useWebSocket(
         'ws://localhost:8080/chat'
     )
-    
+
     const handleSend = () => {
         sendMessage('Hello, server!')
     }
-    
+
     return (
         <div>
             <div>Status: {readyState}</div>
@@ -1816,27 +1818,29 @@ function RealtimeData() {
     const { lastMessage, sendJsonMessage, readyState } = useWebSocket(
         'wss://api.example.com/stream'
     )
-    
+
     const [data, setData] = useState([])
-    
+
     useEffect(() => {
         if (lastMessage) {
             const parsed = JSON.parse(lastMessage.data)
-            setData(prev => [...prev, parsed])
+            setData((prev) => [...prev, parsed])
         }
     }, [lastMessage])
-    
+
     const requestData = () => {
         sendJsonMessage({ action: 'getData', filter: 'active' })
     }
-    
+
     return (
         <div>
             <button onClick={requestData} disabled={readyState !== 'OPEN'}>
                 Request Data
             </button>
             <ul>
-                {data.map((item, i) => <li key={i}>{JSON.stringify(item)}</li>)}
+                {data.map((item, i) => (
+                    <li key={i}>{JSON.stringify(item)}</li>
+                ))}
             </ul>
         </div>
     )
@@ -1854,10 +1858,10 @@ function ResilientConnection() {
             reconnectInterval: 3000,
             onOpen: () => console.log('Connected to WebSocket'),
             onClose: () => console.log('Disconnected from WebSocket'),
-            onError: (error) => console.error('WebSocket error:', error)
+            onError: (error) => console.error('WebSocket error:', error),
         }
     )
-    
+
     return (
         <div>
             <StatusIndicator status={readyState} />
@@ -1874,7 +1878,7 @@ function ManualConnection() {
         'ws://localhost:8080',
         { autoConnect: false }
     )
-    
+
     return (
         <div>
             {readyState === 'CLOSED' && (
@@ -1895,21 +1899,24 @@ function ManualConnection() {
 // Real-time notifications
 function NotificationCenter() {
     const [notifications, setNotifications] = useState([])
-    
-    const { lastMessage } = useWebSocket('wss://api.example.com/notifications', {
-        onMessage: (event) => {
-            const notification = JSON.parse(event.data)
-            toast.info(notification.message)
+
+    const { lastMessage } = useWebSocket(
+        'wss://api.example.com/notifications',
+        {
+            onMessage: (event) => {
+                const notification = JSON.parse(event.data)
+                toast.info(notification.message)
+            },
         }
-    })
-    
+    )
+
     useEffect(() => {
         if (lastMessage) {
             const notification = JSON.parse(lastMessage.data)
-            setNotifications(prev => [notification, ...prev].slice(0, 10))
+            setNotifications((prev) => [notification, ...prev].slice(0, 10))
         }
     }, [lastMessage])
-    
+
     return (
         <div>
             <h3>Recent Notifications</h3>
@@ -1930,32 +1937,32 @@ function LiveChat() {
             reconnect: true,
             onOpen: () => {
                 sendJsonMessage({ type: 'join', user: userId })
-            }
+            },
         }
     )
-    
+
     const [messages, setMessages] = useState([])
     const [typingUsers, setTypingUsers] = useState([])
-    
+
     useEffect(() => {
         if (lastMessage) {
             const msg = JSON.parse(lastMessage.data)
             if (msg.type === 'message') {
-                setMessages(prev => [...prev, msg])
+                setMessages((prev) => [...prev, msg])
             } else if (msg.type === 'typing') {
                 setTypingUsers(msg.users)
             }
         }
     }, [lastMessage])
-    
+
     const handleSend = (text) => {
         sendJsonMessage({ type: 'message', text, user: userId })
     }
-    
+
     const handleTyping = () => {
         sendJsonMessage({ type: 'typing', user: userId })
     }
-    
+
     return (
         <ChatUI
             messages={messages}
@@ -1972,7 +1979,7 @@ function LiveChat() {
 // Stock price ticker
 function StockTicker({ symbols }) {
     const [prices, setPrices] = useState({})
-    
+
     const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
         'wss://market-data.example.com',
         {
@@ -1980,21 +1987,21 @@ function StockTicker({ symbols }) {
             reconnectAttempts: 0, // infinite
             onOpen: () => {
                 sendJsonMessage({ action: 'subscribe', symbols })
-            }
+            },
         }
     )
-    
+
     useEffect(() => {
         if (lastMessage) {
             const update = JSON.parse(lastMessage.data)
-            setPrices(prev => ({ ...prev, [update.symbol]: update.price }))
+            setPrices((prev) => ({ ...prev, [update.symbol]: update.price }))
         }
     }, [lastMessage])
-    
+
     return (
         <div>
             <div>Connection: {readyState}</div>
-            {symbols.map(symbol => (
+            {symbols.map((symbol) => (
                 <div key={symbol}>
                     {symbol}: ${prices[symbol] || 'Loading...'}
                 </div>
@@ -2008,10 +2015,9 @@ function StockTicker({ symbols }) {
 // Game server connection
 function GameConnection() {
     const [gameState, setGameState] = useState(null)
-    
-    const { sendJsonMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
-        'wss://game.example.com/room/123',
-        {
+
+    const { sendJsonMessage, lastMessage, readyState, getWebSocket } =
+        useWebSocket('wss://game.example.com/room/123', {
             reconnect: true,
             reconnectInterval: 5000,
             onOpen: () => {
@@ -2021,10 +2027,9 @@ function GameConnection() {
                 if (!event.wasClean) {
                     toast.error('Connection lost. Reconnecting...')
                 }
-            }
-        }
-    )
-    
+            },
+        })
+
     useEffect(() => {
         if (lastMessage) {
             const data = JSON.parse(lastMessage.data)
@@ -2033,11 +2038,11 @@ function GameConnection() {
             }
         }
     }, [lastMessage])
-    
+
     const sendAction = (action) => {
         sendJsonMessage({ type: 'action', action, player: playerId })
     }
-    
+
     return (
         <GameUI
             state={gameState}
@@ -2052,17 +2057,17 @@ function GameConnection() {
 // IoT device monitoring
 function DeviceMonitor({ deviceId }) {
     const [metrics, setMetrics] = useState([])
-    
+
     const url = deviceId ? `wss://iot.example.com/device/${deviceId}` : null
-    
+
     const { lastMessage, readyState } = useWebSocket(url, {
         reconnect: true,
         onMessage: (event) => {
             const metric = JSON.parse(event.data)
-            setMetrics(prev => [...prev.slice(-99), metric]) // Keep last 100
-        }
+            setMetrics((prev) => [...prev.slice(-99), metric]) // Keep last 100
+        },
     })
-    
+
     return (
         <div>
             <h3>Device {deviceId}</h3>
@@ -2079,28 +2084,28 @@ function CollaborativeEditor() {
     const [content, setContent] = useState('')
     const [cursors, setCursors] = useState({})
     const lastChangeRef = useRef(null)
-    
+
     const { sendJsonMessage, lastMessage } = useWebSocket(
         'wss://collab.example.com/doc/abc123',
         {
             reconnect: true,
             onOpen: () => {
                 sendJsonMessage({ type: 'join', user: userId })
-            }
+            },
         }
     )
-    
+
     useEffect(() => {
         if (lastMessage) {
             const msg = JSON.parse(lastMessage.data)
             if (msg.type === 'edit' && msg.user !== userId) {
                 setContent(msg.content)
             } else if (msg.type === 'cursor') {
-                setCursors(prev => ({ ...prev, [msg.user]: msg.position }))
+                setCursors((prev) => ({ ...prev, [msg.user]: msg.position }))
             }
         }
     }, [lastMessage])
-    
+
     const handleChange = (newContent) => {
         if (newContent !== lastChangeRef.current) {
             setContent(newContent)
@@ -2108,65 +2113,62 @@ function CollaborativeEditor() {
             lastChangeRef.current = newContent
         }
     }
-    
+
     return (
-        <Editor
-            content={content}
-            onChange={handleChange}
-            cursors={cursors}
-        />
+        <Editor content={content} onChange={handleChange} cursors={cursors} />
     )
 }
 ```
 
 ## How it works
 
-- Creates WebSocket connection using native WebSocket API
-- Tracks connection state (CONNECTING, OPEN, CLOSING, CLOSED)
-- Stores the most recent message received
-- Provides methods to send string or JSON messages
-- Supports automatic reconnection with configurable attempts and intervals
-- Allows manual connection control (connect/disconnect)
-- Cleans up connection and timers on unmount
-- Handles URL changes by reconnecting to new endpoint
+-   Creates WebSocket connection using native WebSocket API
+-   Tracks connection state (CONNECTING, OPEN, CLOSING, CLOSED)
+-   Stores the most recent message received
+-   Provides methods to send string or JSON messages
+-   Supports automatic reconnection with configurable attempts and intervals
+-   Allows manual connection control (connect/disconnect)
+-   Cleans up connection and timers on unmount
+-   Handles URL changes by reconnecting to new endpoint
 
 ## When to use
 
-- Real-time chat applications
-- Live data streams (stock prices, sports scores, etc.)
-- Notifications and alerts
-- Collaborative editing
-- Multiplayer games
-- IoT device monitoring
-- Live dashboards and metrics
-- Server-sent updates
-- Bidirectional client-server communication
-- Push notifications
+-   Real-time chat applications
+-   Live data streams (stock prices, sports scores, etc.)
+-   Notifications and alerts
+-   Collaborative editing
+-   Multiplayer games
+-   IoT device monitoring
+-   Live dashboards and metrics
+-   Server-sent updates
+-   Bidirectional client-server communication
+-   Push notifications
 
 ## Notes
 
-- URL can be null to defer connection
-- Set `autoConnect: false` for manual connection control
-- Reconnection is disabled by default - enable with `reconnect: true`
-- `reconnectAttempts: 0` means infinite reconnection attempts
-- Messages are not queued - sending while disconnected logs a warning
-- `lastMessage` updates on every message, store in state if history is needed
-- Use `sendJsonMessage` for automatic JSON serialization
-- Access raw WebSocket with `getWebSocket()` for advanced use cases
-- Reconnection resets after successful connection
-- Manual `disconnect()` disables automatic reconnection
-- Supports both `ws://` (insecure) and `wss://` (secure) protocols
-- No automatic ping/pong - implement at application level if needed
-- Consider message rate limiting to avoid overwhelming the connection
+-   URL can be null to defer connection
+-   Set `autoConnect: false` for manual connection control
+-   Reconnection is disabled by default - enable with `reconnect: true`
+-   `reconnectAttempts: 0` means infinite reconnection attempts
+-   Messages are not queued - sending while disconnected logs a warning
+-   `lastMessage` updates on every message, store in state if history is needed
+-   Use `sendJsonMessage` for automatic JSON serialization
+-   Access raw WebSocket with `getWebSocket()` for advanced use cases
+-   Reconnection resets after successful connection
+-   Manual `disconnect()` disables automatic reconnection
+-   Supports both `ws://` (insecure) and `wss://` (secure) protocols
+-   No automatic ping/pong - implement at application level if needed
+-   Consider message rate limiting to avoid overwhelming the connection
 
 ## Browser support
 
 All modern browsers supporting WebSocket API:
-- Chrome 16+
-- Firefox 11+
-- Safari 7+
-- Edge (all versions)
-- Opera 12.1+
+
+-   Chrome 16+
+-   Firefox 11+
+-   Safari 7+
+-   Edge (all versions)
+-   Opera 12.1+
 
 ## Tests
 
@@ -2206,10 +2208,10 @@ interface UsePromiseResult<T, Args> {
 
 ## Parameters
 
-- `promiseFunction` ((...args: Args) => Promise<T>): Function that returns a promise
-- `options` (UsePromiseOptions, optional):
-  - `immediate`: Execute promise on mount (default: false)
-  - `initialArgs`: Arguments for immediate execution
+-   `promiseFunction` ((...args: Args) => Promise<T>): Function that returns a promise
+-   `options` (UsePromiseOptions, optional):
+    -   `immediate`: Execute promise on mount (default: false)
+    -   `initialArgs`: Arguments for immediate execution
 
 ## Returns
 
@@ -2222,14 +2224,14 @@ import { usePromise } from 'my-awesome-component-library'
 
 // Basic data fetching
 function UserProfile({ userId }) {
-    const { data, isLoading, error, execute } = usePromise(
-        (id: string) => fetch(`/api/users/${id}`).then(r => r.json())
+    const { data, isLoading, error, execute } = usePromise((id: string) =>
+        fetch(`/api/users/${id}`).then((r) => r.json())
     )
-    
+
     useEffect(() => {
         execute(userId)
     }, [userId])
-    
+
     if (isLoading) return <Spinner />
     if (error) return <Error message={error.message} />
     if (data) return <User {...data} />
@@ -2241,18 +2243,17 @@ function UserProfile({ userId }) {
 // Manual execution with button
 function SearchUsers() {
     const [query, setQuery] = useState('')
-    const { data, isLoading, execute } = usePromise(
-        (searchTerm: string) => 
-            fetch(`/api/search?q=${searchTerm}`).then(r => r.json())
+    const { data, isLoading, execute } = usePromise((searchTerm: string) =>
+        fetch(`/api/search?q=${searchTerm}`).then((r) => r.json())
     )
-    
+
     const handleSearch = () => {
         execute(query)
     }
-    
+
     return (
         <div>
-            <input value={query} onChange={e => setQuery(e.target.value)} />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} />
             <button onClick={handleSearch} disabled={isLoading}>
                 {isLoading ? 'Searching...' : 'Search'}
             </button>
@@ -2266,10 +2267,10 @@ function SearchUsers() {
 // Immediate execution on mount
 function Dashboard() {
     const { data, isLoading, error } = usePromise(
-        () => fetch('/api/dashboard').then(r => r.json()),
+        () => fetch('/api/dashboard').then((r) => r.json()),
         { immediate: true }
     )
-    
+
     if (isLoading) return <Skeleton />
     if (error) return <ErrorBoundary error={error} />
     return <DashboardView data={data} />
@@ -2280,15 +2281,15 @@ function Dashboard() {
 // With initial arguments
 function ProductDetails({ productId }) {
     const { data, isLoading, reset } = usePromise(
-        (id: string) => fetch(`/api/products/${id}`).then(r => r.json()),
+        (id: string) => fetch(`/api/products/${id}`).then((r) => r.json()),
         { immediate: true, initialArgs: [productId] }
     )
-    
+
     useEffect(() => {
         reset()
         // Re-fetch when productId changes
     }, [productId])
-    
+
     return isLoading ? <Loader /> : <Product data={data} />
 }
 ```
@@ -2297,13 +2298,13 @@ function ProductDetails({ productId }) {
 // Form submission with status feedback
 function CreatePost() {
     const { execute, isLoading, isResolved, error, reset } = usePromise(
-        (postData: PostData) => 
+        (postData: PostData) =>
             fetch('/api/posts', {
                 method: 'POST',
-                body: JSON.stringify(postData)
-            }).then(r => r.json())
+                body: JSON.stringify(postData),
+            }).then((r) => r.json())
     )
-    
+
     const handleSubmit = async (data: PostData) => {
         try {
             await execute(data)
@@ -2312,7 +2313,7 @@ function CreatePost() {
             toast.error('Failed to create post')
         }
     }
-    
+
     return (
         <form onSubmit={handleSubmit}>
             <PostForm />
@@ -2330,19 +2331,13 @@ function CreatePost() {
 // Multi-step wizard with promise states
 function Wizard() {
     const [step, setStep] = useState(1)
-    
-    const step1Promise = usePromise((data) => 
-        api.validateStep1(data)
-    )
-    
-    const step2Promise = usePromise((data) => 
-        api.validateStep2(data)
-    )
-    
-    const submitPromise = usePromise((allData) => 
-        api.submitWizard(allData)
-    )
-    
+
+    const step1Promise = usePromise((data) => api.validateStep1(data))
+
+    const step2Promise = usePromise((data) => api.validateStep2(data))
+
+    const submitPromise = usePromise((allData) => api.submitWizard(allData))
+
     const handleStep1Next = async (data) => {
         try {
             await step1Promise.execute(data)
@@ -2351,24 +2346,24 @@ function Wizard() {
             // Handle validation error
         }
     }
-    
+
     return (
         <div>
             {step === 1 && (
-                <Step1 
-                    onNext={handleStep1Next} 
+                <Step1
+                    onNext={handleStep1Next}
                     isLoading={step1Promise.isLoading}
                     error={step1Promise.error}
                 />
             )}
             {step === 2 && (
-                <Step2 
-                    onNext={handleStep2Next} 
+                <Step2
+                    onNext={handleStep2Next}
                     isLoading={step2Promise.isLoading}
                 />
             )}
             {step === 3 && (
-                <Review 
+                <Review
                     onSubmit={submitPromise.execute}
                     isSubmitting={submitPromise.isLoading}
                 />
@@ -2385,23 +2380,23 @@ function FileUploader() {
         async (file: File) => {
             const formData = new FormData()
             formData.append('file', file)
-            
+
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData
+                body: formData,
             })
-            
+
             return response.json()
         }
     )
-    
+
     const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
             await execute(file)
         }
     }
-    
+
     return (
         <div>
             <input type="file" onChange={handleFile} disabled={isLoading} />
@@ -2416,20 +2411,20 @@ function FileUploader() {
 ```tsx
 // Polling with manual control
 function LiveData() {
-    const { data, execute, isLoading } = usePromise(
-        () => fetch('/api/live-data').then(r => r.json())
+    const { data, execute, isLoading } = usePromise(() =>
+        fetch('/api/live-data').then((r) => r.json())
     )
-    
+
     useEffect(() => {
         execute() // Initial fetch
-        
+
         const interval = setInterval(() => {
             execute() // Poll every 5 seconds
         }, 5000)
-        
+
         return () => clearInterval(interval)
     }, [execute])
-    
+
     return (
         <div>
             {isLoading && !data && <Skeleton />}
@@ -2442,48 +2437,41 @@ function LiveData() {
 ```tsx
 // Dependent promises (sequential)
 function OrderCheckout() {
-    const validateCart = usePromise((cartId) => 
-        api.validateCart(cartId)
-    )
-    
-    const processPayment = usePromise((paymentData) => 
+    const validateCart = usePromise((cartId) => api.validateCart(cartId))
+
+    const processPayment = usePromise((paymentData) =>
         api.processPayment(paymentData)
     )
-    
-    const createOrder = usePromise((orderData) => 
-        api.createOrder(orderData)
-    )
-    
+
+    const createOrder = usePromise((orderData) => api.createOrder(orderData))
+
     const handleCheckout = async (cartId, paymentData) => {
         try {
             // Step 1: Validate cart
             await validateCart.execute(cartId)
-            
+
             // Step 2: Process payment
             const payment = await processPayment.execute(paymentData)
-            
+
             // Step 3: Create order
             const order = await createOrder.execute({
                 cartId,
-                paymentId: payment.id
+                paymentId: payment.id,
             })
-            
+
             router.push(`/orders/${order.id}`)
         } catch (err) {
             toast.error(err.message)
         }
     }
-    
-    const isProcessing = 
-        validateCart.isLoading || 
-        processPayment.isLoading || 
+
+    const isProcessing =
+        validateCart.isLoading ||
+        processPayment.isLoading ||
         createOrder.isLoading
-    
+
     return (
-        <CheckoutForm 
-            onSubmit={handleCheckout}
-            isProcessing={isProcessing}
-        />
+        <CheckoutForm onSubmit={handleCheckout} isProcessing={isProcessing} />
     )
 }
 ```
@@ -2492,22 +2480,20 @@ function OrderCheckout() {
 // Optimistic updates with rollback
 function TodoList() {
     const [todos, setTodos] = useState([])
-    
-    const deleteTodo = usePromise(
-        async (id: string) => {
-            const response = await fetch(`/api/todos/${id}`, {
-                method: 'DELETE'
-            })
-            if (!response.ok) throw new Error('Delete failed')
-            return id
-        }
-    )
-    
+
+    const deleteTodo = usePromise(async (id: string) => {
+        const response = await fetch(`/api/todos/${id}`, {
+            method: 'DELETE',
+        })
+        if (!response.ok) throw new Error('Delete failed')
+        return id
+    })
+
     const handleDelete = async (id: string) => {
         // Optimistic update
         const previousTodos = todos
-        setTodos(todos.filter(t => t.id !== id))
-        
+        setTodos(todos.filter((t) => t.id !== id))
+
         try {
             await deleteTodo.execute(id)
             toast.success('Todo deleted')
@@ -2517,12 +2503,12 @@ function TodoList() {
             toast.error('Failed to delete')
         }
     }
-    
+
     return (
         <ul>
-            {todos.map(todo => (
-                <TodoItem 
-                    key={todo.id} 
+            {todos.map((todo) => (
+                <TodoItem
+                    key={todo.id}
                     todo={todo}
                     onDelete={handleDelete}
                     isDeleting={deleteTodo.isLoading}
@@ -2538,23 +2524,22 @@ function TodoList() {
 function SmartSearch() {
     const [query, setQuery] = useState('')
     const debouncedQuery = useDebounce(query, 500)
-    
-    const { data, isLoading, execute } = usePromise(
-        (searchTerm: string) => 
-            fetch(`/api/search?q=${searchTerm}`).then(r => r.json())
+
+    const { data, isLoading, execute } = usePromise((searchTerm: string) =>
+        fetch(`/api/search?q=${searchTerm}`).then((r) => r.json())
     )
-    
+
     useEffect(() => {
         if (debouncedQuery) {
             execute(debouncedQuery)
         }
     }, [debouncedQuery])
-    
+
     return (
         <div>
-            <input 
-                value={query} 
-                onChange={e => setQuery(e.target.value)}
+            <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search..."
             />
             {isLoading && <Spinner />}
@@ -2566,44 +2551,44 @@ function SmartSearch() {
 
 ## How it works
 
-- Wraps promise function with state management
-- Tracks four states: idle, pending, resolved, rejected
-- Provides boolean helpers (isLoading, isIdle, isResolved, isRejected)
-- Prevents state updates on unmounted components
-- Handles race conditions - only latest promise updates state
-- Converts non-Error rejections to Error objects
-- Allows manual execution with `execute()`
-- Provides `reset()` to return to idle state
-- Returns promise from `execute()` for chaining
-- Supports immediate execution on mount
+-   Wraps promise function with state management
+-   Tracks four states: idle, pending, resolved, rejected
+-   Provides boolean helpers (isLoading, isIdle, isResolved, isRejected)
+-   Prevents state updates on unmounted components
+-   Handles race conditions - only latest promise updates state
+-   Converts non-Error rejections to Error objects
+-   Allows manual execution with `execute()`
+-   Provides `reset()` to return to idle state
+-   Returns promise from `execute()` for chaining
+-   Supports immediate execution on mount
 
 ## When to use
 
-- Data fetching from APIs
-- Form submissions
-- File uploads
-- Authentication operations
-- Multi-step workflows
-- Any async operation needing state tracking
-- Replacing useState + useEffect patterns for promises
-- When you need loading/error states
-- Operations with user-triggered execution
-- Debounced or throttled async operations
+-   Data fetching from APIs
+-   Form submissions
+-   File uploads
+-   Authentication operations
+-   Multi-step workflows
+-   Any async operation needing state tracking
+-   Replacing useState + useEffect patterns for promises
+-   When you need loading/error states
+-   Operations with user-triggered execution
+-   Debounced or throttled async operations
 
 ## Notes
 
-- Does NOT execute automatically unless `immediate: true`
-- Race condition safe - only latest promise updates state
-- Component unmount protection prevents memory leaks
-- `execute()` returns the promise for await/catch
-- Errors are rethrown from `execute()` for manual handling
-- `reset()` clears data/error and returns to idle
-- Non-Error rejections are converted to Error objects
-- Promise function changes trigger new `execute` callback
-- State updates are synchronous after promise resolves
-- Use with `useEffect` for automatic execution on deps
-- Combine with `useDebounce` for debounced searches
-- Works great with optimistic updates pattern
+-   Does NOT execute automatically unless `immediate: true`
+-   Race condition safe - only latest promise updates state
+-   Component unmount protection prevents memory leaks
+-   `execute()` returns the promise for await/catch
+-   Errors are rethrown from `execute()` for manual handling
+-   `reset()` clears data/error and returns to idle
+-   Non-Error rejections are converted to Error objects
+-   Promise function changes trigger new `execute` callback
+-   State updates are synchronous after promise resolves
+-   Use with `useEffect` for automatic execution on deps
+-   Combine with `useDebounce` for debounced searches
+-   Works great with optimistic updates pattern
 
 ## Browser support
 
@@ -2647,13 +2632,14 @@ interface UseListActions<T> {
 
 ## Parameters
 
-- `initialValue` (T[], optional): Initial array value (default: [])
+-   `initialValue` (T[], optional): Initial array value (default: [])
 
 ## Returns
 
 Tuple of [list, actions]:
-- `list` (T[]): Current array state
-- `actions` (UseListActions): Object with helper methods
+
+-   `list` (T[]): Current array state
+-   `actions` (UseListActions): Object with helper methods
 
 ## Usage
 
@@ -2664,25 +2650,25 @@ import { useList } from 'my-awesome-component-library'
 function TodoList() {
     const [todos, { push, removeAt, updateAt, clear }] = useList([
         { id: 1, text: 'Learn React', done: false },
-        { id: 2, text: 'Build app', done: false }
+        { id: 2, text: 'Build app', done: false },
     ])
-    
+
     const addTodo = (text: string) => {
         push({ id: Date.now(), text, done: false })
     }
-    
+
     const toggleTodo = (index: number) => {
         const todo = todos[index]
         updateAt(index, { ...todo, done: !todo.done })
     }
-    
+
     return (
         <div>
             <button onClick={() => addTodo('New task')}>Add</button>
             <button onClick={clear}>Clear All</button>
             {todos.map((todo, i) => (
                 <div key={todo.id}>
-                    <input 
+                    <input
                         type="checkbox"
                         checked={todo.done}
                         onChange={() => toggleTodo(i)}
@@ -2700,9 +2686,9 @@ function TodoList() {
 // Shopping cart
 function ShoppingCart() {
     const [cart, { push, removeAt, updateAt, clear }] = useList([])
-    
+
     const addToCart = (product: Product) => {
-        const existing = cart.findIndex(item => item.id === product.id)
+        const existing = cart.findIndex((item) => item.id === product.id)
         if (existing >= 0) {
             const item = cart[existing]
             updateAt(existing, { ...item, quantity: item.quantity + 1 })
@@ -2710,7 +2696,7 @@ function ShoppingCart() {
             push({ ...product, quantity: 1 })
         }
     }
-    
+
     const updateQuantity = (index: number, quantity: number) => {
         if (quantity <= 0) {
             removeAt(index)
@@ -2718,14 +2704,17 @@ function ShoppingCart() {
             updateAt(index, { ...cart[index], quantity })
         }
     }
-    
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    
+
+    const total = cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    )
+
     return (
         <div>
             <h2>Cart ({cart.length})</h2>
             {cart.map((item, i) => (
-                <CartItem 
+                <CartItem
                     key={item.id}
                     item={item}
                     onUpdateQuantity={(qty) => updateQuantity(i, qty)}
@@ -2744,29 +2733,25 @@ function ShoppingCart() {
 function TagInput() {
     const [tags, { push, removeAt, remove }] = useList(['react', 'typescript'])
     const [input, setInput] = useState('')
-    
+
     const addTag = () => {
         if (input.trim() && !tags.includes(input.trim())) {
             push(input.trim())
             setInput('')
         }
     }
-    
+
     return (
         <div>
             <div className="tags">
                 {tags.map((tag, i) => (
-                    <Chip 
-                        key={i}
-                        label={tag}
-                        onDelete={() => removeAt(i)}
-                    />
+                    <Chip key={i} label={tag} onDelete={() => removeAt(i)} />
                 ))}
             </div>
-            <input 
+            <input
                 value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && addTag()}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addTag()}
                 placeholder="Add tag..."
             />
         </div>
@@ -2780,16 +2765,16 @@ function DraggableList() {
     const [items, { set, updateAt }] = useList([
         { id: 1, text: 'Item 1' },
         { id: 2, text: 'Item 2' },
-        { id: 3, text: 'Item 3' }
+        { id: 3, text: 'Item 3' },
     ])
-    
+
     const moveItem = (fromIndex: number, toIndex: number) => {
         const newItems = [...items]
         const [removed] = newItems.splice(fromIndex, 1)
         newItems.splice(toIndex, 0, removed)
         set(newItems)
     }
-    
+
     return (
         <div>
             {items.map((item, i) => (
@@ -2810,33 +2795,37 @@ function DraggableList() {
 function UndoRedoEditor() {
     const [history, historyActions] = useList([''])
     const [currentIndex, setCurrentIndex] = useState(0)
-    
+
     const current = history[currentIndex]
     const canUndo = currentIndex > 0
     const canRedo = currentIndex < history.length - 1
-    
+
     const setText = (text: string) => {
         // Remove future history
         historyActions.set(history.slice(0, currentIndex + 1))
         historyActions.push(text)
         setCurrentIndex(currentIndex + 1)
     }
-    
+
     const undo = () => {
         if (canUndo) setCurrentIndex(currentIndex - 1)
     }
-    
+
     const redo = () => {
         if (canRedo) setCurrentIndex(currentIndex + 1)
     }
-    
+
     return (
         <div>
-            <button onClick={undo} disabled={!canUndo}>Undo</button>
-            <button onClick={redo} disabled={!canRedo}>Redo</button>
-            <textarea 
+            <button onClick={undo} disabled={!canUndo}>
+                Undo
+            </button>
+            <button onClick={redo} disabled={!canRedo}>
+                Redo
+            </button>
+            <textarea
                 value={current}
-                onChange={e => setText(e.target.value)}
+                onChange={(e) => setText(e.target.value)}
             />
         </div>
     )
@@ -2849,25 +2838,25 @@ function BulkActions() {
     const [items, { filter, map, sort, reverse, clear }] = useList([
         { id: 1, name: 'Alice', age: 25, active: true },
         { id: 2, name: 'Bob', age: 30, active: false },
-        { id: 3, name: 'Charlie', age: 20, active: true }
+        { id: 3, name: 'Charlie', age: 20, active: true },
     ])
-    
+
     const removeInactive = () => {
-        filter(item => item.active)
+        filter((item) => item.active)
     }
-    
+
     const incrementAges = () => {
-        map(item => ({ ...item, age: item.age + 1 }))
+        map((item) => ({ ...item, age: item.age + 1 }))
     }
-    
+
     const sortByAge = () => {
         sort((a, b) => a.age - b.age)
     }
-    
+
     const sortByName = () => {
         sort((a, b) => a.name.localeCompare(b.name))
     }
-    
+
     return (
         <div>
             <button onClick={sortByAge}>Sort by Age</button>
@@ -2886,23 +2875,23 @@ function BulkActions() {
 // Queue implementation
 function MessageQueue() {
     const [queue, { push, shift }] = useList([])
-    
+
     const enqueue = (message: string) => {
         push({ id: Date.now(), text: message })
     }
-    
+
     const dequeue = () => {
         const item = shift()
         if (item) {
             console.log('Processing:', item.text)
         }
     }
-    
+
     return (
         <div>
-            <input 
+            <input
                 placeholder="Message..."
-                onKeyPress={e => {
+                onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                         enqueue(e.currentTarget.value)
                         e.currentTarget.value = ''
@@ -2914,7 +2903,9 @@ function MessageQueue() {
             </button>
             <div>Queue size: {queue.length}</div>
             {queue.map((msg, i) => (
-                <div key={msg.id}>{i + 1}. {msg.text}</div>
+                <div key={msg.id}>
+                    {i + 1}. {msg.text}
+                </div>
             ))}
         </div>
     )
@@ -2925,19 +2916,19 @@ function MessageQueue() {
 // Stack implementation
 function NavigationStack() {
     const [stack, { push, pop }] = useList(['/home'])
-    
+
     const navigate = (path: string) => {
         push(path)
     }
-    
+
     const goBack = () => {
         if (stack.length > 1) {
             pop()
         }
     }
-    
+
     const current = stack[stack.length - 1]
-    
+
     return (
         <div>
             <button onClick={goBack} disabled={stack.length === 1}>
@@ -2960,28 +2951,28 @@ function MultiSelect() {
     const [items] = useState([
         { id: 1, name: 'Apple' },
         { id: 2, name: 'Banana' },
-        { id: 3, name: 'Cherry' }
+        { id: 3, name: 'Cherry' },
     ])
     const [selected, { push, remove, clear, set }] = useList([])
-    
-    const toggleItem = (item: typeof items[0]) => {
+
+    const toggleItem = (item: (typeof items)[0]) => {
         if (selected.includes(item.id)) {
             remove(item.id)
         } else {
             push(item.id)
         }
     }
-    
+
     const selectAll = () => {
-        set(items.map(item => item.id))
+        set(items.map((item) => item.id))
     }
-    
+
     const deleteSelected = () => {
         // Perform delete operation
         console.log('Deleting:', selected)
         clear()
     }
-    
+
     return (
         <div>
             <button onClick={selectAll}>Select All</button>
@@ -2989,9 +2980,9 @@ function MultiSelect() {
             <button onClick={deleteSelected} disabled={selected.length === 0}>
                 Delete ({selected.length})
             </button>
-            {items.map(item => (
+            {items.map((item) => (
                 <label key={item.id}>
-                    <input 
+                    <input
                         type="checkbox"
                         checked={selected.includes(item.id)}
                         onChange={() => toggleItem(item)}
@@ -3008,17 +2999,20 @@ function MultiSelect() {
 // Form with dynamic fields
 function DynamicForm() {
     const [fields, { push, removeAt, updateAt, reset }] = useList([
-        { id: 1, label: 'Name', value: '' }
+        { id: 1, label: 'Name', value: '' },
     ])
-    
+
     const addField = () => {
         push({ id: Date.now(), label: '', value: '' })
     }
-    
-    const updateField = (index: number, updates: Partial<typeof fields[0]>) => {
+
+    const updateField = (
+        index: number,
+        updates: Partial<(typeof fields)[0]>
+    ) => {
         updateAt(index, { ...fields[index], ...updates })
     }
-    
+
     const handleSubmit = () => {
         const data = fields.reduce((acc, field) => {
             if (field.label) {
@@ -3028,26 +3022,41 @@ function DynamicForm() {
         }, {})
         console.log('Form data:', data)
     }
-    
+
     return (
-        <form onSubmit={e => { e.preventDefault(); handleSubmit() }}>
+        <form
+            onSubmit={(e) => {
+                e.preventDefault()
+                handleSubmit()
+            }}
+        >
             {fields.map((field, i) => (
                 <div key={field.id}>
-                    <input 
+                    <input
                         placeholder="Label"
                         value={field.label}
-                        onChange={e => updateField(i, { label: e.target.value })}
+                        onChange={(e) =>
+                            updateField(i, { label: e.target.value })
+                        }
                     />
-                    <input 
+                    <input
                         placeholder="Value"
                         value={field.value}
-                        onChange={e => updateField(i, { value: e.target.value })}
+                        onChange={(e) =>
+                            updateField(i, { value: e.target.value })
+                        }
                     />
-                    <button type="button" onClick={() => removeAt(i)}>×</button>
+                    <button type="button" onClick={() => removeAt(i)}>
+                        ×
+                    </button>
                 </div>
             ))}
-            <button type="button" onClick={addField}>+ Add Field</button>
-            <button type="button" onClick={reset}>Reset</button>
+            <button type="button" onClick={addField}>
+                + Add Field
+            </button>
+            <button type="button" onClick={reset}>
+                Reset
+            </button>
             <button type="submit">Submit</button>
         </form>
     )
@@ -3056,40 +3065,40 @@ function DynamicForm() {
 
 ## How it works
 
-- Wraps `useState` for array state
-- All methods use `useCallback` with stable references
-- Methods mutate by creating new arrays (immutable updates)
-- `pop()` and `shift()` return the removed item
-- Index-based methods validate bounds before mutation
-- `filter`, `sort`, `map` modify the list in place
-- `reset()` returns to initial value
+-   Wraps `useState` for array state
+-   All methods use `useCallback` with stable references
+-   Methods mutate by creating new arrays (immutable updates)
+-   `pop()` and `shift()` return the removed item
+-   Index-based methods validate bounds before mutation
+-   `filter`, `sort`, `map` modify the list in place
+-   `reset()` returns to initial value
 
 ## When to use
 
-- Managing lists of items (todos, cart, tags)
-- Form arrays (dynamic fields, multi-select)
-- History/undo functionality
-- Queue/stack implementations
-- Bulk operations on arrays
-- Drag and drop lists
-- Any array state needing frequent manipulation
-- Replacing complex `useState` + array spread patterns
-- When you need many array operations
-- Building list-based UI components
+-   Managing lists of items (todos, cart, tags)
+-   Form arrays (dynamic fields, multi-select)
+-   History/undo functionality
+-   Queue/stack implementations
+-   Bulk operations on arrays
+-   Drag and drop lists
+-   Any array state needing frequent manipulation
+-   Replacing complex `useState` + array spread patterns
+-   When you need many array operations
+-   Building list-based UI components
 
 ## Notes
 
-- All action methods have stable references (won't change on re-render)
-- Methods that accept index validate bounds (no-op if invalid)
-- `pop()` and `shift()` return `undefined` for empty arrays
-- `insertAt()` clamps index to valid range [0, length]
-- `remove()` only removes first occurrence, `removeAll()` removes all
-- `filter`, `sort`, `map`, `reverse` modify list in place
-- `reset()` uses initial value, even if initial value changes
-- TypeScript generics infer type from initial value
-- Works with primitives and complex objects
-- Combine operations by calling multiple methods
-- For complex state, consider using `useReducer` instead
+-   All action methods have stable references (won't change on re-render)
+-   Methods that accept index validate bounds (no-op if invalid)
+-   `pop()` and `shift()` return `undefined` for empty arrays
+-   `insertAt()` clamps index to valid range [0, length]
+-   `remove()` only removes first occurrence, `removeAll()` removes all
+-   `filter`, `sort`, `map`, `reverse` modify list in place
+-   `reset()` uses initial value, even if initial value changes
+-   TypeScript generics infer type from initial value
+-   Works with primitives and complex objects
+-   Combine operations by calling multiple methods
+-   For complex state, consider using `useReducer` instead
 
 ## Browser support
 
@@ -3098,7 +3107,6 @@ All modern browsers (uses standard array methods)
 ## Tests
 
 See `src/utility/hooks/__tests__/useList.test.tsx` for comprehensive tests covering initialization, push, pop, shift, unshift, insert, update, remove, filter, sort, reverse, map, concat, reset, complex objects, chained operations, stable references, empty lists, and single item operations (32 tests).
-
 
 ---
 
@@ -3132,18 +3140,18 @@ interface UseHotkeysOptions {
 
 ## Parameters
 
-- `hotkey` (string): Hotkey combination (e.g., "ctrl+s", "shift+alt+k")
-- `callback` ((event: KeyboardEvent) => void): Function called when hotkey is pressed
-- `options` (UseHotkeysOptions, optional): Configuration options
+-   `hotkey` (string): Hotkey combination (e.g., "ctrl+s", "shift+alt+k")
+-   `callback` ((event: KeyboardEvent) => void): Function called when hotkey is pressed
+-   `options` (UseHotkeysOptions, optional): Configuration options
 
 ## Options
 
-- `enabled`: Enable/disable the hotkey
-- `enableOnFormTags`: Allow hotkey in input/textarea/select elements
-- `enableOnContentEditable`: Allow hotkey in contentEditable elements
-- `preventDefault`: Prevent default browser behavior
-- `stopPropagation`: Stop event propagation
-- `description`: Optional description for documentation
+-   `enabled`: Enable/disable the hotkey
+-   `enableOnFormTags`: Allow hotkey in input/textarea/select elements
+-   `enableOnContentEditable`: Allow hotkey in contentEditable elements
+-   `preventDefault`: Prevent default browser behavior
+-   `stopPropagation`: Stop event propagation
+-   `description`: Optional description for documentation
 
 ## Usage
 
@@ -3155,7 +3163,7 @@ function Editor() {
     useHotkeys('ctrl+s', () => {
         console.log('Save!')
     })
-    
+
     return <textarea />
 }
 ```
@@ -3166,11 +3174,11 @@ function App() {
     useHotkeys('ctrl+shift+p', () => {
         console.log('Open command palette')
     })
-    
+
     useHotkeys('alt+f4', () => {
         console.log('Close window')
     })
-    
+
     return <div>Press Ctrl+Shift+P</div>
 }
 ```
@@ -3179,19 +3187,19 @@ function App() {
 // Keyboard navigation
 function List({ items }) {
     const [selected, setSelected] = useState(0)
-    
+
     useHotkeys('up', () => {
         setSelected(Math.max(0, selected - 1))
     })
-    
+
     useHotkeys('down', () => {
         setSelected(Math.min(items.length - 1, selected + 1))
     })
-    
+
     useHotkeys('enter', () => {
         console.log('Selected:', items[selected])
     })
-    
+
     return (
         <ul>
             {items.map((item, i) => (
@@ -3208,7 +3216,7 @@ function List({ items }) {
 // Enable on form inputs
 function SearchBox() {
     const inputRef = useRef()
-    
+
     useHotkeys(
         'ctrl+f',
         () => {
@@ -3216,7 +3224,7 @@ function SearchBox() {
         },
         { enableOnFormTags: true }
     )
-    
+
     return <input ref={inputRef} placeholder="Search..." />
 }
 ```
@@ -3225,9 +3233,9 @@ function SearchBox() {
 // Conditional hotkeys
 function Modal({ isOpen, onClose }) {
     useHotkeys('esc', onClose, { enabled: isOpen })
-    
+
     if (!isOpen) return null
-    
+
     return (
         <div className="modal">
             <p>Press Esc to close</p>
@@ -3241,7 +3249,7 @@ function Modal({ isOpen, onClose }) {
 // Multiple hotkeys with useHotkeysMap
 function TextEditor() {
     const [content, setContent] = useState('')
-    
+
     useHotkeysMap({
         'ctrl+s': () => console.log('Save'),
         'ctrl+o': () => console.log('Open'),
@@ -3252,8 +3260,13 @@ function TextEditor() {
         'ctrl+i': () => console.log('Italic'),
         'ctrl+u': () => console.log('Underline'),
     })
-    
-    return <textarea value={content} onChange={e => setContent(e.target.value)} />
+
+    return (
+        <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+        />
+    )
 }
 ```
 
@@ -3261,24 +3274,24 @@ function TextEditor() {
 // Custom action shortcuts
 function CommandPalette() {
     const [open, setOpen] = useState(false)
-    
+
     useHotkeys('ctrl+k', () => {
         setOpen(!open)
     })
-    
+
     useHotkeysMap(
         {
-            'escape': () => setOpen(false),
-            'enter': () => {
+            escape: () => setOpen(false),
+            enter: () => {
                 console.log('Execute command')
                 setOpen(false)
             },
         },
         { enabled: open }
     )
-    
+
     if (!open) return null
-    
+
     return (
         <div className="command-palette">
             <input placeholder="Type a command..." />
@@ -3291,15 +3304,15 @@ function CommandPalette() {
 // Special keys
 function Game() {
     useHotkeysMap({
-        'space': () => console.log('Jump'),
-        'enter': () => console.log('Interact'),
-        'escape': () => console.log('Pause'),
-        'up': () => console.log('Move up'),
-        'down': () => console.log('Move down'),
-        'left': () => console.log('Move left'),
-        'right': () => console.log('Move right'),
+        space: () => console.log('Jump'),
+        enter: () => console.log('Interact'),
+        escape: () => console.log('Pause'),
+        up: () => console.log('Move up'),
+        down: () => console.log('Move down'),
+        left: () => console.log('Move left'),
+        right: () => console.log('Move right'),
     })
-    
+
     return <canvas />
 }
 ```
@@ -3308,15 +3321,23 @@ function Game() {
 // Prevent default vs allow default
 function Form() {
     // Prevent Ctrl+S from showing save dialog
-    useHotkeys('ctrl+s', () => {
-        console.log('Custom save')
-    }, { preventDefault: true })
-    
+    useHotkeys(
+        'ctrl+s',
+        () => {
+            console.log('Custom save')
+        },
+        { preventDefault: true }
+    )
+
     // Allow browser's Ctrl+F
-    useHotkeys('ctrl+shift+f', () => {
-        console.log('App search')
-    }, { preventDefault: false })
-    
+    useHotkeys(
+        'ctrl+shift+f',
+        () => {
+            console.log('App search')
+        },
+        { preventDefault: false }
+    )
+
     return <form />
 }
 ```
@@ -3329,13 +3350,13 @@ function App() {
         { key: 'ctrl+o', action: 'Open', handler: () => console.log('Open') },
         { key: 'ctrl+p', action: 'Print', handler: () => console.log('Print') },
     ]
-    
+
     shortcuts.forEach(({ key, handler, action }) => {
         useHotkeys(key, handler, {
             description: action,
         })
     })
-    
+
     return (
         <div>
             <h2>Keyboard Shortcuts</h2>
@@ -3355,7 +3376,7 @@ function App() {
 // Tab navigation
 function TabbedInterface() {
     const [tab, setTab] = useState(0)
-    
+
     useHotkeysMap({
         'ctrl+1': () => setTab(0),
         'ctrl+2': () => setTab(1),
@@ -3363,7 +3384,7 @@ function TabbedInterface() {
         'ctrl+tab': () => setTab((tab + 1) % 3),
         'ctrl+shift+tab': () => setTab((tab + 2) % 3),
     })
-    
+
     return (
         <div>
             <nav>
@@ -3379,60 +3400,60 @@ function TabbedInterface() {
 
 ## Supported Keys
 
-- **Modifiers**: `ctrl`, `shift`, `alt`, `meta` (cmd on Mac)
-- **Letters**: `a-z`
-- **Numbers**: `0-9`
-- **Special**: `enter`, `escape` (or `esc`), `space`, `tab`
-- **Arrows**: `up`, `down`, `left`, `right`
-- **Function**: `f1`-`f12`
-- **Symbols**: Any key that produces a character
+-   **Modifiers**: `ctrl`, `shift`, `alt`, `meta` (cmd on Mac)
+-   **Letters**: `a-z`
+-   **Numbers**: `0-9`
+-   **Special**: `enter`, `escape` (or `esc`), `space`, `tab`
+-   **Arrows**: `up`, `down`, `left`, `right`
+-   **Function**: `f1`-`f12`
+-   **Symbols**: Any key that produces a character
 
 ## Key Aliases
 
-- `return` → `enter`
-- `esc` → `escape`
-- `spacebar` → `space`
-- `control` → `ctrl`
-- `cmd`/`command` → `meta`
+-   `return` → `enter`
+-   `esc` → `escape`
+-   `spacebar` → `space`
+-   `control` → `ctrl`
+-   `cmd`/`command` → `meta`
 
 ## How it works
 
-- Parses hotkey string into modifier + key combination
-- Registers window-level `keydown` listener
-- Matches event against parsed hotkey
-- Filters based on target element (form tags, contentEditable)
-- Calls callback if match found
-- Prevents default and stops propagation if configured
-- Cleans up listener on unmount
-- Updates callback without re-registering listener
+-   Parses hotkey string into modifier + key combination
+-   Registers window-level `keydown` listener
+-   Matches event against parsed hotkey
+-   Filters based on target element (form tags, contentEditable)
+-   Calls callback if match found
+-   Prevents default and stops propagation if configured
+-   Cleans up listener on unmount
+-   Updates callback without re-registering listener
 
 ## When to use
 
-- Application-wide keyboard shortcuts
-- Editor keyboard bindings
-- Keyboard navigation
-- Accessibility features
-- Modal/dialog close on Escape
-- Form submission on Ctrl+Enter
-- Game controls
-- Command palettes
-- Quick actions
-- Tab/window management
-- Custom keyboard interfaces
+-   Application-wide keyboard shortcuts
+-   Editor keyboard bindings
+-   Keyboard navigation
+-   Accessibility features
+-   Modal/dialog close on Escape
+-   Form submission on Ctrl+Enter
+-   Game controls
+-   Command palettes
+-   Quick actions
+-   Tab/window management
+-   Custom keyboard interfaces
 
 ## Notes
 
-- Hotkeys are case-insensitive ("CTRL+S" = "ctrl+s")
-- Multiple modifiers can be combined in any order
-- By default, ignores events from input/textarea/select elements
-- Set `enableOnFormTags: true` to allow hotkeys in form elements
-- Set `preventDefault: false` to allow default browser behavior
-- `useHotkeysMap` triggers only the first matching hotkey
-- Callback updates don't re-register the listener (performance)
-- Works with any key that produces a character
-- Modifier keys must match exactly (no extra modifiers allowed)
-- Uses window-level listener (captures all keyboard events)
-- Safe to use multiple times in same component
+-   Hotkeys are case-insensitive ("CTRL+S" = "ctrl+s")
+-   Multiple modifiers can be combined in any order
+-   By default, ignores events from input/textarea/select elements
+-   Set `enableOnFormTags: true` to allow hotkeys in form elements
+-   Set `preventDefault: false` to allow default browser behavior
+-   `useHotkeysMap` triggers only the first matching hotkey
+-   Callback updates don't re-register the listener (performance)
+-   Works with any key that produces a character
+-   Modifier keys must match exactly (no extra modifiers allowed)
+-   Uses window-level listener (captures all keyboard events)
+-   Safe to use multiple times in same component
 
 ## Browser support
 
@@ -3442,3 +3463,309 @@ All modern browsers (uses standard KeyboardEvent API)
 
 See `src/utility/hooks/__tests__/useHotkeys.test.tsx` for comprehensive tests covering single/multiple modifiers, special keys, key normalization, enable/disable, form element filtering, contentEditable filtering, preventDefault, callback updates, hotkey updates, cleanup, case insensitivity, and multiple hotkeys with useHotkeysMap (30 tests).
 
+---
+
+# Hook: useIsMounted
+
+Returns a function that checks if a component is currently mounted. This is essential for preventing memory leaks by avoiding state updates on unmounted components, especially when dealing with async operations.
+
+## API
+
+```ts
+useIsMounted(): () => boolean
+```
+
+## Returns
+
+A stable function that returns `true` if the component is mounted, `false` otherwise.
+
+## Usage
+
+### Basic usage with async operations
+
+```tsx
+import { useIsMounted } from 'my-awesome-component-library'
+
+function UserProfile({ userId }: { userId: string }) {
+    const [user, setUser] = useState<User | null>(null)
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        fetchUser(userId).then((data) => {
+            // Only update state if component is still mounted
+            if (isMounted()) {
+                setUser(data)
+            }
+        })
+    }, [userId, isMounted])
+
+    return <div>{user?.name}</div>
+}
+```
+
+### With fetch and setState pattern
+
+```tsx
+function DataComponent() {
+    const [data, setData] = useState(null)
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        fetch('/api/data')
+            .then((res) => res.json())
+            .then((result) => {
+                if (isMounted()) {
+                    setData(result)
+                }
+            })
+            .catch((error) => {
+                if (isMounted()) {
+                    console.error(error)
+                }
+            })
+    }, [isMounted])
+
+    return <div>{data}</div>
+}
+```
+
+### With setTimeout/setInterval
+
+```tsx
+function DelayedMessage() {
+    const [message, setMessage] = useState('')
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (isMounted()) {
+                setMessage('Hello after 3 seconds!')
+            }
+        }, 3000)
+
+        return () => clearTimeout(timeoutId)
+    }, [isMounted])
+
+    return <div>{message}</div>
+}
+```
+
+### With WebSocket/EventSource
+
+```tsx
+function RealtimeData() {
+    const [messages, setMessages] = useState<string[]>([])
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        const ws = new WebSocket('wss://example.com/data')
+
+        ws.onmessage = (event) => {
+            if (isMounted()) {
+                setMessages((prev) => [...prev, event.data])
+            }
+        }
+
+        return () => ws.close()
+    }, [isMounted])
+
+    return (
+        <ul>
+            {messages.map((msg, i) => (
+                <li key={i}>{msg}</li>
+            ))}
+        </ul>
+    )
+}
+```
+
+### Multiple async operations
+
+```tsx
+function Dashboard() {
+    const [stats, setStats] = useState(null)
+    const [notifications, setNotifications] = useState([])
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        // Fetch stats
+        fetchStats().then((data) => {
+            if (isMounted()) setStats(data)
+        })
+
+        // Fetch notifications
+        fetchNotifications().then((data) => {
+            if (isMounted()) setNotifications(data)
+        })
+    }, [isMounted])
+
+    return (
+        <div>
+            <Stats data={stats} />
+            <Notifications items={notifications} />
+        </div>
+    )
+}
+```
+
+### Animation frame cancellation
+
+```tsx
+function AnimatedValue() {
+    const [value, setValue] = useState(0)
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        let rafId: number
+
+        const animate = () => {
+            setValue((v) => v + 1)
+            if (isMounted()) {
+                rafId = requestAnimationFrame(animate)
+            }
+        }
+
+        rafId = requestAnimationFrame(animate)
+
+        return () => cancelAnimationFrame(rafId)
+    }, [isMounted])
+
+    return <div>Value: {value}</div>
+}
+```
+
+### Subscription cleanup pattern
+
+```tsx
+function EventSubscriber() {
+    const [events, setEvents] = useState<Event[]>([])
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        const subscription = eventEmitter.subscribe((event) => {
+            if (isMounted()) {
+                setEvents((prev) => [...prev, event])
+            }
+        })
+
+        return () => subscription.unsubscribe()
+    }, [isMounted])
+
+    return <EventList events={events} />
+}
+```
+
+### Error handling in async operations
+
+```tsx
+function RobustDataFetcher() {
+    const [data, setData] = useState(null)
+    const [error, setError] = useState<Error | null>(null)
+    const [loading, setLoading] = useState(false)
+    const isMounted = useIsMounted()
+
+    useEffect(() => {
+        setLoading(true)
+
+        fetchData()
+            .then((result) => {
+                if (isMounted()) {
+                    setData(result)
+                    setError(null)
+                }
+            })
+            .catch((err) => {
+                if (isMounted()) {
+                    setError(err)
+                    setData(null)
+                }
+            })
+            .finally(() => {
+                if (isMounted()) {
+                    setLoading(false)
+                }
+            })
+    }, [isMounted])
+
+    if (loading) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
+    return <div>{data}</div>
+}
+```
+
+## Key features
+
+-   **Memory leak prevention**: Prevents setState calls on unmounted components
+-   **Stable reference**: Returns the same function instance across re-renders
+-   **Zero dependencies**: Uses only useRef, useEffect, and useCallback
+-   **TypeScript support**: Fully typed with proper return types
+-   **Simple API**: Just call `isMounted()` to check mount status
+-   **Cleanup safety**: Properly handles component lifecycle
+
+## Common patterns
+
+### Pattern 1: Async/await with isMounted
+
+```tsx
+useEffect(() => {
+    const loadData = async () => {
+        const data = await fetchData()
+        if (isMounted()) {
+            setData(data)
+        }
+    }
+    loadData()
+}, [isMounted])
+```
+
+### Pattern 2: Promise chain with isMounted
+
+```tsx
+useEffect(() => {
+    Promise.all([fetchUser(), fetchPosts()]).then(([user, posts]) => {
+        if (isMounted()) {
+            setUser(user)
+            setPosts(posts)
+        }
+    })
+}, [isMounted])
+```
+
+### Pattern 3: Cleanup with isMounted check
+
+```tsx
+useEffect(() => {
+    const interval = setInterval(() => {
+        if (isMounted()) {
+            setCount((c) => c + 1)
+        } else {
+            clearInterval(interval)
+        }
+    }, 1000)
+
+    return () => clearInterval(interval)
+}, [isMounted])
+```
+
+## When to use
+
+-   Any async operation that updates state (fetch, timers, promises)
+-   Event listeners that trigger state updates
+-   WebSocket/SSE connections that update state
+-   Animation frames that update state
+-   Subscriptions that update state
+-   Any scenario where component might unmount before async completes
+
+## When NOT to use
+
+-   Synchronous state updates (no risk of unmounted updates)
+-   Effects with proper cleanup that cancels async operations
+-   When using libraries that handle cleanup automatically (e.g., React Query)
+
+## Browser support
+
+All modern browsers and React 16.8+
+
+## Tests
+
+See `src/utility/hooks/__tests__/useIsMounted.test.tsx` for comprehensive tests covering mount/unmount states, async operations, stable references, multiple re-renders, rapid mount/unmount cycles, useEffect cleanup, fetch patterns, and multiple async operations (12 tests).
