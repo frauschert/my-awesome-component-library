@@ -11,7 +11,7 @@ describe('useCopyToClipboard', () => {
             writeText: jest.fn(),
         }
 
-        Object.defineProperty(navigator, 'clipboard', {
+        Object.defineProperty(window.navigator, 'clipboard', {
             writable: true,
             value: mockClipboard,
             configurable: true,
@@ -197,7 +197,7 @@ describe('useCopyToClipboard', () => {
     describe('fallback to execCommand', () => {
         beforeEach(() => {
             // Remove Clipboard API
-            Object.defineProperty(navigator, 'clipboard', {
+            Object.defineProperty(window.navigator, 'clipboard', {
                 writable: true,
                 value: undefined,
                 configurable: true,
