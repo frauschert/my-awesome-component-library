@@ -3769,3 +3769,536 @@ All modern browsers and React 16.8+
 ## Tests
 
 See `src/utility/hooks/__tests__/useIsMounted.test.tsx` for comprehensive tests covering mount/unmount states, async operations, stable references, multiple re-renders, rapid mount/unmount cycles, useEffect cleanup, fetch patterns, and multiple async operations (12 tests).
+
+---
+
+# Hook: useMutationObserver
+
+Observes DOM mutations using the MutationObserver API. Perfect for watching dynamic content changes, monitoring DOM updates, tracking element modifications, and responding to structural changes in real-time.
+
+## API
+
+```ts
+useMutationObserver<T extends HTMLElement>(
+    callback: MutationCallback,
+    targetRef: React.RefObject<T>,
+    options?: UseMutationObserverOptions
+): void
+
+type MutationCallback = (mutations: MutationRecord[], observer: MutationObserver) => void
+
+interface UseMutationObserverOptions extends MutationObserverInit {
+    enabled?: boolean // default: true
+    // MutationObserverInit options:
+    attributes?: boolean
+    attributeFilter?: string[]
+    attributeOldValue?: boolean
+    characterData?: boolean
+    characterDataOldValue?: boolean
+    childList?: boolean
+    subtree?: boolean
+}
+```
+
+## Parameters
+
+-   `callback` (MutationCallback): Function called when mutations occur
+-   `targetRef` (RefObject<T>): React ref to the element to observe
+-   `options` (UseMutationObserverOptions, optional): Configuration options
+
+## Options
+
+-   `enabled`: Enable/disable the observer
+-   `attributes`: Watch attribute changes
+-   `attributeFilter`: Array of specific attributes to watch
+-   `attributeOldValue`: Include old attribute values in mutation records
+-   `characterData`: Watch text content changes
+-   `characterDataOldValue`: Include old character data in mutation records
+-   `childList`: Watch child element additions/removals
+-   `subtree`: Observe all descendants, not just direct children
+
+## Usage
+
+### Watch for child additions/removals
+
+```tsx
+import { useRef } from 'react'
+import { useMutationObserver } from 'my-awesome-component-library'
+
+function DynamicList() {
+    const listRef = useRef<HTMLUListElement>(null)
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    console.log('Added:', mutation.addedNodes.length)
+                    console.log('Removed:', mutation.removedNodes.length)
+                }
+            })
+        },
+        listRef,
+        { childList: true }
+    )
+
+    return (
+        <ul ref={listRef}>
+            <li>Item 1</li>
+            <li>Item 2</li>
+        </ul>
+    )
+}
+```
+
+### Watch for attribute changes
+
+```tsx
+function AttributeWatcher() {
+    const divRef = useRef<HTMLDivElement>(null)
+    const [log, setLog] = useState<string[]>([])
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes') {
+                    setLog((prev) => [
+                        ...prev,
+                        `${mutation.attributeName} changed to ${(
+                            mutation.target as Element
+                        ).getAttribute(mutation.attributeName!)}`,
+                    ])
+                }
+            })
+        },
+        divRef,
+        { attributes: true, attributeOldValue: true }
+    )
+
+    return (
+        <div>
+            <div ref={divRef} className="watched">
+                Watched element
+            </div>
+            <button onClick={() => divRef.current?.classList.toggle('active')}>
+                Toggle Class
+            </button>
+            <ul>
+                {log.map((entry, i) => (
+                    <li key={i}>{entry}</li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+```
+
+### Watch specific attributes only
+
+```tsx
+function ClassWatcher() {
+    const elementRef = useRef<HTMLDivElement>(null)
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                console.log(
+                    'Class changed:',
+                    (mutation.target as Element).className
+                )
+            })
+        },
+        elementRef,
+        {
+            attributes: true,
+            attributeFilter: ['class'], // Only watch class attribute
+        }
+    )
+
+    return <div ref={elementRef}>Element with watched class</div>
+}
+```
+
+### Watch text content changes
+
+```tsx
+function TextWatcher() {
+    const textRef = useRef<HTMLParagraphElement>(null)
+    const [changes, setChanges] = useState(0)
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'characterData') {
+                    setChanges((c) => c + 1)
+                    console.log('Old:', mutation.oldValue)
+                    console.log('New:', mutation.target.textContent)
+                }
+            })
+        },
+        textRef,
+        {
+            characterData: true,
+            characterDataOldValue: true,
+            subtree: true,
+        }
+    )
+
+    return (
+        <div>
+            <p ref={textRef}>Editable text</p>
+            <p>Changes: {changes}</p>
+        </div>
+    )
+}
+```
+
+### Watch entire subtree
+
+```tsx
+function SubtreeWatcher() {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const [mutationCount, setMutationCount] = useState(0)
+
+    useMutationObserver(
+        (mutations) => {
+            setMutationCount((c) => c + mutations.length)
+        },
+        containerRef,
+        {
+            childList: true,
+            attributes: true,
+            characterData: true,
+            subtree: true, // Watch all descendants
+        }
+    )
+
+    return (
+        <div ref={containerRef}>
+            <p>Mutations detected: {mutationCount}</p>
+            <div>
+                <span>Nested content</span>
+            </div>
+        </div>
+    )
+}
+```
+
+### Enable/disable dynamically
+
+```tsx
+function ConditionalObserver({ shouldWatch }: { shouldWatch: boolean }) {
+    const elementRef = useRef<HTMLDivElement>(null)
+
+    useMutationObserver(
+        (mutations) => {
+            console.log('Mutations:', mutations.length)
+        },
+        elementRef,
+        {
+            childList: true,
+            enabled: shouldWatch, // Dynamic enable/disable
+        }
+    )
+
+    return <div ref={elementRef}>Watched element</div>
+}
+```
+
+### Track DOM changes in real-time
+
+```tsx
+function LiveDOMTracker() {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const [stats, setStats] = useState({
+        addedNodes: 0,
+        removedNodes: 0,
+        attributeChanges: 0,
+    })
+
+    useMutationObserver(
+        (mutations) => {
+            let added = 0
+            let removed = 0
+            let attrs = 0
+
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    added += mutation.addedNodes.length
+                    removed += mutation.removedNodes.length
+                } else if (mutation.type === 'attributes') {
+                    attrs++
+                }
+            })
+
+            setStats((prev) => ({
+                addedNodes: prev.addedNodes + added,
+                removedNodes: prev.removedNodes + removed,
+                attributeChanges: prev.attributeChanges + attrs,
+            }))
+        },
+        containerRef,
+        {
+            childList: true,
+            attributes: true,
+            subtree: true,
+        }
+    )
+
+    return (
+        <div>
+            <div ref={containerRef}>
+                <p>Container content</p>
+            </div>
+            <div>
+                <p>Added: {stats.addedNodes}</p>
+                <p>Removed: {stats.removedNodes}</p>
+                <p>Attributes: {stats.attributeChanges}</p>
+            </div>
+        </div>
+    )
+}
+```
+
+### Monitor dynamic content loading
+
+```tsx
+function ContentLoader() {
+    const contentRef = useRef<HTMLDivElement>(null)
+    const [isLoading, setIsLoading] = useState(true)
+
+    useMutationObserver(
+        (mutations) => {
+            const hasContent = mutations.some(
+                (m) =>
+                    m.addedNodes.length > 0 && m.target === contentRef.current
+            )
+            if (hasContent) {
+                setIsLoading(false)
+            }
+        },
+        contentRef,
+        { childList: true }
+    )
+
+    return (
+        <div>
+            {isLoading && <p>Loading...</p>}
+            <div ref={contentRef} id="dynamic-content" />
+        </div>
+    )
+}
+```
+
+### Watch for class changes with callback updates
+
+```tsx
+function ThemeWatcher() {
+    const bodyRef = useRef(document.body)
+    const [theme, setTheme] = useState('light')
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                const element = mutation.target as HTMLElement
+                if (element.classList.contains('dark')) {
+                    setTheme('dark')
+                } else {
+                    setTheme('light')
+                }
+            })
+        },
+        bodyRef,
+        {
+            attributes: true,
+            attributeFilter: ['class'],
+        }
+    )
+
+    return <p>Current theme: {theme}</p>
+}
+```
+
+### Monitor form field additions
+
+```tsx
+function DynamicForm() {
+    const formRef = useRef<HTMLFormElement>(null)
+    const [fieldCount, setFieldCount] = useState(0)
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (
+                        node.nodeName === 'INPUT' ||
+                        node.nodeName === 'TEXTAREA' ||
+                        node.nodeName === 'SELECT'
+                    ) {
+                        setFieldCount((c) => c + 1)
+                    }
+                })
+            })
+        },
+        formRef,
+        { childList: true, subtree: true }
+    )
+
+    return (
+        <form ref={formRef}>
+            <p>Fields: {fieldCount}</p>
+        </form>
+    )
+}
+```
+
+### Watch inline style changes
+
+```tsx
+function StyleWatcher() {
+    const elementRef = useRef<HTMLDivElement>(null)
+    const [styleLog, setStyleLog] = useState<string[]>([])
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'style') {
+                    const newStyle = (
+                        mutation.target as HTMLElement
+                    ).getAttribute('style')
+                    setStyleLog((prev) => [...prev, newStyle || 'none'])
+                }
+            })
+        },
+        elementRef,
+        {
+            attributes: true,
+            attributeFilter: ['style'],
+            attributeOldValue: true,
+        }
+    )
+
+    return (
+        <div>
+            <div ref={elementRef} style={{ color: 'blue' }}>
+                Styled element
+            </div>
+            <ul>
+                {styleLog.map((style, i) => (
+                    <li key={i}>{style}</li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+```
+
+### Detect element removal
+
+```tsx
+function RemovalDetector() {
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useMutationObserver(
+        (mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.removedNodes.forEach((node) => {
+                    if (node.nodeName === 'DIV') {
+                        console.log('Div removed:', node.textContent)
+                    }
+                })
+            })
+        },
+        containerRef,
+        { childList: true }
+    )
+
+    return <div ref={containerRef}>Container</div>
+}
+```
+
+## Key features
+
+-   **DOM change tracking**: Monitor any type of DOM mutation
+-   **Flexible configuration**: Watch attributes, children, text, or all changes
+-   **Subtree support**: Observe entire element trees
+-   **Attribute filtering**: Watch specific attributes only
+-   **Old value tracking**: Access previous attribute/text values
+-   **Dynamic enable/disable**: Turn observer on/off conditionally
+-   **Callback stability**: Updates callback without reconnecting observer
+-   **Automatic cleanup**: Disconnects observer on unmount
+-   **TypeScript support**: Fully typed with generic element types
+-   **Performance optimized**: Uses native MutationObserver API
+
+## Common patterns
+
+### Pattern 1: Track specific changes
+
+```tsx
+useMutationObserver(
+    (mutations) => {
+        mutations.forEach((m) => {
+            if (m.type === 'attributes' && m.attributeName === 'data-value') {
+                // Handle data-value changes
+            }
+        })
+    },
+    ref,
+    { attributes: true, attributeFilter: ['data-value'] }
+)
+```
+
+### Pattern 2: Count mutations
+
+```tsx
+const [count, setCount] = useState(0)
+useMutationObserver(() => setCount((c) => c + 1), ref, { childList: true })
+```
+
+### Pattern 3: Batch processing
+
+```tsx
+useMutationObserver(
+    (mutations) => {
+        const allAdded = mutations.flatMap((m) => Array.from(m.addedNodes))
+        processNodes(allAdded)
+    },
+    ref,
+    { childList: true, subtree: true }
+)
+```
+
+## When to use
+
+-   Monitoring dynamically loaded content
+-   Tracking third-party DOM changes
+-   Watching for class/style changes
+-   Detecting element additions/removals
+-   Observing attribute modifications
+-   Monitoring WYSIWYG editors
+-   Tracking DOM-based animations
+-   Detecting form field changes
+-   Watching iframe content
+-   Monitoring web component updates
+
+## When NOT to use
+
+-   For state that you control (use React state instead)
+-   For simple event handlers (use standard event listeners)
+-   For performance-critical tight loops
+-   When you can use React lifecycle methods instead
+
+## Performance notes
+
+-   MutationObserver is generally performant
+-   Watching entire subtrees can be expensive on large DOMs
+-   Filter observations to minimum needed
+-   Batch process multiple mutations
+-   Consider debouncing callback for high-frequency changes
+
+## Browser support
+
+All modern browsers (IE11+, uses native MutationObserver API)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useMutationObserver.test.tsx` for comprehensive tests covering child list mutations, attribute mutations, character data mutations, attribute filtering, subtree observation, enable/disable, callback updates, disconnection, null refs, ref changes, multiple mutation types, observer instance, useRef integration, and dynamic enable/disable toggle (14 tests).

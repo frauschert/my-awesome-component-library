@@ -45,6 +45,7 @@ import usePromise from './usePromise'
 import useList from './useList'
 import useHotkeys, { useHotkeysMap } from './useHotkeys'
 import useIsMounted from './useIsMounted'
+import useMutationObserver from './useMutationObserver'
 
 export {
     useDebounceEffect,
@@ -97,6 +98,7 @@ export {
     useHotkeys,
     useHotkeysMap,
     useIsMounted,
+    useMutationObserver,
 }
 
 export default {
@@ -150,4 +152,5 @@ export default {
     useHotkeys,
     useHotkeysMap,
     useIsMounted,
+    useMutationObserver,
 }
