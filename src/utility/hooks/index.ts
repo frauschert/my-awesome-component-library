@@ -41,6 +41,7 @@ import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
 import useColorScheme from './useColorScheme'
 import useWebSocket from './useWebSocket'
+import usePromise from './usePromise'
 
 export {
     useDebounceEffect,
@@ -88,6 +89,7 @@ export {
     useIdle,
     useColorScheme,
     useWebSocket,
+    usePromise,
 }
 
 export default {
@@ -136,4 +138,5 @@ export default {
     useIdle,
     useColorScheme,
     useWebSocket,
+    usePromise,
 }

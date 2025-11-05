@@ -2171,3 +2171,444 @@ All modern browsers supporting WebSocket API:
 ## Tests
 
 See `src/utility/hooks/__tests__/useWebSocket.test.tsx` for comprehensive tests covering connection lifecycle, message handling, automatic reconnection, manual control, error handling, cleanup, and URL changes.
+
+---
+
+# Hook: usePromise
+
+Manages promise lifecycle with loading, error, and result states. Perfect for handling async operations with automatic state management and race condition protection.
+
+## API
+
+```ts
+usePromise<T, Args>(
+    promiseFunction: (...args: Args) => Promise<T>,
+    options?: UsePromiseOptions<Args>
+): UsePromiseResult<T, Args>
+
+interface UsePromiseOptions<Args> {
+    immediate?: boolean // default: false
+    initialArgs?: Args
+}
+
+interface UsePromiseResult<T, Args> {
+    data: T | null
+    error: Error | null
+    status: 'idle' | 'pending' | 'resolved' | 'rejected'
+    isLoading: boolean
+    isIdle: boolean
+    isResolved: boolean
+    isRejected: boolean
+    execute: (...args: Args) => Promise<T>
+    reset: () => void
+}
+```
+
+## Parameters
+
+- `promiseFunction` ((...args: Args) => Promise<T>): Function that returns a promise
+- `options` (UsePromiseOptions, optional):
+  - `immediate`: Execute promise on mount (default: false)
+  - `initialArgs`: Arguments for immediate execution
+
+## Returns
+
+Object with promise state and control methods
+
+## Usage
+
+```tsx
+import { usePromise } from 'my-awesome-component-library'
+
+// Basic data fetching
+function UserProfile({ userId }) {
+    const { data, isLoading, error, execute } = usePromise(
+        (id: string) => fetch(`/api/users/${id}`).then(r => r.json())
+    )
+    
+    useEffect(() => {
+        execute(userId)
+    }, [userId])
+    
+    if (isLoading) return <Spinner />
+    if (error) return <Error message={error.message} />
+    if (data) return <User {...data} />
+    return null
+}
+```
+
+```tsx
+// Manual execution with button
+function SearchUsers() {
+    const [query, setQuery] = useState('')
+    const { data, isLoading, execute } = usePromise(
+        (searchTerm: string) => 
+            fetch(`/api/search?q=${searchTerm}`).then(r => r.json())
+    )
+    
+    const handleSearch = () => {
+        execute(query)
+    }
+    
+    return (
+        <div>
+            <input value={query} onChange={e => setQuery(e.target.value)} />
+            <button onClick={handleSearch} disabled={isLoading}>
+                {isLoading ? 'Searching...' : 'Search'}
+            </button>
+            {data && <Results items={data} />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Immediate execution on mount
+function Dashboard() {
+    const { data, isLoading, error } = usePromise(
+        () => fetch('/api/dashboard').then(r => r.json()),
+        { immediate: true }
+    )
+    
+    if (isLoading) return <Skeleton />
+    if (error) return <ErrorBoundary error={error} />
+    return <DashboardView data={data} />
+}
+```
+
+```tsx
+// With initial arguments
+function ProductDetails({ productId }) {
+    const { data, isLoading, reset } = usePromise(
+        (id: string) => fetch(`/api/products/${id}`).then(r => r.json()),
+        { immediate: true, initialArgs: [productId] }
+    )
+    
+    useEffect(() => {
+        reset()
+        // Re-fetch when productId changes
+    }, [productId])
+    
+    return isLoading ? <Loader /> : <Product data={data} />
+}
+```
+
+```tsx
+// Form submission with status feedback
+function CreatePost() {
+    const { execute, isLoading, isResolved, error, reset } = usePromise(
+        (postData: PostData) => 
+            fetch('/api/posts', {
+                method: 'POST',
+                body: JSON.stringify(postData)
+            }).then(r => r.json())
+    )
+    
+    const handleSubmit = async (data: PostData) => {
+        try {
+            await execute(data)
+            toast.success('Post created!')
+        } catch (err) {
+            toast.error('Failed to create post')
+        }
+    }
+    
+    return (
+        <form onSubmit={handleSubmit}>
+            <PostForm />
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Creating...' : 'Create Post'}
+            </button>
+            {isResolved && <Redirect to="/posts" />}
+            {error && <FormError message={error.message} />}
+        </form>
+    )
+}
+```
+
+```tsx
+// Multi-step wizard with promise states
+function Wizard() {
+    const [step, setStep] = useState(1)
+    
+    const step1Promise = usePromise((data) => 
+        api.validateStep1(data)
+    )
+    
+    const step2Promise = usePromise((data) => 
+        api.validateStep2(data)
+    )
+    
+    const submitPromise = usePromise((allData) => 
+        api.submitWizard(allData)
+    )
+    
+    const handleStep1Next = async (data) => {
+        try {
+            await step1Promise.execute(data)
+            setStep(2)
+        } catch (err) {
+            // Handle validation error
+        }
+    }
+    
+    return (
+        <div>
+            {step === 1 && (
+                <Step1 
+                    onNext={handleStep1Next} 
+                    isLoading={step1Promise.isLoading}
+                    error={step1Promise.error}
+                />
+            )}
+            {step === 2 && (
+                <Step2 
+                    onNext={handleStep2Next} 
+                    isLoading={step2Promise.isLoading}
+                />
+            )}
+            {step === 3 && (
+                <Review 
+                    onSubmit={submitPromise.execute}
+                    isSubmitting={submitPromise.isLoading}
+                />
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// File upload with progress
+function FileUploader() {
+    const { execute, isLoading, isResolved, error, data, reset } = usePromise(
+        async (file: File) => {
+            const formData = new FormData()
+            formData.append('file', file)
+            
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+            
+            return response.json()
+        }
+    )
+    
+    const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            await execute(file)
+        }
+    }
+    
+    return (
+        <div>
+            <input type="file" onChange={handleFile} disabled={isLoading} />
+            {isLoading && <ProgressBar indeterminate />}
+            {isResolved && <Success url={data.url} />}
+            {error && <ErrorMessage error={error} onRetry={reset} />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Polling with manual control
+function LiveData() {
+    const { data, execute, isLoading } = usePromise(
+        () => fetch('/api/live-data').then(r => r.json())
+    )
+    
+    useEffect(() => {
+        execute() // Initial fetch
+        
+        const interval = setInterval(() => {
+            execute() // Poll every 5 seconds
+        }, 5000)
+        
+        return () => clearInterval(interval)
+    }, [execute])
+    
+    return (
+        <div>
+            {isLoading && !data && <Skeleton />}
+            {data && <DataDisplay data={data} refreshing={isLoading} />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Dependent promises (sequential)
+function OrderCheckout() {
+    const validateCart = usePromise((cartId) => 
+        api.validateCart(cartId)
+    )
+    
+    const processPayment = usePromise((paymentData) => 
+        api.processPayment(paymentData)
+    )
+    
+    const createOrder = usePromise((orderData) => 
+        api.createOrder(orderData)
+    )
+    
+    const handleCheckout = async (cartId, paymentData) => {
+        try {
+            // Step 1: Validate cart
+            await validateCart.execute(cartId)
+            
+            // Step 2: Process payment
+            const payment = await processPayment.execute(paymentData)
+            
+            // Step 3: Create order
+            const order = await createOrder.execute({
+                cartId,
+                paymentId: payment.id
+            })
+            
+            router.push(`/orders/${order.id}`)
+        } catch (err) {
+            toast.error(err.message)
+        }
+    }
+    
+    const isProcessing = 
+        validateCart.isLoading || 
+        processPayment.isLoading || 
+        createOrder.isLoading
+    
+    return (
+        <CheckoutForm 
+            onSubmit={handleCheckout}
+            isProcessing={isProcessing}
+        />
+    )
+}
+```
+
+```tsx
+// Optimistic updates with rollback
+function TodoList() {
+    const [todos, setTodos] = useState([])
+    
+    const deleteTodo = usePromise(
+        async (id: string) => {
+            const response = await fetch(`/api/todos/${id}`, {
+                method: 'DELETE'
+            })
+            if (!response.ok) throw new Error('Delete failed')
+            return id
+        }
+    )
+    
+    const handleDelete = async (id: string) => {
+        // Optimistic update
+        const previousTodos = todos
+        setTodos(todos.filter(t => t.id !== id))
+        
+        try {
+            await deleteTodo.execute(id)
+            toast.success('Todo deleted')
+        } catch (err) {
+            // Rollback on error
+            setTodos(previousTodos)
+            toast.error('Failed to delete')
+        }
+    }
+    
+    return (
+        <ul>
+            {todos.map(todo => (
+                <TodoItem 
+                    key={todo.id} 
+                    todo={todo}
+                    onDelete={handleDelete}
+                    isDeleting={deleteTodo.isLoading}
+                />
+            ))}
+        </ul>
+    )
+}
+```
+
+```tsx
+// Debounced search with race condition protection
+function SmartSearch() {
+    const [query, setQuery] = useState('')
+    const debouncedQuery = useDebounce(query, 500)
+    
+    const { data, isLoading, execute } = usePromise(
+        (searchTerm: string) => 
+            fetch(`/api/search?q=${searchTerm}`).then(r => r.json())
+    )
+    
+    useEffect(() => {
+        if (debouncedQuery) {
+            execute(debouncedQuery)
+        }
+    }, [debouncedQuery])
+    
+    return (
+        <div>
+            <input 
+                value={query} 
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search..."
+            />
+            {isLoading && <Spinner />}
+            {data && <SearchResults results={data} />}
+        </div>
+    )
+}
+```
+
+## How it works
+
+- Wraps promise function with state management
+- Tracks four states: idle, pending, resolved, rejected
+- Provides boolean helpers (isLoading, isIdle, isResolved, isRejected)
+- Prevents state updates on unmounted components
+- Handles race conditions - only latest promise updates state
+- Converts non-Error rejections to Error objects
+- Allows manual execution with `execute()`
+- Provides `reset()` to return to idle state
+- Returns promise from `execute()` for chaining
+- Supports immediate execution on mount
+
+## When to use
+
+- Data fetching from APIs
+- Form submissions
+- File uploads
+- Authentication operations
+- Multi-step workflows
+- Any async operation needing state tracking
+- Replacing useState + useEffect patterns for promises
+- When you need loading/error states
+- Operations with user-triggered execution
+- Debounced or throttled async operations
+
+## Notes
+
+- Does NOT execute automatically unless `immediate: true`
+- Race condition safe - only latest promise updates state
+- Component unmount protection prevents memory leaks
+- `execute()` returns the promise for await/catch
+- Errors are rethrown from `execute()` for manual handling
+- `reset()` clears data/error and returns to idle
+- Non-Error rejections are converted to Error objects
+- Promise function changes trigger new `execute` callback
+- State updates are synchronous after promise resolves
+- Use with `useEffect` for automatic execution on deps
+- Combine with `useDebounce` for debounced searches
+- Works great with optimistic updates pattern
+
+## Browser support
+
+All modern browsers (uses standard Promise API)
+
+## Tests
+
+See `src/utility/hooks/__tests__/usePromise.test.tsx` for comprehensive tests covering execution, resolution, rejection, arguments, immediate mode, initial args, reset, multiple executions, error handling, race conditions, unmount protection, error conversion, return values, function changes, async functions, complex data, and stable references.

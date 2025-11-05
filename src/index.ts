@@ -246,6 +246,7 @@ import {
     useIdle,
     useColorScheme,
     useWebSocket,
+    usePromise,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -475,6 +476,7 @@ export {
     useIdle,
     useColorScheme,
     useWebSocket,
+    usePromise,
     memoize,
     throttle,
     chunk,
