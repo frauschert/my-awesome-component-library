@@ -2612,3 +2612,490 @@ All modern browsers (uses standard Promise API)
 ## Tests
 
 See `src/utility/hooks/__tests__/usePromise.test.tsx` for comprehensive tests covering execution, resolution, rejection, arguments, immediate mode, initial args, reset, multiple executions, error handling, race conditions, unmount protection, error conversion, return values, function changes, async functions, complex data, and stable references.
+
+---
+
+# Hook: useList
+
+Manages array state with built-in helper methods for common operations. Eliminates boilerplate for array manipulation and provides a clean, chainable API.
+
+## API
+
+```ts
+useList<T>(initialValue?: T[]): [T[], UseListActions<T>]
+
+interface UseListActions<T> {
+    set: (newList: T[]) => void
+    push: (...items: T[]) => void
+    pop: () => T | undefined
+    unshift: (...items: T[]) => void
+    shift: () => T | undefined
+    removeAt: (index: number) => void
+    insertAt: (index: number, item: T) => void
+    updateAt: (index: number, item: T) => void
+    clear: () => void
+    filter: (predicate: (item: T, index: number) => boolean) => void
+    sort: (compareFn?: (a: T, b: T) => number) => void
+    reverse: () => void
+    remove: (item: T) => void
+    removeAll: (item: T) => void
+    map: (mapper: (item: T, index: number) => T) => void
+    concat: (...arrays: T[][]) => void
+    reset: () => void
+}
+```
+
+## Parameters
+
+- `initialValue` (T[], optional): Initial array value (default: [])
+
+## Returns
+
+Tuple of [list, actions]:
+- `list` (T[]): Current array state
+- `actions` (UseListActions): Object with helper methods
+
+## Usage
+
+```tsx
+import { useList } from 'my-awesome-component-library'
+
+// Basic todo list
+function TodoList() {
+    const [todos, { push, removeAt, updateAt, clear }] = useList([
+        { id: 1, text: 'Learn React', done: false },
+        { id: 2, text: 'Build app', done: false }
+    ])
+    
+    const addTodo = (text: string) => {
+        push({ id: Date.now(), text, done: false })
+    }
+    
+    const toggleTodo = (index: number) => {
+        const todo = todos[index]
+        updateAt(index, { ...todo, done: !todo.done })
+    }
+    
+    return (
+        <div>
+            <button onClick={() => addTodo('New task')}>Add</button>
+            <button onClick={clear}>Clear All</button>
+            {todos.map((todo, i) => (
+                <div key={todo.id}>
+                    <input 
+                        type="checkbox"
+                        checked={todo.done}
+                        onChange={() => toggleTodo(i)}
+                    />
+                    <span>{todo.text}</span>
+                    <button onClick={() => removeAt(i)}>×</button>
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Shopping cart
+function ShoppingCart() {
+    const [cart, { push, removeAt, updateAt, clear }] = useList([])
+    
+    const addToCart = (product: Product) => {
+        const existing = cart.findIndex(item => item.id === product.id)
+        if (existing >= 0) {
+            const item = cart[existing]
+            updateAt(existing, { ...item, quantity: item.quantity + 1 })
+        } else {
+            push({ ...product, quantity: 1 })
+        }
+    }
+    
+    const updateQuantity = (index: number, quantity: number) => {
+        if (quantity <= 0) {
+            removeAt(index)
+        } else {
+            updateAt(index, { ...cart[index], quantity })
+        }
+    }
+    
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    
+    return (
+        <div>
+            <h2>Cart ({cart.length})</h2>
+            {cart.map((item, i) => (
+                <CartItem 
+                    key={item.id}
+                    item={item}
+                    onUpdateQuantity={(qty) => updateQuantity(i, qty)}
+                    onRemove={() => removeAt(i)}
+                />
+            ))}
+            <div>Total: ${total.toFixed(2)}</div>
+            <button onClick={clear}>Clear Cart</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Tag input with chips
+function TagInput() {
+    const [tags, { push, removeAt, remove }] = useList(['react', 'typescript'])
+    const [input, setInput] = useState('')
+    
+    const addTag = () => {
+        if (input.trim() && !tags.includes(input.trim())) {
+            push(input.trim())
+            setInput('')
+        }
+    }
+    
+    return (
+        <div>
+            <div className="tags">
+                {tags.map((tag, i) => (
+                    <Chip 
+                        key={i}
+                        label={tag}
+                        onDelete={() => removeAt(i)}
+                    />
+                ))}
+            </div>
+            <input 
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyPress={e => e.key === 'Enter' && addTag()}
+                placeholder="Add tag..."
+            />
+        </div>
+    )
+}
+```
+
+```tsx
+// Drag and drop reorder
+function DraggableList() {
+    const [items, { set, updateAt }] = useList([
+        { id: 1, text: 'Item 1' },
+        { id: 2, text: 'Item 2' },
+        { id: 3, text: 'Item 3' }
+    ])
+    
+    const moveItem = (fromIndex: number, toIndex: number) => {
+        const newItems = [...items]
+        const [removed] = newItems.splice(fromIndex, 1)
+        newItems.splice(toIndex, 0, removed)
+        set(newItems)
+    }
+    
+    return (
+        <div>
+            {items.map((item, i) => (
+                <DraggableItem
+                    key={item.id}
+                    item={item}
+                    index={i}
+                    onMove={moveItem}
+                />
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Undo/redo stack
+function UndoRedoEditor() {
+    const [history, historyActions] = useList([''])
+    const [currentIndex, setCurrentIndex] = useState(0)
+    
+    const current = history[currentIndex]
+    const canUndo = currentIndex > 0
+    const canRedo = currentIndex < history.length - 1
+    
+    const setText = (text: string) => {
+        // Remove future history
+        historyActions.set(history.slice(0, currentIndex + 1))
+        historyActions.push(text)
+        setCurrentIndex(currentIndex + 1)
+    }
+    
+    const undo = () => {
+        if (canUndo) setCurrentIndex(currentIndex - 1)
+    }
+    
+    const redo = () => {
+        if (canRedo) setCurrentIndex(currentIndex + 1)
+    }
+    
+    return (
+        <div>
+            <button onClick={undo} disabled={!canUndo}>Undo</button>
+            <button onClick={redo} disabled={!canRedo}>Redo</button>
+            <textarea 
+                value={current}
+                onChange={e => setText(e.target.value)}
+            />
+        </div>
+    )
+}
+```
+
+```tsx
+// Bulk operations
+function BulkActions() {
+    const [items, { filter, map, sort, reverse, clear }] = useList([
+        { id: 1, name: 'Alice', age: 25, active: true },
+        { id: 2, name: 'Bob', age: 30, active: false },
+        { id: 3, name: 'Charlie', age: 20, active: true }
+    ])
+    
+    const removeInactive = () => {
+        filter(item => item.active)
+    }
+    
+    const incrementAges = () => {
+        map(item => ({ ...item, age: item.age + 1 }))
+    }
+    
+    const sortByAge = () => {
+        sort((a, b) => a.age - b.age)
+    }
+    
+    const sortByName = () => {
+        sort((a, b) => a.name.localeCompare(b.name))
+    }
+    
+    return (
+        <div>
+            <button onClick={sortByAge}>Sort by Age</button>
+            <button onClick={sortByName}>Sort by Name</button>
+            <button onClick={reverse}>Reverse</button>
+            <button onClick={incrementAges}>+1 Year All</button>
+            <button onClick={removeInactive}>Remove Inactive</button>
+            <button onClick={clear}>Clear All</button>
+            <UserList items={items} />
+        </div>
+    )
+}
+```
+
+```tsx
+// Queue implementation
+function MessageQueue() {
+    const [queue, { push, shift }] = useList([])
+    
+    const enqueue = (message: string) => {
+        push({ id: Date.now(), text: message })
+    }
+    
+    const dequeue = () => {
+        const item = shift()
+        if (item) {
+            console.log('Processing:', item.text)
+        }
+    }
+    
+    return (
+        <div>
+            <input 
+                placeholder="Message..."
+                onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                        enqueue(e.currentTarget.value)
+                        e.currentTarget.value = ''
+                    }
+                }}
+            />
+            <button onClick={dequeue} disabled={queue.length === 0}>
+                Process Next
+            </button>
+            <div>Queue size: {queue.length}</div>
+            {queue.map((msg, i) => (
+                <div key={msg.id}>{i + 1}. {msg.text}</div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Stack implementation
+function NavigationStack() {
+    const [stack, { push, pop }] = useList(['/home'])
+    
+    const navigate = (path: string) => {
+        push(path)
+    }
+    
+    const goBack = () => {
+        if (stack.length > 1) {
+            pop()
+        }
+    }
+    
+    const current = stack[stack.length - 1]
+    
+    return (
+        <div>
+            <button onClick={goBack} disabled={stack.length === 1}>
+                ← Back
+            </button>
+            <div>Current: {current}</div>
+            <div>History: {stack.join(' → ')}</div>
+            <nav>
+                <button onClick={() => navigate('/profile')}>Profile</button>
+                <button onClick={() => navigate('/settings')}>Settings</button>
+            </nav>
+        </div>
+    )
+}
+```
+
+```tsx
+// Multi-select with bulk operations
+function MultiSelect() {
+    const [items] = useState([
+        { id: 1, name: 'Apple' },
+        { id: 2, name: 'Banana' },
+        { id: 3, name: 'Cherry' }
+    ])
+    const [selected, { push, remove, clear, set }] = useList([])
+    
+    const toggleItem = (item: typeof items[0]) => {
+        if (selected.includes(item.id)) {
+            remove(item.id)
+        } else {
+            push(item.id)
+        }
+    }
+    
+    const selectAll = () => {
+        set(items.map(item => item.id))
+    }
+    
+    const deleteSelected = () => {
+        // Perform delete operation
+        console.log('Deleting:', selected)
+        clear()
+    }
+    
+    return (
+        <div>
+            <button onClick={selectAll}>Select All</button>
+            <button onClick={clear}>Clear Selection</button>
+            <button onClick={deleteSelected} disabled={selected.length === 0}>
+                Delete ({selected.length})
+            </button>
+            {items.map(item => (
+                <label key={item.id}>
+                    <input 
+                        type="checkbox"
+                        checked={selected.includes(item.id)}
+                        onChange={() => toggleItem(item)}
+                    />
+                    {item.name}
+                </label>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Form with dynamic fields
+function DynamicForm() {
+    const [fields, { push, removeAt, updateAt, reset }] = useList([
+        { id: 1, label: 'Name', value: '' }
+    ])
+    
+    const addField = () => {
+        push({ id: Date.now(), label: '', value: '' })
+    }
+    
+    const updateField = (index: number, updates: Partial<typeof fields[0]>) => {
+        updateAt(index, { ...fields[index], ...updates })
+    }
+    
+    const handleSubmit = () => {
+        const data = fields.reduce((acc, field) => {
+            if (field.label) {
+                acc[field.label] = field.value
+            }
+            return acc
+        }, {})
+        console.log('Form data:', data)
+    }
+    
+    return (
+        <form onSubmit={e => { e.preventDefault(); handleSubmit() }}>
+            {fields.map((field, i) => (
+                <div key={field.id}>
+                    <input 
+                        placeholder="Label"
+                        value={field.label}
+                        onChange={e => updateField(i, { label: e.target.value })}
+                    />
+                    <input 
+                        placeholder="Value"
+                        value={field.value}
+                        onChange={e => updateField(i, { value: e.target.value })}
+                    />
+                    <button type="button" onClick={() => removeAt(i)}>×</button>
+                </div>
+            ))}
+            <button type="button" onClick={addField}>+ Add Field</button>
+            <button type="button" onClick={reset}>Reset</button>
+            <button type="submit">Submit</button>
+        </form>
+    )
+}
+```
+
+## How it works
+
+- Wraps `useState` for array state
+- All methods use `useCallback` with stable references
+- Methods mutate by creating new arrays (immutable updates)
+- `pop()` and `shift()` return the removed item
+- Index-based methods validate bounds before mutation
+- `filter`, `sort`, `map` modify the list in place
+- `reset()` returns to initial value
+
+## When to use
+
+- Managing lists of items (todos, cart, tags)
+- Form arrays (dynamic fields, multi-select)
+- History/undo functionality
+- Queue/stack implementations
+- Bulk operations on arrays
+- Drag and drop lists
+- Any array state needing frequent manipulation
+- Replacing complex `useState` + array spread patterns
+- When you need many array operations
+- Building list-based UI components
+
+## Notes
+
+- All action methods have stable references (won't change on re-render)
+- Methods that accept index validate bounds (no-op if invalid)
+- `pop()` and `shift()` return `undefined` for empty arrays
+- `insertAt()` clamps index to valid range [0, length]
+- `remove()` only removes first occurrence, `removeAll()` removes all
+- `filter`, `sort`, `map`, `reverse` modify list in place
+- `reset()` uses initial value, even if initial value changes
+- TypeScript generics infer type from initial value
+- Works with primitives and complex objects
+- Combine operations by calling multiple methods
+- For complex state, consider using `useReducer` instead
+
+## Browser support
+
+All modern browsers (uses standard array methods)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useList.test.tsx` for comprehensive tests covering initialization, push, pop, shift, unshift, insert, update, remove, filter, sort, reverse, map, concat, reset, complex objects, chained operations, stable references, empty lists, and single item operations (32 tests).
+

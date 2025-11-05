@@ -247,6 +247,7 @@ import {
     useColorScheme,
     useWebSocket,
     usePromise,
+    useList,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -477,6 +478,7 @@ export {
     useColorScheme,
     useWebSocket,
     usePromise,
+    useList,
     memoize,
     throttle,
     chunk,
