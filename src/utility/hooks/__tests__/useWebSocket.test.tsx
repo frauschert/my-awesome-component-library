@@ -57,7 +57,7 @@ class MockWebSocket {
 }
 
 describe('useWebSocket', () => {
-    let originalWebSocket: typeof WebSocket
+    let originalWebSocket: typeof global.WebSocket
 
     beforeEach(() => {
         originalWebSocket = global.WebSocket

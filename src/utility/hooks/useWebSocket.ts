@@ -141,7 +141,7 @@ export default function useWebSocket(
     const [readyState, setReadyState] = useState<ReadyState>('CLOSED')
 
     const wsRef = useRef<WebSocket | null>(null)
-    const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
+    const reconnectTimeoutRef = useRef<NodeJS.Timeout>(null)
     const reconnectCountRef = useRef(0)
     const shouldReconnectRef = useRef(reconnect)
     const urlRef = useRef(url)
