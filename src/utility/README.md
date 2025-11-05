@@ -1504,3 +1504,229 @@ All modern browsers (uses `setTimeout`, `addEventListener`, and standard DOM eve
 ## Tests
 
 See `src/utility/hooks/__tests__/useIdle.test.tsx` for comprehensive tests covering initialization, timeout behavior, event resets, custom events, rapid activity, dynamic timeouts, cleanup, and edge cases.
+
+---
+
+# Hook: useColorScheme
+
+Detects and tracks the user's color scheme preference (light or dark mode). Automatically listens to system/browser preference changes in real-time.
+
+## API
+
+```ts
+useColorScheme(): ColorScheme
+
+type ColorScheme = 'light' | 'dark'
+```
+
+## Returns
+
+- `ColorScheme`: The current color scheme - either `'light'` or `'dark'`
+
+## Usage
+
+```tsx
+import { useColorScheme } from 'my-awesome-component-library'
+
+// Basic theme detection
+function ThemeDisplay() {
+    const colorScheme = useColorScheme()
+    
+    return (
+        <div className={colorScheme === 'dark' ? 'dark-theme' : 'light-theme'}>
+            Current theme: {colorScheme}
+        </div>
+    )
+}
+```
+
+```tsx
+// Apply theme class to entire app
+function App() {
+    const colorScheme = useColorScheme()
+    
+    useEffect(() => {
+        document.body.className = colorScheme
+    }, [colorScheme])
+    
+    return <AppContent />
+}
+```
+
+```tsx
+// Conditional rendering based on theme
+function ThemedIcon() {
+    const colorScheme = useColorScheme()
+    
+    return colorScheme === 'dark' ? <MoonIcon /> : <SunIcon />
+}
+```
+
+```tsx
+// Load different stylesheets
+function ThemeStylesheet() {
+    const colorScheme = useColorScheme()
+    
+    return (
+        <link
+            rel="stylesheet"
+            href={`/styles/${colorScheme}.css`}
+        />
+    )
+}
+```
+
+```tsx
+// Sync with React state
+function ThemeManager() {
+    const systemScheme = useColorScheme()
+    const [theme, setTheme] = useState(systemScheme)
+    
+    useEffect(() => {
+        // Respect user override or fall back to system
+        const savedTheme = localStorage.getItem('theme')
+        if (!savedTheme) {
+            setTheme(systemScheme)
+        }
+    }, [systemScheme])
+    
+    return (
+        <ThemeContext.Provider value={{ theme, setTheme }}>
+            <App />
+        </ThemeContext.Provider>
+    )
+}
+```
+
+```tsx
+// Show notification when theme changes
+function ThemeChangeNotifier() {
+    const colorScheme = useColorScheme()
+    const prevScheme = usePrevious(colorScheme)
+    
+    useEffect(() => {
+        if (prevScheme && prevScheme !== colorScheme) {
+            toast.info(`Switched to ${colorScheme} mode`)
+        }
+    }, [colorScheme, prevScheme])
+    
+    return null
+}
+```
+
+```tsx
+// Adjust component styling
+function Card({ children }) {
+    const colorScheme = useColorScheme()
+    
+    const styles = {
+        backgroundColor: colorScheme === 'dark' ? '#333' : '#fff',
+        color: colorScheme === 'dark' ? '#fff' : '#000',
+        border: `1px solid ${colorScheme === 'dark' ? '#555' : '#ddd'}`
+    }
+    
+    return <div style={styles}>{children}</div>
+}
+```
+
+```tsx
+// Preload images based on theme
+function ThemedImage({ lightSrc, darkSrc, alt }) {
+    const colorScheme = useColorScheme()
+    
+    return (
+        <img
+            src={colorScheme === 'dark' ? darkSrc : lightSrc}
+            alt={alt}
+        />
+    )
+}
+```
+
+```tsx
+// Analytics tracking
+function ThemeAnalytics() {
+    const colorScheme = useColorScheme()
+    
+    useEffect(() => {
+        analytics.track('color_scheme_detected', {
+            scheme: colorScheme,
+            timestamp: Date.now()
+        })
+    }, [colorScheme])
+    
+    return null
+}
+```
+
+```tsx
+// Complex theme system with localStorage override
+function AdvancedThemeProvider() {
+    const systemScheme = useColorScheme()
+    const [userPreference, setUserPreference] = useLocalStorage<'light' | 'dark' | 'auto'>('theme', 'auto')
+    
+    const effectiveTheme = userPreference === 'auto' ? systemScheme : userPreference
+    
+    return (
+        <ThemeContext.Provider value={{ 
+            theme: effectiveTheme, 
+            userPreference,
+            setUserPreference,
+            systemScheme 
+        }}>
+            <div data-theme={effectiveTheme}>
+                <App />
+            </div>
+        </ThemeContext.Provider>
+    )
+}
+```
+
+## How it works
+
+- Queries `window.matchMedia('(prefers-color-scheme: dark)')` to detect initial preference
+- Returns `'dark'` if the media query matches, otherwise `'light'`
+- Sets up an event listener for changes to the color scheme preference
+- Automatically updates when the user changes their system/browser theme
+- Supports both modern (`addEventListener`) and legacy (`addListener`) APIs for maximum compatibility
+- Cleans up event listener on unmount
+
+## When to use
+
+- Respecting user's system theme preference
+- Auto-switching between light and dark themes
+- Loading theme-appropriate resources (images, stylesheets)
+- Providing seamless theme experience without manual toggle
+- Analytics on user theme preferences
+- Conditional rendering based on theme
+- Initial theme detection for theme systems
+- Combining with manual theme toggles (system as fallback)
+
+## Notes
+
+- Works in browser environments only (SSR-safe with `typeof window` check)
+- Returns `'light'` as default in SSR or when `matchMedia` is not supported
+- Detects system-level preference (OS setting) not just browser theme
+- Changes are detected automatically - no polling required
+- Works alongside CSS `prefers-color-scheme` media queries
+- Consider combining with `useLocalStorage` for user overrides
+- Initial value is available immediately (no flash of wrong theme)
+- Does not automatically apply themes - returns preference only
+- Use CSS variables or class names to apply actual theme styling
+- On iOS/macOS, detects Light/Dark appearance setting
+- On Windows 10/11, detects Light/Dark mode in Settings
+
+## Browser support
+
+All modern browsers supporting `prefers-color-scheme` media query:
+- Chrome 76+
+- Firefox 67+
+- Safari 12.1+
+- Edge 79+
+- Opera 63+
+
+Gracefully falls back to `'light'` in older browsers.
+
+## Tests
+
+See `src/utility/hooks/__tests__/useColorScheme.test.tsx` for comprehensive tests covering default detection, dark mode detection, preference changes, rapid changes, cleanup, legacy browser support, SSR handling, and re-render stability.

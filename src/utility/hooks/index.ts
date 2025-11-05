@@ -39,6 +39,7 @@ import useHash from './useHash'
 import useSearchParam from './useSearchParam'
 import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
+import useColorScheme from './useColorScheme'
 
 export {
     useDebounceEffect,
@@ -84,6 +85,7 @@ export {
     useSearchParam,
     useFullscreen,
     useIdle,
+    useColorScheme,
 }
 
 export default {
@@ -130,4 +132,5 @@ export default {
     useSearchParam,
     useFullscreen,
     useIdle,
+    useColorScheme,
 }

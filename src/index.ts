@@ -244,6 +244,7 @@ import {
     useSearchParam,
     useFullscreen,
     useIdle,
+    useColorScheme,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -471,6 +472,7 @@ export {
     useSearchParam,
     useFullscreen,
     useIdle,
+    useColorScheme,
     memoize,
     throttle,
     chunk,
