@@ -55,6 +55,7 @@ import useEvent from './useEvent'
 import useTitle from './useTitle'
 import useFavicon from './useFavicon'
 import useFocusWithin from './useFocusWithin'
+import useIndexedDB from './useIndexedDB'
 
 export {
     useDebounceEffect,
@@ -117,9 +118,11 @@ export {
     useTitle,
     useFavicon,
     useFocusWithin,
+    useIndexedDB,
 }
 
 export type { UseSetActions } from './useSet'
+export type { UseIndexedDBOptions, UseIndexedDBReturn } from './useIndexedDB'
 
 export default {
     useDebounceEffect,

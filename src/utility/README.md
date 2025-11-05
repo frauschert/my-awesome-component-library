@@ -7729,3 +7729,464 @@ All modern browsers (uses standard `focusin`/`focusout` events)
 ## Tests
 
 See `src/utility/hooks/__tests__/useFocusWithin.test.tsx` for comprehensive tests covering initial state, element focus, child focus, focus switching, external focus, nested elements, ref changes, event listener cleanup, rapid changes, form elements, and edge cases (16 tests).
+
+---
+
+# Hook: useIndexedDB
+
+Hook for managing IndexedDB storage with a simple key-value interface. Provides async methods for get, set, remove, and clear operations with loading and error states.
+
+## API
+
+```ts
+useIndexedDB<T = unknown>(
+    key: string,
+    options?: UseIndexedDBOptions
+): UseIndexedDBReturn<T>
+
+interface UseIndexedDBOptions {
+    database?: string  // default: 'app-storage'
+    store?: string     // default: 'keyval'
+    version?: number   // default: 1
+}
+
+interface UseIndexedDBReturn<T> {
+    value: T | undefined
+    loading: boolean
+    error: Error | null
+    set: (value: T) => Promise<void>
+    get: () => Promise<T | undefined>
+    remove: () => Promise<void>
+    clear: () => Promise<void>
+}
+```
+
+## Parameters
+
+-   `key` (string): Storage key for the value
+-   `options` (UseIndexedDBOptions, optional): Configuration options
+
+## Options
+
+-   `database`: IndexedDB database name (default: "app-storage")
+-   `store`: Object store name (default: "keyval")
+-   `version`: Database version number (default: 1)
+
+## Return Value
+
+-   `value`: Current stored value (undefined until loaded)
+-   `loading`: Loading state (true during initial fetch)
+-   `error`: Error object if operation failed (null otherwise)
+-   `set`: Async function to store a value
+-   `get`: Async function to retrieve the value
+-   `remove`: Async function to delete the value
+-   `clear`: Async function to clear all values in the store
+
+## Usage
+
+```tsx
+import { useIndexedDB } from 'my-awesome-component-library'
+
+// Basic usage
+function UserProfile() {
+    const { value: user, loading, set } = useIndexedDB('user')
+
+    if (loading) return <div>Loading...</div>
+
+    return (
+        <div>
+            <h1>{user?.name || 'No user'}</h1>
+            <button onClick={() => set({ name: 'John', age: 30 })}>
+                Save User
+            </button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Custom database and store
+function AppSettings() {
+    const { value, set, loading } = useIndexedDB('theme', {
+        database: 'my-app',
+        store: 'settings',
+        version: 1,
+    })
+
+    if (loading) return <div>Loading settings...</div>
+
+    return (
+        <div>
+            <p>Current theme: {value || 'default'}</p>
+            <button onClick={() => set('dark')}>Dark Mode</button>
+            <button onClick={() => set('light')}>Light Mode</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Storing complex objects
+function TodoList() {
+    const {
+        value: todos,
+        set,
+        loading,
+    } = useIndexedDB<
+        Array<{
+            id: number
+            text: string
+            done: boolean
+        }>
+    >('todos')
+
+    const addTodo = async (text: string) => {
+        const newTodos = [
+            ...(todos || []),
+            {
+                id: Date.now(),
+                text,
+                done: false,
+            },
+        ]
+        await set(newTodos)
+    }
+
+    const toggleTodo = async (id: number) => {
+        const updated = todos?.map((todo) =>
+            todo.id === id ? { ...todo, done: !todo.done } : todo
+        )
+        await set(updated || [])
+    }
+
+    if (loading) return <div>Loading todos...</div>
+
+    return (
+        <ul>
+            {todos?.map((todo) => (
+                <li key={todo.id}>
+                    <input
+                        type="checkbox"
+                        checked={todo.done}
+                        onChange={() => toggleTodo(todo.id)}
+                    />
+                    {todo.text}
+                </li>
+            ))}
+        </ul>
+    )
+}
+```
+
+```tsx
+// Remove value
+function ClearableStorage() {
+    const { value, set, remove, loading } = useIndexedDB('cache')
+
+    return (
+        <div>
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <>
+                    <p>Value: {JSON.stringify(value)}</p>
+                    <button onClick={() => set({ data: 'cached' })}>
+                        Save
+                    </button>
+                    <button onClick={remove}>Clear</button>
+                </>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Clear all values from store
+function StorageManager() {
+    const store1 = useIndexedDB('key1')
+    const store2 = useIndexedDB('key2')
+    const store3 = useIndexedDB('key3')
+
+    const clearAll = async () => {
+        // Clear clears ALL keys in the store
+        await store1.clear()
+    }
+
+    return (
+        <div>
+            <p>Key1: {JSON.stringify(store1.value)}</p>
+            <p>Key2: {JSON.stringify(store2.value)}</p>
+            <p>Key3: {JSON.stringify(store3.value)}</p>
+            <button onClick={clearAll}>Clear Everything</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Error handling
+function SafeStorage() {
+    const { value, set, error, loading } = useIndexedDB('important')
+
+    const handleSave = async () => {
+        try {
+            await set({ critical: 'data' })
+            console.log('Saved successfully')
+        } catch (err) {
+            console.error('Save failed:', err)
+        }
+    }
+
+    if (loading) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
+
+    return (
+        <div>
+            <p>{JSON.stringify(value)}</p>
+            <button onClick={handleSave}>Save</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Manual get operation
+function LazyLoader() {
+    const { value, get, loading } = useIndexedDB('heavy-data')
+    const [manualValue, setManualValue] = useState(null)
+
+    const loadManually = async () => {
+        const data = await get()
+        setManualValue(data)
+    }
+
+    return (
+        <div>
+            <p>Auto-loaded: {JSON.stringify(value)}</p>
+            <p>Manual: {JSON.stringify(manualValue)}</p>
+            <button onClick={loadManually}>Load Manually</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Multiple databases
+function MultiDatabase() {
+    const userDB = useIndexedDB('profile', {
+        database: 'users',
+        store: 'profiles',
+    })
+
+    const settingsDB = useIndexedDB('preferences', {
+        database: 'app',
+        store: 'settings',
+    })
+
+    return (
+        <div>
+            <h2>User: {userDB.value?.name}</h2>
+            <h2>Theme: {settingsDB.value?.theme}</h2>
+        </div>
+    )
+}
+```
+
+```tsx
+// Form with persistence
+function PersistentForm() {
+    const { value: draft, set, loading } = useIndexedDB('form-draft')
+    const [formData, setFormData] = useState(draft || {})
+
+    useEffect(() => {
+        if (draft) setFormData(draft)
+    }, [draft])
+
+    const handleChange = (field: string, value: string) => {
+        const updated = { ...formData, [field]: value }
+        setFormData(updated)
+        set(updated) // Auto-save
+    }
+
+    if (loading) return <div>Loading draft...</div>
+
+    return (
+        <form>
+            <input
+                value={formData.name || ''}
+                onChange={(e) => handleChange('name', e.target.value)}
+                placeholder="Name"
+            />
+            <input
+                value={formData.email || ''}
+                onChange={(e) => handleChange('email', e.target.value)}
+                placeholder="Email"
+            />
+        </form>
+    )
+}
+```
+
+```tsx
+// Cache with expiration
+function CachedData() {
+    const { value, set, loading } = useIndexedDB<{
+        data: any
+        timestamp: number
+    }>('api-cache')
+
+    const fetchWithCache = async () => {
+        const now = Date.now()
+        const maxAge = 5 * 60 * 1000 // 5 minutes
+
+        if (value && now - value.timestamp < maxAge) {
+            console.log('Using cached data')
+            return value.data
+        }
+
+        const response = await fetch('/api/data')
+        const data = await response.json()
+
+        await set({ data, timestamp: now })
+        return data
+    }
+
+    return (
+        <div>
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <button onClick={fetchWithCache}>Fetch Data</button>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Offline-first app
+function OfflineNotes() {
+    const { value: notes, set, loading } = useIndexedDB<string[]>('notes')
+    const [input, setInput] = useState('')
+
+    const addNote = async () => {
+        const updated = [...(notes || []), input]
+        await set(updated)
+        setInput('')
+    }
+
+    const syncToServer = async () => {
+        try {
+            await fetch('/api/notes', {
+                method: 'POST',
+                body: JSON.stringify(notes),
+            })
+            console.log('Synced to server')
+        } catch (err) {
+            console.error('Sync failed, keeping local copy')
+        }
+    }
+
+    if (loading) return <div>Loading notes...</div>
+
+    return (
+        <div>
+            <ul>
+                {notes?.map((note, i) => (
+                    <li key={i}>{note}</li>
+                ))}
+            </ul>
+            <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="New note"
+            />
+            <button onClick={addNote}>Add</button>
+            <button onClick={syncToServer}>Sync</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Type-safe storage
+interface UserSettings {
+    theme: 'light' | 'dark'
+    notifications: boolean
+    fontSize: number
+}
+
+function TypeSafeSettings() {
+    const { value, set, loading } = useIndexedDB<UserSettings>('settings')
+
+    const updateTheme = (theme: 'light' | 'dark') => {
+        set({ ...value!, theme })
+    }
+
+    if (loading) return <div>Loading...</div>
+
+    return (
+        <div>
+            <p>Theme: {value?.theme}</p>
+            <button onClick={() => updateTheme('dark')}>Dark</button>
+            <button onClick={() => updateTheme('light')}>Light</button>
+        </div>
+    )
+}
+```
+
+## How it works
+
+-   Opens IndexedDB connection on first operation
+-   Automatically loads initial value on mount
+-   Creates object store if it doesn't exist (on upgrade)
+-   All operations (set, get, remove, clear) are async
+-   Closes database connection after each operation
+-   Updates `value` state after successful set/remove/clear
+-   Sets `error` state if operation fails
+-   Prevents state updates after unmount
+
+## When to use
+
+-   Large data storage (larger than localStorage 5-10MB limit)
+-   Offline-first applications
+-   Caching API responses
+-   Storing complex objects/arrays
+-   Form draft persistence
+-   User preferences/settings
+-   Application state persistence
+-   File/blob storage
+-   Client-side database
+-   Progressive Web Apps (PWAs)
+
+## When NOT to use
+
+-   Small string values (use `useLocalStorage` instead)
+-   Server-side rendering (IndexedDB is browser-only)
+-   Simple session data (use `useSessionStorage`)
+-   Real-time sync requirements (use WebSocket/server state)
+-   Cross-tab communication (use BroadcastChannel or localStorage events)
+
+## Notes
+
+-   IndexedDB is asynchronous (all operations return Promises)
+-   Automatically creates database and object store if missing
+-   `clear()` removes ALL keys from the store (not just current key)
+-   Values are serialized/deserialized automatically by IndexedDB
+-   Storage quota varies by browser (typically 50-100MB+)
+-   Works with any serializable data (objects, arrays, primitives)
+-   Does NOT work in SSR or Node.js environments
+-   Browser may prompt user for storage quota increase
+-   Data persists across browser sessions
+-   Each key is independent (no reactivity between hooks)
+-   Loading state is only true during initial fetch
+-   Error state persists until next successful operation
+
+## Browser support
+
+All modern browsers with IndexedDB support (IE10+, Chrome, Firefox, Safari, Edge)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useIndexedDB.test.tsx` for comprehensive tests covering initial load, set/get/remove/clear operations, custom databases/stores, complex objects, multiple keys, error handling, data type support, rapid operations, and edge cases (23 tests).

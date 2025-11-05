@@ -261,6 +261,12 @@ import {
     useTitle,
     useFavicon,
     useFocusWithin,
+    useIndexedDB,
+} from './utility/hooks'
+import type {
+    UseSetActions,
+    UseIndexedDBOptions,
+    UseIndexedDBReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -505,6 +511,7 @@ export {
     useTitle,
     useFavicon,
     useFocusWithin,
+    useIndexedDB,
     memoize,
     throttle,
     chunk,
@@ -530,6 +537,9 @@ export {
 export type {
     ReadOnlyAtom,
     WritableAtom,
+    UseSetActions,
+    UseIndexedDBOptions,
+    UseIndexedDBReturn,
     GridProps,
     GridItemProps,
     StackProps,
