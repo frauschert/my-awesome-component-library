@@ -37,6 +37,7 @@ import useIsFirstRender from './useIsFirstRender'
 import useClickAway from './useClickAway'
 import useHash from './useHash'
 import useSearchParam from './useSearchParam'
+import useFullscreen from './useFullscreen'
 
 export {
     useDebounceEffect,
@@ -80,6 +81,7 @@ export {
     useClickAway,
     useHash,
     useSearchParam,
+    useFullscreen,
 }
 
 export default {
@@ -124,4 +126,5 @@ export default {
     useClickAway,
     useHash,
     useSearchParam,
+    useFullscreen,
 }

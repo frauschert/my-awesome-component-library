@@ -242,6 +242,7 @@ import {
     useClickAway,
     useHash,
     useSearchParam,
+    useFullscreen,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -467,6 +468,7 @@ export {
     useClickAway,
     useHash,
     useSearchParam,
+    useFullscreen,
     memoize,
     throttle,
     chunk,

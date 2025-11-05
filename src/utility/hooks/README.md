@@ -23,6 +23,7 @@ Custom React hooks for common use cases in the component library.
 -   [useClickAway](#useclickaway)
 -   [useHash](#usehash)
 -   [useSearchParam](#usesearchparam)
+-   [useFullscreen](#usefullscreen)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -3425,6 +3426,302 @@ The hook uses the browser's `URLSearchParams` API to read and manipulate query s
 ### Tests
 
 See `src/utility/hooks/__tests__/useSearchParam.test.tsx` for comprehensive tests covering getting/setting parameters, removal, preservation of other params, browser navigation, multiple components, URL encoding, and edge cases.
+
+---
+
+## useFullscreen
+
+Manages fullscreen mode for an element. Returns state and controls for entering/exiting fullscreen with browser API support detection.
+
+### API
+
+```tsx
+useFullscreen(elementRef, options?)
+```
+
+### Parameters
+
+-   `elementRef`: `RefObject<HTMLElement>` - Ref to the element to make fullscreen
+-   `options`: `UseFullscreenOptions` (optional) - Configuration object
+    -   `onEnter`: `() => void` - Callback when entering fullscreen
+    -   `onExit`: `() => void` - Callback when exiting fullscreen
+    -   `onError`: `(error: Error) => void` - Callback when fullscreen operation fails
+
+### Returns
+
+```tsx
+{
+    isFullscreen: boolean,
+    enter: () => Promise<void>,
+    exit: () => Promise<void>,
+    toggle: () => Promise<void>,
+    isSupported: boolean
+}
+```
+
+### Features
+
+-   ✅ Detect fullscreen API support
+-   ✅ Enter/exit fullscreen mode
+-   ✅ Toggle fullscreen state
+-   ✅ Track fullscreen state
+-   ✅ Event callbacks (onEnter, onExit, onError)
+-   ✅ Error handling for unsupported browsers
+-   ✅ Cross-browser support (vendor prefixes)
+-   ✅ Works with any HTML element (video, div, etc.)
+-   ✅ Multiple elements tracked independently
+-   ✅ SSR-safe
+-   ✅ TypeScript support
+
+### Usage
+
+```tsx
+import { useFullscreen } from './utility/hooks'
+import { useRef } from 'react'
+
+// Basic fullscreen toggle
+function FullscreenButton() {
+    const ref = useRef<HTMLDivElement>(null)
+    const { isFullscreen, toggle, isSupported } = useFullscreen(ref)
+
+    if (!isSupported) {
+        return <div>Fullscreen not supported</div>
+    }
+
+    return (
+        <div ref={ref}>
+            <h1>Content</h1>
+            <button onClick={toggle}>
+                {isFullscreen ? 'Exit' : 'Enter'} Fullscreen
+            </button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Video player with fullscreen
+function VideoPlayer({ src }: { src: string }) {
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const { isFullscreen, toggle } = useFullscreen(videoRef)
+
+    return (
+        <div className="video-container">
+            <video ref={videoRef} src={src} controls />
+            <button onClick={toggle} className="fullscreen-btn">
+                {isFullscreen ? '⊗' : '⛶'}
+            </button>
+        </div>
+    )
+}
+```
+
+```tsx
+// With event callbacks
+function ImageGallery() {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const { isFullscreen, enter, exit, isSupported } = useFullscreen(
+        containerRef,
+        {
+            onEnter: () => console.log('Entered fullscreen'),
+            onExit: () => console.log('Exited fullscreen'),
+            onError: (error) => console.error('Fullscreen error:', error),
+        }
+    )
+
+    return (
+        <div ref={containerRef}>
+            <img src="gallery.jpg" alt="Gallery" />
+            {isSupported && (
+                <>
+                    <button onClick={enter}>Fullscreen</button>
+                    {isFullscreen && <button onClick={exit}>Exit</button>}
+                </>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Presentation mode
+function PresentationSlides() {
+    const [currentSlide, setCurrentSlide] = useState(0)
+    const slideContainerRef = useRef<HTMLDivElement>(null)
+    const { isFullscreen, enter, exit } = useFullscreen(slideContainerRef)
+
+    const startPresentation = async () => {
+        try {
+            await enter()
+            setCurrentSlide(0)
+        } catch (error) {
+            alert('Could not enter fullscreen mode')
+        }
+    }
+
+    return (
+        <div>
+            {!isFullscreen ? (
+                <button onClick={startPresentation}>Start Presentation</button>
+            ) : (
+                <div ref={slideContainerRef} className="slides">
+                    <Slide index={currentSlide} />
+                    <button onClick={() => setCurrentSlide((prev) => prev + 1)}>
+                        Next
+                    </button>
+                    <button onClick={exit}>Exit Presentation</button>
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Fullscreen with keyboard shortcuts
+function Document() {
+    const docRef = useRef<HTMLDivElement>(null)
+    const { isFullscreen, toggle } = useFullscreen(docRef)
+
+    useEffect(() => {
+        const handleKeyPress = (e: KeyboardEvent) => {
+            if (e.key === 'f' && e.ctrlKey) {
+                e.preventDefault()
+                toggle()
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyPress)
+        return () => document.removeEventListener('keydown', handleKeyPress)
+    }, [toggle])
+
+    return (
+        <div ref={docRef}>
+            <p>Press Ctrl+F to toggle fullscreen</p>
+            <div className="document-content">{/* content */}</div>
+        </div>
+    )
+}
+```
+
+```tsx
+// Conditionally render based on support
+function MediaViewer() {
+    const mediaRef = useRef<HTMLDivElement>(null)
+    const { isSupported, isFullscreen, toggle } = useFullscreen(mediaRef)
+
+    return (
+        <div ref={mediaRef}>
+            <img src="image.jpg" alt="Media" />
+            {isSupported ? (
+                <button onClick={toggle}>
+                    {isFullscreen ? 'Exit Fullscreen' : 'View Fullscreen'}
+                </button>
+            ) : (
+                <p className="info">Fullscreen not available in this browser</p>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Game container
+function GameCanvas() {
+    const canvasContainerRef = useRef<HTMLDivElement>(null)
+    const { isFullscreen, enter, exit } = useFullscreen(canvasContainerRef, {
+        onEnter: () => {
+            // Lock pointer for game controls
+            canvasContainerRef.current?.requestPointerLock()
+        },
+        onExit: () => {
+            document.exitPointerLock()
+        },
+    })
+
+    return (
+        <div ref={canvasContainerRef}>
+            <canvas width={800} height={600} />
+            {!isFullscreen ? (
+                <button onClick={enter}>Play in Fullscreen</button>
+            ) : (
+                <button onClick={exit} className="exit-btn">
+                    Exit Game
+                </button>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Dashboard with fullscreen charts
+function Chart({ data }: { data: number[] }) {
+    const chartRef = useRef<HTMLDivElement>(null)
+    const { isFullscreen, toggle } = useFullscreen(chartRef)
+
+    return (
+        <div
+            ref={chartRef}
+            className={isFullscreen ? 'chart-fullscreen' : 'chart'}
+        >
+            <div className="chart-header">
+                <h3>Analytics</h3>
+                <button onClick={toggle} title="Toggle fullscreen">
+                    {isFullscreen ? '↙' : '⤢'}
+                </button>
+            </div>
+            <ChartComponent data={data} fullscreen={isFullscreen} />
+        </div>
+    )
+}
+```
+
+### How it works
+
+The hook manages the Fullscreen API with cross-browser support by checking for vendor-prefixed methods (`webkit`, `moz`, `ms`). It tracks the fullscreen state by listening to `fullscreenchange` events (and vendor-prefixed variants) on the document. The hook compares the current fullscreen element against the provided ref to determine if the specific element is in fullscreen mode.
+
+When entering fullscreen, the hook calls `requestFullscreen()` on the element. When exiting, it calls `document.exitFullscreen()`. The hook handles errors by calling the optional `onError` callback and throwing the error for the caller to handle.
+
+### When to use
+
+-   **Video Players**: Fullscreen video playback
+-   **Image Galleries**: View photos in fullscreen
+-   **Presentations**: Slide show mode
+-   **Games**: Immersive fullscreen gaming
+-   **Data Visualization**: Fullscreen charts and graphs
+-   **Document Viewers**: Read documents without distractions
+-   **Maps**: Fullscreen map exploration
+-   **Drawing Apps**: Fullscreen canvas for artwork
+-   **Code Editors**: Distraction-free coding mode
+-   **Any content** that benefits from fullscreen viewing
+
+### Notes
+
+-   The Fullscreen API requires user interaction (click, key press) to work
+-   Some browsers may not support fullscreen on all elements
+-   The `isSupported` flag checks for browser support before attempting operations
+-   iOS Safari has limited fullscreen support (mainly for videos)
+-   The hook automatically handles vendor prefixes for older browsers
+-   Multiple elements can have independent fullscreen hooks
+-   Only one element can be in fullscreen mode at a time (browser limitation)
+-   ESC key exits fullscreen automatically (browser behavior)
+-   SSR-safe: returns `false` for `isSupported` when `document` is undefined
+-   Fullscreen state persists across component re-renders
+-   Event callbacks are called after state changes complete
+
+### Browser Support
+
+-   ✅ Chrome/Edge: Full support
+-   ✅ Firefox: Full support
+-   ✅ Safari: Full support (limited on iOS)
+-   ✅ Opera: Full support
+-   ⚠️ IE11: Partial support (with prefixes)
+-   ❌ Older browsers: Check `isSupported` flag
+
+### Tests
+
+See `src/utility/hooks/__tests__/useFullscreen.test.tsx` for comprehensive tests covering API detection, enter/exit operations, toggle functionality, error handling, event callbacks, and browser support checking.
 
 ---
 
