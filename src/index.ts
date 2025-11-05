@@ -255,6 +255,7 @@ import {
     usePreferredLanguage,
     useWakeLock,
     useShare,
+    useMap,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -493,6 +494,7 @@ export {
     usePreferredLanguage,
     useWakeLock,
     useShare,
+    useMap,
     memoize,
     throttle,
     chunk,

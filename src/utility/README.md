@@ -5660,3 +5660,503 @@ if (shareable) await share({ title, url })
 ## Tests
 
 See `src/utility/hooks/__tests__/useShare.test.tsx` for comprehensive tests covering initial state, unsupported browsers, file sharing support, successful sharing, callbacks (onSuccess, onError), user cancellation (AbortError), validation errors, sharing different content types (title/text/url/files), canShare functionality, isSharing state, and all field combinations (20 tests).
+
+---
+
+# Hook: useMap
+
+Manage a Map state with convenient helper methods. Provides a reactive Map with immutable updates and a clean API for common Map operations.
+
+## API
+
+```ts
+useMap<K, V>(initialMap?: Map<K, V> | Iterable<readonly [K, V]>): UseMapReturn<K, V>
+
+type UseMapReturn<K, V> = [
+    Map<K, V>,
+    {
+        set: (key: K, value: V) => void
+        setAll: (entries: Iterable<readonly [K, V]>) => void
+        remove: (key: K) => void
+        clear: () => void
+        reset: () => void
+        get: (key: K) => V | undefined
+        has: (key: K) => boolean
+        size: number
+    }
+]
+```
+
+## Parameters
+
+-   `initialMap` (Map | Iterable, optional): Initial Map or entries to populate
+
+## Returns
+
+Tuple of `[map, actions]`:
+
+-   `map`: The current Map state
+-   `actions.set(key, value)`: Set a key-value pair
+-   `actions.setAll(entries)`: Set multiple entries at once
+-   `actions.remove(key)`: Delete a key
+-   `actions.clear()`: Remove all entries
+-   `actions.reset()`: Reset to initial state
+-   `actions.get(key)`: Get value for key (convenience)
+-   `actions.has(key)`: Check if key exists
+-   `actions.size`: Current number of entries
+
+## Usage
+
+### Basic key-value store
+
+```tsx
+import { useMap } from 'my-awesome-component-library'
+
+function UserManager() {
+    const [users, { set, remove, clear, has }] = useMap<string, User>()
+
+    const addUser = (id: string, user: User) => {
+        set(id, user)
+    }
+
+    return (
+        <div>
+            <button onClick={() => set('1', { name: 'Alice', age: 30 })}>
+                Add Alice
+            </button>
+            <button onClick={() => remove('1')}>Remove Alice</button>
+            <button onClick={clear}>Clear All</button>
+            <p>Has Alice: {has('1') ? 'Yes' : 'No'}</p>
+            <p>Total users: {users.size}</p>
+        </div>
+    )
+}
+```
+
+### Form field tracking
+
+```tsx
+function DynamicForm() {
+    const [fields, { set, remove, get }] = useMap<string, string>()
+
+    const updateField = (name: string, value: string) => {
+        set(name, value)
+    }
+
+    const submitForm = () => {
+        const data = Object.fromEntries(fields)
+        console.log('Form data:', data)
+    }
+
+    return (
+        <div>
+            <input
+                placeholder="Username"
+                onChange={(e) => updateField('username', e.target.value)}
+                value={get('username') || ''}
+            />
+            <input
+                placeholder="Email"
+                onChange={(e) => updateField('email', e.target.value)}
+                value={get('email') || ''}
+            />
+            <button onClick={submitForm}>Submit</button>
+        </div>
+    )
+}
+```
+
+### Cache management
+
+```tsx
+function DataCache() {
+    const [cache, { set, get, has, clear }] = useMap<string, CachedData>()
+
+    const fetchData = async (id: string) => {
+        if (has(id)) {
+            return get(id)
+        }
+
+        const data = await api.fetch(id)
+        set(id, { data, timestamp: Date.now() })
+        return data
+    }
+
+    const invalidateCache = () => {
+        clear()
+    }
+
+    return (
+        <div>
+            <p>Cached items: {cache.size}</p>
+            <button onClick={invalidateCache}>Clear Cache</button>
+        </div>
+    )
+}
+```
+
+### Bulk operations with setAll
+
+```tsx
+function BulkImport() {
+    const [items, { setAll, clear }] = useMap<number, Product>()
+
+    const importProducts = (products: Product[]) => {
+        const entries: [number, Product][] = products.map((p) => [p.id, p])
+        setAll(entries)
+    }
+
+    const loadSampleData = () => {
+        setAll([
+            [1, { id: 1, name: 'Product 1', price: 10 }],
+            [2, { id: 2, name: 'Product 2', price: 20 }],
+            [3, { id: 3, name: 'Product 3', price: 30 }],
+        ])
+    }
+
+    return (
+        <div>
+            <button onClick={loadSampleData}>Load Sample Data</button>
+            <button onClick={clear}>Clear</button>
+            <p>Products loaded: {items.size}</p>
+        </div>
+    )
+}
+```
+
+### Selected items tracking
+
+```tsx
+function ItemSelector({ items }: { items: Item[] }) {
+    const [selected, { set, remove, has }] = useMap<string, Item>()
+
+    const toggleSelection = (item: Item) => {
+        if (has(item.id)) {
+            remove(item.id)
+        } else {
+            set(item.id, item)
+        }
+    }
+
+    return (
+        <div>
+            {items.map((item) => (
+                <label key={item.id}>
+                    <input
+                        type="checkbox"
+                        checked={has(item.id)}
+                        onChange={() => toggleSelection(item)}
+                    />
+                    {item.name}
+                </label>
+            ))}
+            <p>Selected: {selected.size} items</p>
+        </div>
+    )
+}
+```
+
+### State machine with Map
+
+```tsx
+function StateMachine() {
+    const [states, { set, get }] = useMap<string, StateConfig>([
+        ['idle', { next: 'loading', color: 'gray' }],
+        ['loading', { next: 'success', color: 'blue' }],
+        ['success', { next: 'idle', color: 'green' }],
+        ['error', { next: 'idle', color: 'red' }],
+    ])
+    const [current, setCurrent] = useState('idle')
+
+    const transition = () => {
+        const config = get(current)
+        if (config) {
+            setCurrent(config.next)
+        }
+    }
+
+    const currentConfig = get(current)
+
+    return (
+        <div style={{ color: currentConfig?.color }}>
+            <p>State: {current}</p>
+            <button onClick={transition}>Next</button>
+        </div>
+    )
+}
+```
+
+### Entity store by ID
+
+```tsx
+function EntityStore() {
+    const [entities, { set, remove, get, setAll }] = useMap<number, Entity>()
+
+    const loadEntities = async () => {
+        const data = await fetchEntities()
+        setAll(data.map((e) => [e.id, e]))
+    }
+
+    const updateEntity = (id: number, updates: Partial<Entity>) => {
+        const entity = get(id)
+        if (entity) {
+            set(id, { ...entity, ...updates })
+        }
+    }
+
+    return (
+        <div>
+            {Array.from(entities.entries()).map(([id, entity]) => (
+                <div key={id}>
+                    <span>{entity.name}</span>
+                    <button onClick={() => remove(id)}>Delete</button>
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+### Configuration manager
+
+```tsx
+function ConfigManager() {
+    const [config, { set, get, reset }] = useMap([
+        ['theme', 'dark'],
+        ['language', 'en'],
+        ['notifications', 'enabled'],
+    ])
+
+    const updateSetting = (key: string, value: string) => {
+        set(key, value)
+    }
+
+    const resetToDefaults = () => {
+        reset()
+    }
+
+    return (
+        <div>
+            <select
+                value={get('theme')}
+                onChange={(e) => updateSetting('theme', e.target.value)}
+            >
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+            <select
+                value={get('language')}
+                onChange={(e) => updateSetting('language', e.target.value)}
+            >
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+            </select>
+            <button onClick={resetToDefaults}>Reset to Defaults</button>
+        </div>
+    )
+}
+```
+
+### Lookup table
+
+```tsx
+function ColorLookup() {
+    const [colors] = useMap([
+        ['primary', '#007bff'],
+        ['secondary', '#6c757d'],
+        ['success', '#28a745'],
+        ['danger', '#dc3545'],
+        ['warning', '#ffc107'],
+        ['info', '#17a2b8'],
+    ])
+
+    return (
+        <div>
+            {Array.from(colors.entries()).map(([name, hex]) => (
+                <div
+                    key={name}
+                    style={{
+                        backgroundColor: hex,
+                        padding: '10px',
+                        color: 'white',
+                    }}
+                >
+                    {name}: {hex}
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+### Multi-select with metadata
+
+```tsx
+function AdvancedSelector() {
+    const [selections, { set, remove, has, clear }] = useMap<
+        string,
+        { item: Item; timestamp: number }
+    >()
+
+    const select = (item: Item) => {
+        set(item.id, { item, timestamp: Date.now() })
+    }
+
+    const deselect = (id: string) => {
+        remove(id)
+    }
+
+    const clearOld = () => {
+        const now = Date.now()
+        const fiveMinutes = 5 * 60 * 1000
+        Array.from(selections.entries()).forEach(([id, { timestamp }]) => {
+            if (now - timestamp > fiveMinutes) {
+                remove(id)
+            }
+        })
+    }
+
+    return (
+        <div>
+            <button onClick={clearOld}>Clear Old Selections</button>
+            <button onClick={clear}>Clear All</button>
+            <p>Selected: {selections.size}</p>
+        </div>
+    )
+}
+```
+
+### Relationship mapping
+
+```tsx
+function RelationshipGraph() {
+    const [relationships, { set, get }] = useMap<string, string[]>()
+
+    const addRelationship = (from: string, to: string) => {
+        const existing = get(from) || []
+        set(from, [...existing, to])
+    }
+
+    const getConnections = (node: string) => {
+        return get(node) || []
+    }
+
+    return (
+        <div>
+            <button onClick={() => addRelationship('A', 'B')}>
+                Connect A → B
+            </button>
+            <button onClick={() => addRelationship('A', 'C')}>
+                Connect A → C
+            </button>
+            <p>A connects to: {getConnections('A').join(', ')}</p>
+        </div>
+    )
+}
+```
+
+### Performance metrics tracker
+
+```tsx
+function MetricsTracker() {
+    const [metrics, { set, setAll }] = useMap<string, number>()
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setAll([
+                ['cpu', Math.random() * 100],
+                ['memory', Math.random() * 100],
+                ['disk', Math.random() * 100],
+            ])
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [])
+
+    return (
+        <div>
+            {Array.from(metrics.entries()).map(([metric, value]) => (
+                <div key={metric}>
+                    {metric}: {value.toFixed(2)}%
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+## How it works
+
+1. Wraps a Map in React state
+2. Provides immutable update methods
+3. Creates new Map instance on each change (triggers re-render)
+4. Preserves Map reference identity between renders when no changes
+5. Memoizes action functions with useCallback
+6. Supports any key and value types (including objects)
+
+## When to use
+
+-   Managing key-value state with unique keys
+-   Entity stores (normalize data by ID)
+-   Caching and memoization
+-   Lookup tables and dictionaries
+-   Selected items tracking
+-   Form field state
+-   Configuration management
+-   Relationship mappings
+-   Frequency counting
+-   Object keys (Map allows objects as keys, unlike plain objects)
+
+## When NOT to use
+
+-   Simple object state (use useState with objects)
+-   Array-like data (use useList or useState with arrays)
+-   Single values (use useState)
+-   When you need JSON serialization (Map is not JSON-serializable)
+
+## Key features
+
+-   **Immutable updates**: Each change creates new Map
+-   **Type-safe**: Full TypeScript support with generics
+-   **Flexible keys**: Use any type as key (string, number, object, etc.)
+-   **Convenient API**: Helper methods for all common operations
+-   **Reset support**: Restore to initial state
+-   **Bulk operations**: Set multiple entries at once with setAll
+-   **React-optimized**: Memoized callbacks, no unnecessary re-renders
+
+## Notes
+
+-   Map is not JSON-serializable (can't use with localStorage directly)
+-   Object keys work via reference equality
+-   Size is always up-to-date (reactive)
+-   Initial Map is deep-copied to prevent mutations
+-   All operations are immutable (original Map unchanged)
+-   Use spread or Array.from() to iterate: `Array.from(map.entries())`
+
+## Common patterns
+
+### Pattern 1: Entity normalization
+
+```tsx
+const [entities, { set, get }] = useMap<number, Entity>()
+entities.forEach((entity) => set(entity.id, entity))
+```
+
+### Pattern 2: Toggle pattern
+
+```tsx
+const toggle = (key: K, value: V) => {
+    if (has(key)) remove(key)
+    else set(key, value)
+}
+```
+
+### Pattern 3: Batch updates
+
+```tsx
+setAll(items.map((item) => [item.id, item]))
+```
+
+## Tests
+
+See `src/utility/hooks/__tests__/useMap.test.tsx` for comprehensive tests covering empty initialization, initial entries, existing Map initialization, set/update operations, setAll with bulk operations, remove operations, clear, reset, get, has, size tracking, different key types (numbers, objects), complex value types, immutability, sequential operations, edge cases (empty array, undefined/null values), and multiple updates (22 tests).
