@@ -99,7 +99,7 @@ interface UseFullscreenReturn {
  * }
  */
 export default function useFullscreen(
-    elementRef: RefObject<HTMLElement>,
+    elementRef: RefObject<HTMLElement | null>,
     options: UseFullscreenOptions = {}
 ): UseFullscreenReturn {
     const { onEnter, onExit, onError } = options
