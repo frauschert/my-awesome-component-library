@@ -6160,3 +6160,411 @@ setAll(items.map((item) => [item.id, item]))
 ## Tests
 
 See `src/utility/hooks/__tests__/useMap.test.tsx` for comprehensive tests covering empty initialization, initial entries, existing Map initialization, set/update operations, setAll with bulk operations, remove operations, clear, reset, get, has, size tracking, different key types (numbers, objects), complex value types, immutability, sequential operations, edge cases (empty array, undefined/null values), and multiple updates (22 tests).
+
+---
+
+# Hook: useSet
+
+Manage Set state with immutable updates and helper methods. Perfect for tracking unique collections like selected items, tags, filters, or any data requiring uniqueness.
+
+## API
+
+```ts
+useSet<T = unknown>(
+    initialSet?: Iterable<T> | Set<T>
+): [Set<T>, UseSetActions<T>]
+
+interface UseSetActions<T> {
+    add: (value: T) => void
+    addAll: (values: Iterable<T>) => void
+    delete: (value: T) => void
+    deleteAll: (values: Iterable<T>) => void
+    clear: () => void
+    reset: () => void
+    toggle: (value: T) => void
+    has: (value: T) => boolean
+    size: number
+}
+```
+
+## Parameters
+
+-   `initialSet` (Iterable<T> | Set<T>, optional): Initial values (array, Set, or any iterable)
+
+## Returns
+
+A tuple containing:
+
+1. `set` (Set<T>): The current Set instance
+2. `actions` (UseSetActions<T>): Object with helper methods
+
+## Usage
+
+```tsx
+import { useSet } from 'my-awesome-component-library'
+
+// Basic tag management
+function TagEditor() {
+    const [tags, { add, delete: remove, has, toggle }] = useSet([
+        'react',
+        'typescript',
+    ])
+
+    return (
+        <div>
+            <div>
+                {Array.from(tags).map((tag) => (
+                    <span key={tag}>
+                        {tag}
+                        <button onClick={() => remove(tag)}>×</button>
+                    </span>
+                ))}
+            </div>
+            <button onClick={() => add('hooks')}>Add hooks</button>
+            <button onClick={() => toggle('vue')}>Toggle Vue</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Selected items in a list
+function ItemList({ items }) {
+    const [selected, { toggle, has, clear, size }] = useSet<string>()
+
+    return (
+        <div>
+            <p>Selected: {size}</p>
+            <button onClick={clear}>Clear All</button>
+            <ul>
+                {items.map((item) => (
+                    <li
+                        key={item.id}
+                        onClick={() => toggle(item.id)}
+                        className={has(item.id) ? 'selected' : ''}
+                    >
+                        {item.name}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+```
+
+```tsx
+// Active filters
+function FilterPanel() {
+    const [filters, { toggle, has, clear, size }] = useSet(['new', 'featured'])
+
+    const isActive = (filter: string) => has(filter)
+
+    return (
+        <div>
+            <p>{size} filters active</p>
+            <button onClick={() => toggle('new')}>
+                New {isActive('new') && '✓'}
+            </button>
+            <button onClick={() => toggle('featured')}>
+                Featured {isActive('featured') && '✓'}
+            </button>
+            <button onClick={() => toggle('sale')}>
+                Sale {isActive('sale') && '✓'}
+            </button>
+            <button onClick={clear}>Clear Filters</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Bulk operations with addAll/deleteAll
+function BulkSelector() {
+    const [selected, { addAll, deleteAll, clear, size }] = useSet<number>()
+
+    const selectPage = () => addAll([1, 2, 3, 4, 5])
+    const deselectPage = () => deleteAll([1, 2, 3, 4, 5])
+    const selectAll = () => addAll(Array.from({ length: 100 }, (_, i) => i))
+
+    return (
+        <div>
+            <p>Selected: {size}</p>
+            <button onClick={selectPage}>Select Page</button>
+            <button onClick={deselectPage}>Deselect Page</button>
+            <button onClick={selectAll}>Select All</button>
+            <button onClick={clear}>Clear</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Unique categories
+function CategoryManager() {
+    const [categories, { add, delete: remove, has, size }] = useSet([
+        'JavaScript',
+        'TypeScript',
+        'React',
+    ])
+
+    const handleAdd = (category: string) => {
+        if (!has(category)) {
+            add(category)
+        }
+    }
+
+    return (
+        <div>
+            <p>{size} categories</p>
+            {Array.from(categories).map((cat) => (
+                <div key={cat}>
+                    {cat}
+                    <button onClick={() => remove(cat)}>Remove</button>
+                </div>
+            ))}
+            <input onBlur={(e) => handleAdd(e.target.value)} />
+        </div>
+    )
+}
+```
+
+```tsx
+// Visited pages tracker
+function Navigation() {
+    const [visited, { add, has }] = useSet<string>()
+
+    const navigate = (page: string) => {
+        add(page)
+        // ... navigation logic
+    }
+
+    return (
+        <nav>
+            <a
+                onClick={() => navigate('home')}
+                className={has('home') ? 'visited' : ''}
+            >
+                Home
+            </a>
+            <a
+                onClick={() => navigate('about')}
+                className={has('about') ? 'visited' : ''}
+            >
+                About
+            </a>
+            <a
+                onClick={() => navigate('contact')}
+                className={has('contact') ? 'visited' : ''}
+            >
+                Contact
+            </a>
+        </nav>
+    )
+}
+```
+
+```tsx
+// Feature flags
+function FeatureToggle() {
+    const [features, { toggle, has, reset }] = useSet(['darkMode', 'beta'])
+
+    return (
+        <div>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={has('darkMode')}
+                    onChange={() => toggle('darkMode')}
+                />
+                Dark Mode
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={has('beta')}
+                    onChange={() => toggle('beta')}
+                />
+                Beta Features
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={has('analytics')}
+                    onChange={() => toggle('analytics')}
+                />
+                Analytics
+            </label>
+            <button onClick={reset}>Reset to Defaults</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Expanded accordion items
+function Accordion({ items }) {
+    const [expanded, { toggle, has }] = useSet<string>()
+
+    return (
+        <div>
+            {items.map((item) => (
+                <div key={item.id}>
+                    <button onClick={() => toggle(item.id)}>
+                        {item.title} {has(item.id) ? '▼' : '▶'}
+                    </button>
+                    {has(item.id) && <div>{item.content}</div>}
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Notification IDs seen
+function NotificationCenter({ notifications }) {
+    const [seen, { add, has, size }] = useSet<string>()
+
+    const markAsSeen = (id: string) => {
+        add(id)
+        // ... API call
+    }
+
+    const unseenCount = notifications.length - size
+
+    return (
+        <div>
+            <p>{unseenCount} new notifications</p>
+            {notifications.map((notif) => (
+                <div
+                    key={notif.id}
+                    className={has(notif.id) ? 'seen' : 'unseen'}
+                    onClick={() => markAsSeen(notif.id)}
+                >
+                    {notif.message}
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Permission checks
+function PermissionGate({ children, requiredPermissions }) {
+    const [userPermissions] = useSet(['read', 'write', 'delete'])
+
+    const hasAllPermissions = requiredPermissions.every((perm) =>
+        userPermissions.has(perm)
+    )
+
+    return hasAllPermissions ? children : <p>Access Denied</p>
+}
+```
+
+```tsx
+// Multi-select with objects
+function UserSelector({ users }) {
+    const [selected, { toggle, has, clear, size }] = useSet<User>()
+
+    return (
+        <div>
+            <p>Selected: {size} users</p>
+            <button onClick={clear}>Clear</button>
+            {users.map((user) => (
+                <div
+                    key={user.id}
+                    onClick={() => toggle(user)}
+                    className={has(user) ? 'selected' : ''}
+                >
+                    {user.name}
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Error tracking
+function ErrorBoundary() {
+    const [errors, { add, clear, size }] = useSet<string>()
+
+    const handleError = (error: Error) => {
+        add(error.message)
+    }
+
+    return (
+        <div>
+            {size > 0 && (
+                <div className="error-banner">
+                    {size} error(s) occurred
+                    <button onClick={clear}>Dismiss All</button>
+                    {Array.from(errors).map((err) => (
+                        <div key={err}>{err}</div>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+```
+
+## How it works
+
+-   Wraps React's `useState` with a Set instance
+-   All operations create a new Set (immutable updates)
+-   `add`/`addAll` adds values to the set
+-   `delete`/`deleteAll` removes values from the set
+-   `clear` removes all values
+-   `reset` restores initial state
+-   `toggle` adds if missing, removes if present
+-   `has` checks existence (always current)
+-   `size` tracks number of values
+-   All action functions are memoized with `useCallback`
+
+## When to use
+
+-   Selected items in multi-select lists
+-   Active filters or tags
+-   Visited pages/routes
+-   Feature flags/toggles
+-   Expanded accordion/tree items
+-   Notification/message tracking
+-   Permission checks
+-   Error/warning collections
+-   Unique categories/labels
+-   Toggle groups
+-   Any collection requiring uniqueness
+
+## When NOT to use
+
+-   Ordered collections (use `useList` instead)
+-   Key-value pairs (use `useMap` instead)
+-   Simple true/false toggle (use `useToggle` instead)
+-   Primitive values only (simple `useState` may suffice)
+-   Need to preserve insertion order critically
+-   Frequent lookups by index
+
+## Notes
+
+-   Set values must be comparable by reference/value
+-   Objects are compared by reference (same instance)
+-   Primitive values compared by value
+-   `has` returns current state (reactive)
+-   `size` updates automatically on changes
+-   All operations trigger re-renders
+-   Actions are stable (won't change between renders)
+-   `delete` is aliased as a named export (reserved keyword)
+-   Works with any iterable for initialization
+-   Duplicates in initial array are automatically removed
+-   Safe to use `toggle` repeatedly
+-   `reset` restores the initial Set state
+
+## Browser support
+
+All modern browsers (uses native Set)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useSet.test.tsx` for comprehensive tests covering empty initialization, array initialization, Set initialization, duplicate handling, add/delete operations, addAll/deleteAll bulk operations, clear, reset, toggle (add/remove/multiple), has checks, size tracking, different value types (strings, objects), immutability, sequential operations, and edge cases (25 tests).
