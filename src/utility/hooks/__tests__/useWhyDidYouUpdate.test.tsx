@@ -180,7 +180,9 @@ describe('useWhyDidYouUpdate', () => {
         const { rerender } = renderHook(
             ({ props }) => useWhyDidYouUpdate('TestComponent', props),
             {
-                initialProps: { props: { value: undefined } },
+                initialProps: {
+                    props: { value: undefined as undefined | null },
+                },
             }
         )
 
@@ -204,7 +206,7 @@ describe('useWhyDidYouUpdate', () => {
         const { rerender } = renderHook(
             ({ props }) => useWhyDidYouUpdate('TestComponent', props),
             {
-                initialProps: { props: { count: 1 } },
+                initialProps: { props: { count: 1 } as {} },
             }
         )
 
@@ -229,7 +231,7 @@ describe('useWhyDidYouUpdate', () => {
         const { rerender } = renderHook(
             ({ props }) => useWhyDidYouUpdate('TestComponent', props),
             {
-                initialProps: { props: { count: 1, name: 'test' } },
+                initialProps: { props: { count: 1, name: 'test' } as {} },
             }
         )
 
