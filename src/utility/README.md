@@ -6929,3 +6929,449 @@ All modern browsers (uses standard React hooks)
 ## Tests
 
 See `src/utility/hooks/__tests__/useEvent.test.tsx` for comprehensive tests covering stable references, latest handler calls, state closure captures, async functions, dependency stability, useEffect integration, multiple arguments, error handling, prop passing, event handlers, multiple hooks, and various return types (20 tests).
+
+---
+
+# Hook: useTitle
+
+Dynamically manage the document title. Automatically restores the previous title when the component unmounts.
+
+## API
+
+```ts
+useTitle(title: string, options?: UseTitleOptions): void
+
+interface UseTitleOptions {
+    restoreOnUnmount?: boolean // default: true
+}
+```
+
+## Parameters
+
+-   `title` (string): The title to set for the document
+-   `options` (UseTitleOptions, optional): Configuration options
+
+## Options
+
+-   `restoreOnUnmount` (boolean): Whether to restore the previous title on unmount (default: `true`)
+
+## Usage
+
+```tsx
+import { useTitle } from 'my-awesome-component-library'
+
+// Basic page title
+function Dashboard() {
+    useTitle('Dashboard | My App')
+
+    return <div>Dashboard content</div>
+}
+```
+
+```tsx
+// Dynamic title with state
+function UserProfile({ userId }) {
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        fetchUser(userId).then(setUser)
+    }, [userId])
+
+    useTitle(user ? `${user.name} - Profile` : 'Loading...')
+
+    return <div>{user?.name}</div>
+}
+```
+
+```tsx
+// Unread count in title
+function Inbox() {
+    const [unreadCount, setUnreadCount] = useState(0)
+
+    useTitle(unreadCount > 0 ? `(${unreadCount}) Inbox` : 'Inbox')
+
+    return (
+        <div>
+            <h1>Inbox</h1>
+            <p>{unreadCount} unread messages</p>
+        </div>
+    )
+}
+```
+
+```tsx
+// Different titles for different routes
+function ProductPage({ productId }) {
+    const product = useProduct(productId)
+
+    useTitle(product ? `${product.name} - Shop` : 'Product - Shop')
+
+    return <div>{product?.name}</div>
+}
+```
+
+```tsx
+// Don't restore on unmount
+function ConfirmationPage() {
+    useTitle('Order Confirmed! 🎉', { restoreOnUnmount: false })
+
+    return <div>Thank you for your order!</div>
+}
+```
+
+```tsx
+// Form with unsaved changes indicator
+function Editor() {
+    const [content, setContent] = useState('')
+    const [isDirty, setIsDirty] = useState(false)
+
+    useTitle(isDirty ? '* Unsaved Changes - Editor' : 'Editor')
+
+    return (
+        <textarea
+            value={content}
+            onChange={(e) => {
+                setContent(e.target.value)
+                setIsDirty(true)
+            }}
+        />
+    )
+}
+```
+
+```tsx
+// Loading state in title
+function DataPage() {
+    const [loading, setLoading] = useState(true)
+
+    useTitle(loading ? 'Loading... - Dashboard' : 'Dashboard')
+
+    return <div>Content</div>
+}
+```
+
+```tsx
+// Error state in title
+function CheckoutPage() {
+    const [error, setError] = useState(null)
+
+    useTitle(error ? 'Error - Checkout' : 'Checkout')
+
+    return <div>{error ? 'Error occurred' : 'Checkout form'}</div>
+}
+```
+
+```tsx
+// Multi-step form with step indicator
+function Wizard({ step }) {
+    useTitle(`Step ${step} of 4 - Setup Wizard`)
+
+    return <div>Step {step} content</div>
+}
+```
+
+```tsx
+// Search results count
+function SearchResults({ query, results }) {
+    useTitle(
+        results.length > 0
+            ? `${results.length} results for "${query}"`
+            : `Search: ${query}`
+    )
+
+    return <div>Results for {query}</div>
+}
+```
+
+```tsx
+// Timer/countdown in title
+function PomodoroTimer() {
+    const [timeLeft, setTimeLeft] = useState(1500) // 25 minutes
+
+    useTitle(
+        `${Math.floor(timeLeft / 60)}:${(timeLeft % 60)
+            .toString()
+            .padStart(2, '0')} - Pomodoro`
+    )
+
+    return <div>Timer: {timeLeft}s</div>
+}
+```
+
+```tsx
+// Notification badge
+function ChatRoom() {
+    const [newMessages, setNewMessages] = useState(0)
+
+    useTitle(newMessages > 0 ? `(${newMessages}) Chat Room` : 'Chat Room')
+
+    return <div>Chat content</div>
+}
+```
+
+## How it works
+
+-   Sets `document.title` on mount and when title changes
+-   Stores the original title on first mount
+-   Restores the original title on unmount (by default)
+-   Updates synchronously on every render with new title
+-   Multiple instances: last mounted component controls the title
+
+## When to use
+
+-   Page titles that reflect current content
+-   Unread counts/notifications in title
+-   Loading/error states
+-   Multi-step forms with step indicators
+-   Search results counts
+-   User profile names
+-   Dynamic route-based titles
+-   Countdown timers
+-   Unsaved changes indicators
+-   Status updates
+
+## When NOT to use
+
+-   Static titles that never change (just set in HTML)
+-   Server-side rendered apps where SEO matters (use meta tags)
+-   When you need fine-grained control over title restoration
+
+## Notes
+
+-   Title changes are immediate (synchronous)
+-   Previous title is captured on first mount only
+-   With multiple `useTitle` hooks, last one wins
+-   Restores to the title that existed before first mount
+-   Works with special characters and emojis
+-   Empty string is a valid title
+-   Does not affect SEO meta tags (use helmet/next/head for that)
+-   Title restoration happens on component unmount
+-   Safe to use in nested components
+
+## Browser support
+
+All browsers (uses standard `document.title`)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useTitle.test.tsx` for comprehensive tests covering basic title setting, updates, restore on unmount, custom restore options, special characters, multiple instances, and edge cases (11 tests).
+
+---
+
+# Hook: useFavicon
+
+Dynamically change the favicon. Automatically restores the previous favicon when the component unmounts.
+
+## API
+
+```ts
+useFavicon(href: string, options?: UseFaviconOptions): void
+
+interface UseFaviconOptions {
+    rel?: string // default: 'icon'
+    type?: string
+    restoreOnUnmount?: boolean // default: true
+}
+```
+
+## Parameters
+
+-   `href` (string): The URL or data URL for the favicon image
+-   `options` (UseFaviconOptions, optional): Configuration options
+
+## Options
+
+-   `rel` (string): The rel attribute for the link element (default: `'icon'`)
+-   `type` (string): The MIME type (e.g., `'image/png'`, `'image/svg+xml'`)
+-   `restoreOnUnmount` (boolean): Whether to restore the previous favicon on unmount (default: `true`)
+
+## Usage
+
+```tsx
+import { useFavicon } from 'my-awesome-component-library'
+
+// Basic favicon change
+function NotificationPage() {
+    useFavicon('/notification-icon.ico')
+
+    return <div>You have notifications!</div>
+}
+```
+
+```tsx
+// Unread count indicator
+function Inbox({ unreadCount }) {
+    const favicon = unreadCount > 0 ? '/favicon-unread.ico' : '/favicon.ico'
+
+    useFavicon(favicon)
+
+    return <div>{unreadCount} unread messages</div>
+}
+```
+
+```tsx
+// SVG favicon
+function DarkModeApp({ isDark }) {
+    useFavicon(isDark ? '/favicon-dark.svg' : '/favicon-light.svg', {
+        type: 'image/svg+xml',
+    })
+
+    return <div className={isDark ? 'dark' : 'light'}>App</div>
+}
+```
+
+```tsx
+// Loading spinner favicon
+function LoadingPage({ isLoading }) {
+    useFavicon(isLoading ? '/favicon-loading.gif' : '/favicon.ico')
+
+    return <div>{isLoading ? 'Loading...' : 'Loaded'}</div>
+}
+```
+
+```tsx
+// Error state favicon
+function AppWithErrorBoundary({ hasError }) {
+    useFavicon(hasError ? '/favicon-error.ico' : '/favicon.ico')
+
+    return <div>App content</div>
+}
+```
+
+```tsx
+// Status indicator
+function StatusMonitor({ status }) {
+    const faviconMap = {
+        online: '/favicon-green.ico',
+        offline: '/favicon-red.ico',
+        warning: '/favicon-yellow.ico',
+    }
+
+    useFavicon(faviconMap[status] || '/favicon.ico')
+
+    return <div>Status: {status}</div>
+}
+```
+
+```tsx
+// Data URL favicon (dynamically generated)
+function DynamicFavicon({ color }) {
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <circle cx="16" cy="16" r="16" fill="${color}"/>
+        </svg>
+    `
+    const dataUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`
+
+    useFavicon(dataUrl, { type: 'image/svg+xml' })
+
+    return <div>Color: {color}</div>
+}
+```
+
+```tsx
+// PNG favicon with explicit type
+function HighResFavicon() {
+    useFavicon('/favicon-32x32.png', { type: 'image/png' })
+
+    return <div>App</div>
+}
+```
+
+```tsx
+// Timer progress in favicon
+function TimerApp({ progress }) {
+    // Generate favicon showing progress
+    const canvas = document.createElement('canvas')
+    canvas.width = 32
+    canvas.height = 32
+    const ctx = canvas.getContext('2d')
+    // Draw progress arc...
+    const dataUrl = canvas.toDataURL()
+
+    useFavicon(dataUrl)
+
+    return <div>Progress: {progress}%</div>
+}
+```
+
+```tsx
+// Don't restore on unmount
+function CompletedPage() {
+    useFavicon('/favicon-success.ico', { restoreOnUnmount: false })
+
+    return <div>Task completed!</div>
+}
+```
+
+```tsx
+// Apple touch icon
+function PWAApp() {
+    useFavicon('/apple-touch-icon.png', {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+    })
+
+    return <div>PWA content</div>
+}
+```
+
+```tsx
+// Multiple favicon sizes (advanced)
+function MultiSizeFavicon() {
+    useFavicon('/favicon-16x16.png', { rel: 'icon', type: 'image/png' })
+    useFavicon('/favicon-32x32.png', { rel: 'icon', type: 'image/png' })
+
+    return <div>App</div>
+}
+```
+
+## How it works
+
+-   Finds existing favicon `<link>` element or creates one
+-   Updates the `href` attribute to the new favicon
+-   Stores the original favicon on first mount
+-   Restores the original favicon on unmount (by default)
+-   Appends to `<head>` if no favicon exists
+-   Updates all specified attributes (`rel`, `type`, `href`)
+
+## When to use
+
+-   Notification indicators
+-   Unread message counts
+-   Status monitoring (online/offline/error)
+-   Dark mode theme favicons
+-   Loading states
+-   Progress indicators
+-   Success/error states
+-   Dynamic branding
+-   Game states
+-   Timer countdowns
+
+## When NOT to use
+
+-   Static favicons that never change
+-   SEO-critical favicon management (use HTML)
+-   When you need multiple favicon formats simultaneously
+-   Server-side rendering (client-side only)
+
+## Notes
+
+-   Creates `<link>` element if none exists
+-   Works with `.ico`, `.png`, `.svg`, `.gif` formats
+-   Supports data URLs for dynamic generation
+-   Can update `rel`, `type`, and `href` attributes
+-   Only one favicon link is updated at a time
+-   Previous favicon stored on first mount only
+-   Restoration uses original href/rel/type
+-   Safe to use multiple times (last one wins)
+-   Does not affect apple-touch-icon unless specified
+-   Browser caching may delay visible changes
+
+## Browser support
+
+All modern browsers (uses standard DOM APIs)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useFavicon.test.tsx` for comprehensive tests covering basic favicon setting, updates, restore on unmount, custom rel/type attributes, data URLs, SVG favicons, creating non-existent links, multiple changes, and edge cases (13 tests).

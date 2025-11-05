@@ -52,6 +52,8 @@ import useShare from './useShare'
 import useMap from './useMap'
 import useSet from './useSet'
 import useEvent from './useEvent'
+import useTitle from './useTitle'
+import useFavicon from './useFavicon'
 
 export {
     useDebounceEffect,
@@ -111,6 +113,8 @@ export {
     useMap,
     useSet,
     useEvent,
+    useTitle,
+    useFavicon,
 }
 
 export type { UseSetActions } from './useSet'
@@ -173,4 +177,6 @@ export default {
     useMap,
     useSet,
     useEvent,
+    useTitle,
+    useFavicon,
 }

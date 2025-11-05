@@ -258,6 +258,8 @@ import {
     useMap,
     useSet,
     useEvent,
+    useTitle,
+    useFavicon,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -499,6 +501,8 @@ export {
     useMap,
     useSet,
     useEvent,
+    useTitle,
+    useFavicon,
     memoize,
     throttle,
     chunk,
