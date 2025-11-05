@@ -257,6 +257,7 @@ import {
     useShare,
     useMap,
     useSet,
+    useEvent,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -497,6 +498,7 @@ export {
     useShare,
     useMap,
     useSet,
+    useEvent,
     memoize,
     throttle,
     chunk,

@@ -6568,3 +6568,364 @@ All modern browsers (uses native Set)
 ## Tests
 
 See `src/utility/hooks/__tests__/useSet.test.tsx` for comprehensive tests covering empty initialization, array initialization, Set initialization, duplicate handling, add/delete operations, addAll/deleteAll bulk operations, clear, reset, toggle (add/remove/multiple), has checks, size tracking, different value types (strings, objects), immutability, sequential operations, and edge cases (25 tests).
+
+---
+
+# Hook: useEvent
+
+Returns a stable function reference that always has access to the latest values. Solves the stale closure problem without causing re-renders or requiring functions in dependency arrays. This is an implementation of the proposed React useEvent RFC.
+
+## API
+
+```ts
+useEvent<T extends (...args: unknown[]) => unknown>(handler: T): T
+```
+
+## Parameters
+
+-   `handler` (T): The callback function to wrap
+
+## Returns
+
+A stable function reference that always calls the latest version of the handler
+
+## Usage
+
+```tsx
+import { useEvent } from 'my-awesome-component-library'
+
+// Basic usage - stable reference with latest state
+function Counter() {
+    const [count, setCount] = useState(0)
+
+    // handleClick reference never changes, but always has latest count
+    const handleClick = useEvent(() => {
+        console.log('Current count:', count)
+        alert(`Count is ${count}`)
+    })
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(count + 1)}>Increment</button>
+            <button onClick={handleClick}>Show Count</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Avoid infinite loops in useEffect
+function ChatRoom({ roomId }) {
+    const [messages, setMessages] = useState([])
+
+    const handleMessage = useEvent((msg: Message) => {
+        setMessages((prev) => [...prev, msg])
+    })
+
+    useEffect(() => {
+        const connection = connectToRoom(roomId)
+        // handleMessage reference is stable, won't trigger re-run
+        connection.on('message', handleMessage)
+        return () => connection.disconnect()
+    }, [roomId]) // No need to include handleMessage in deps
+
+    return <MessageList messages={messages} />
+}
+```
+
+```tsx
+// Stable callbacks for child components
+function Parent() {
+    const [count, setCount] = useState(0)
+    const [otherState, setOtherState] = useState(0)
+
+    // Child won't re-render when count changes
+    const handleChildClick = useEvent(() => {
+        console.log('Latest count:', count)
+    })
+
+    return (
+        <div>
+            <button onClick={() => setCount(count + 1)}>Count: {count}</button>
+            <button onClick={() => setOtherState(otherState + 1)}>
+                Other: {otherState}
+            </button>
+            <ExpensiveChild onClick={handleChildClick} />
+        </div>
+    )
+}
+
+const ExpensiveChild = memo(({ onClick }) => {
+    console.log('Child rendered')
+    return <button onClick={onClick}>Click me</button>
+})
+```
+
+```tsx
+// Event handlers with latest props
+function Form({ onSubmit, validateEmail }) {
+    const [email, setEmail] = useState('')
+
+    const handleSubmit = useEvent((e: FormEvent) => {
+        e.preventDefault()
+        // Always uses latest validateEmail and onSubmit props
+        if (validateEmail(email)) {
+            onSubmit(email)
+        }
+    })
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+            <button type="submit">Submit</button>
+        </form>
+    )
+}
+```
+
+```tsx
+// Timers with latest state
+function DelayedAction() {
+    const [count, setCount] = useState(0)
+
+    const performAction = useEvent(() => {
+        // Always logs the latest count, even if set after timeout starts
+        console.log('Action with count:', count)
+    })
+
+    const scheduleAction = () => {
+        setTimeout(performAction, 2000)
+    }
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(count + 1)}>Increment</button>
+            <button onClick={scheduleAction}>Schedule Action (2s)</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// WebSocket/event listeners
+function RealtimeData() {
+    const [data, setData] = useState([])
+    const [filters, setFilters] = useState({})
+
+    const handleData = useEvent((newData: DataItem) => {
+        // Always uses latest filters
+        if (matchesFilters(newData, filters)) {
+            setData((prev) => [...prev, newData])
+        }
+    })
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://api.example.com')
+        ws.onmessage = (e) => handleData(JSON.parse(e.data))
+        return () => ws.close()
+    }, []) // Empty deps - handleData is stable
+
+    return <DataList data={data} onFilterChange={setFilters} />
+}
+```
+
+```tsx
+// Animation callbacks
+function AnimatedComponent() {
+    const [position, setPosition] = useState({ x: 0, y: 0 })
+    const [velocity, setVelocity] = useState({ x: 1, y: 1 })
+
+    const animate = useEvent(() => {
+        // Always uses latest position and velocity
+        setPosition({
+            x: position.x + velocity.x,
+            y: position.y + velocity.y,
+        })
+    })
+
+    useEffect(() => {
+        const id = setInterval(animate, 16)
+        return () => clearInterval(id)
+    }, []) // animate reference is stable
+
+    return (
+        <div
+            style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
+        />
+    )
+}
+```
+
+```tsx
+// Complex callback composition
+function Dashboard() {
+    const [filters, setFilters] = useState({})
+    const [sortBy, setSortBy] = useState('date')
+
+    const fetchData = useEvent(async () => {
+        // Always uses latest filters and sortBy
+        const response = await api.getData({ filters, sortBy })
+        return response.data
+    })
+
+    const refreshData = useEvent(() => {
+        fetchData().then((data) => {
+            console.log('Fetched:', data)
+        })
+    })
+
+    return (
+        <div>
+            <Filters value={filters} onChange={setFilters} />
+            <Sort value={sortBy} onChange={setSortBy} />
+            <button onClick={refreshData}>Refresh</button>
+        </div>
+    )
+}
+```
+
+```tsx
+// Debounced search with latest query
+function SearchBox() {
+    const [query, setQuery] = useState('')
+    const [results, setResults] = useState([])
+
+    const performSearch = useEvent(async () => {
+        // Always searches with latest query
+        const data = await api.search(query)
+        setResults(data)
+    })
+
+    const debouncedSearch = useMemo(() => debounce(performSearch, 300), [])
+
+    useEffect(() => {
+        if (query) {
+            debouncedSearch()
+        }
+    }, [query])
+
+    return (
+        <div>
+            <input value={query} onChange={(e) => setQuery(e.target.value)} />
+            <Results items={results} />
+        </div>
+    )
+}
+```
+
+```tsx
+// Logger with latest user context
+function ActivityLogger() {
+    const [user, setUser] = useState(null)
+    const [sessionId, setSessionId] = useState('')
+
+    const logActivity = useEvent((action: string, details: object) => {
+        // Always logs with latest user and sessionId
+        analytics.log({
+            action,
+            details,
+            user: user?.id,
+            sessionId,
+            timestamp: Date.now(),
+        })
+    })
+
+    // Log functions can be passed around without worrying about stale data
+    return <App user={user} onAction={logActivity} />
+}
+```
+
+```tsx
+// Optimistic updates
+function TodoList() {
+    const [todos, setTodos] = useState([])
+
+    const addTodo = useEvent(async (text: string) => {
+        const tempId = Date.now()
+        // Optimistically add with latest todos
+        setTodos([...todos, { id: tempId, text, pending: true }])
+
+        try {
+            const newTodo = await api.createTodo(text)
+            setTodos((current) =>
+                current.map((t) =>
+                    t.id === tempId ? { ...newTodo, pending: false } : t
+                )
+            )
+        } catch (error) {
+            setTodos((current) => current.filter((t) => t.id !== tempId))
+        }
+    })
+
+    return <TodoInput onSubmit={addTodo} />
+}
+```
+
+```tsx
+// Custom event emitter
+function useEventEmitter() {
+    const listenersRef = useRef<Set<Function>>(new Set())
+
+    const emit = useEvent((data: unknown) => {
+        listenersRef.current.forEach((listener) => listener(data))
+    })
+
+    const subscribe = useEvent((listener: Function) => {
+        listenersRef.current.add(listener)
+        return () => listenersRef.current.delete(listener)
+    })
+
+    return { emit, subscribe }
+}
+```
+
+## How it works
+
+-   Stores the handler in a ref that's updated on each render
+-   Returns a stable callback (via `useCallback` with empty deps)
+-   The stable callback always calls the latest handler from the ref
+-   Uses `useLayoutEffect` to update ref synchronously
+-   Function reference never changes, preventing unnecessary re-renders
+-   Always has access to the latest state and props
+
+## When to use
+
+-   Callbacks in `useEffect`/`useLayoutEffect` dependencies
+-   Event handlers passed to memoized child components
+-   WebSocket/event listener callbacks
+-   setTimeout/setInterval callbacks
+-   Animation frame callbacks
+-   Debounced/throttled functions
+-   Optimistic updates with latest state
+-   Logging/analytics with latest context
+-   Any callback that needs latest values without triggering re-renders
+
+## When NOT to use
+
+-   Simple event handlers that don't need stability (just use inline)
+-   When you want the function to capture specific values (use regular `useCallback`)
+-   Server-side rendering critical paths (uses `useLayoutEffect`)
+-   When function identity changes are intentional
+
+## Notes
+
+-   Function reference is completely stable (never changes)
+-   Always calls the latest version of the handler
+-   No need to include in dependency arrays
+-   Uses `useLayoutEffect` for synchronous updates
+-   Does not preserve `this` context (arrow functions recommended)
+-   Safe to pass to `useEffect`, event listeners, and child components
+-   Solves common React pitfalls with stale closures
+-   Based on React RFC for `useEvent` hook
+-   Also known as "event handlers" or "memoized functions"
+-   Cannot be called during render (side effect hook)
+
+## Browser support
+
+All modern browsers (uses standard React hooks)
+
+## Tests
+
+See `src/utility/hooks/__tests__/useEvent.test.tsx` for comprehensive tests covering stable references, latest handler calls, state closure captures, async functions, dependency stability, useEffect integration, multiple arguments, error handling, prop passing, event handlers, multiple hooks, and various return types (20 tests).

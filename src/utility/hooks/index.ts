@@ -51,6 +51,7 @@ import useWakeLock from './useWakeLock'
 import useShare from './useShare'
 import useMap from './useMap'
 import useSet from './useSet'
+import useEvent from './useEvent'
 
 export {
     useDebounceEffect,
@@ -109,6 +110,7 @@ export {
     useShare,
     useMap,
     useSet,
+    useEvent,
 }
 
 export type { UseSetActions } from './useSet'
@@ -170,4 +172,5 @@ export default {
     useShare,
     useMap,
     useSet,
+    useEvent,
 }
