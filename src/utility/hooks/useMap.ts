@@ -25,21 +25,24 @@ export interface UseMapActions<K, V> {
      * Reset to initial state
      */
     reset: () => void
+
+    /**
+     * Get value by key
+     */
+    get: (key: K) => V | undefined
+
+    /**
+     * Check if a key exists
+     */
+    has: (key: K) => boolean
+
+    /**
+     * Current size of the map
+     */
+    size: number
 }
 
-export type UseMapReturn<K, V> = [
-    Map<K, V>,
-    {
-        set: (key: K, value: V) => void
-        setAll: (entries: Iterable<readonly [K, V]>) => void
-        remove: (key: K) => void
-        clear: () => void
-        reset: () => void
-        get: (key: K) => V | undefined
-        has: (key: K) => boolean
-        size: number
-    }
-]
+export type UseMapReturn<K, V> = [Map<K, V>, UseMapActions<K, V>]
 
 /**
  * Hook to manage a Map state with helper methods.
