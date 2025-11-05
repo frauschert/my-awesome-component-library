@@ -1730,3 +1730,444 @@ Gracefully falls back to `'light'` in older browsers.
 ## Tests
 
 See `src/utility/hooks/__tests__/useColorScheme.test.tsx` for comprehensive tests covering default detection, dark mode detection, preference changes, rapid changes, cleanup, legacy browser support, SSR handling, and re-render stability.
+
+---
+
+# Hook: useWebSocket
+
+Manages WebSocket connections with automatic reconnection, message handling, and connection state tracking.
+
+## API
+
+```ts
+useWebSocket(url: string | null, options?: UseWebSocketOptions): UseWebSocketReturn
+
+interface UseWebSocketOptions {
+    protocols?: string | string[]
+    autoConnect?: boolean // default: true
+    reconnect?: boolean // default: false
+    reconnectAttempts?: number // default: 0 (infinite)
+    reconnectInterval?: number // default: 3000ms
+    onOpen?: (event: Event) => void
+    onClose?: (event: CloseEvent) => void
+    onError?: (event: Event) => void
+    onMessage?: (event: MessageEvent) => void
+}
+
+interface UseWebSocketReturn {
+    lastMessage: MessageEvent | null
+    sendMessage: (message: string | ArrayBuffer | Blob) => void
+    sendJsonMessage: (message: any) => void
+    readyState: 'CONNECTING' | 'OPEN' | 'CLOSING' | 'CLOSED'
+    connect: () => void
+    disconnect: () => void
+    getWebSocket: () => WebSocket | null
+}
+```
+
+## Parameters
+
+- `url` (string | null): WebSocket URL to connect to (ws:// or wss://)
+- `options` (UseWebSocketOptions, optional):
+  - `protocols`: WebSocket sub-protocols
+  - `autoConnect`: Automatically connect on mount (default: true)
+  - `reconnect`: Enable automatic reconnection (default: false)
+  - `reconnectAttempts`: Max reconnection attempts, 0 for infinite (default: 0)
+  - `reconnectInterval`: Delay between reconnection attempts in ms (default: 3000)
+  - `onOpen`: Callback when connection opens
+  - `onClose`: Callback when connection closes
+  - `onError`: Callback when error occurs
+  - `onMessage`: Callback when message is received
+
+## Returns
+
+Object with WebSocket state and control methods
+
+## Usage
+
+```tsx
+import { useWebSocket } from 'my-awesome-component-library'
+
+// Basic WebSocket connection
+function ChatComponent() {
+    const { lastMessage, sendMessage, readyState } = useWebSocket(
+        'ws://localhost:8080/chat'
+    )
+    
+    const handleSend = () => {
+        sendMessage('Hello, server!')
+    }
+    
+    return (
+        <div>
+            <div>Status: {readyState}</div>
+            <div>Last message: {lastMessage?.data}</div>
+            <button onClick={handleSend} disabled={readyState !== 'OPEN'}>
+                Send Message
+            </button>
+        </div>
+    )
+}
+```
+
+```tsx
+// With JSON messages
+function RealtimeData() {
+    const { lastMessage, sendJsonMessage, readyState } = useWebSocket(
+        'wss://api.example.com/stream'
+    )
+    
+    const [data, setData] = useState([])
+    
+    useEffect(() => {
+        if (lastMessage) {
+            const parsed = JSON.parse(lastMessage.data)
+            setData(prev => [...prev, parsed])
+        }
+    }, [lastMessage])
+    
+    const requestData = () => {
+        sendJsonMessage({ action: 'getData', filter: 'active' })
+    }
+    
+    return (
+        <div>
+            <button onClick={requestData} disabled={readyState !== 'OPEN'}>
+                Request Data
+            </button>
+            <ul>
+                {data.map((item, i) => <li key={i}>{JSON.stringify(item)}</li>)}
+            </ul>
+        </div>
+    )
+}
+```
+
+```tsx
+// With automatic reconnection
+function ResilientConnection() {
+    const { lastMessage, readyState } = useWebSocket(
+        'wss://api.example.com/updates',
+        {
+            reconnect: true,
+            reconnectAttempts: 5,
+            reconnectInterval: 3000,
+            onOpen: () => console.log('Connected to WebSocket'),
+            onClose: () => console.log('Disconnected from WebSocket'),
+            onError: (error) => console.error('WebSocket error:', error)
+        }
+    )
+    
+    return (
+        <div>
+            <StatusIndicator status={readyState} />
+            {lastMessage && <Message data={lastMessage.data} />}
+        </div>
+    )
+}
+```
+
+```tsx
+// Manual connection control
+function ManualConnection() {
+    const { connect, disconnect, readyState, sendMessage } = useWebSocket(
+        'ws://localhost:8080',
+        { autoConnect: false }
+    )
+    
+    return (
+        <div>
+            {readyState === 'CLOSED' && (
+                <button onClick={connect}>Connect</button>
+            )}
+            {readyState === 'OPEN' && (
+                <>
+                    <button onClick={() => sendMessage('ping')}>Ping</button>
+                    <button onClick={disconnect}>Disconnect</button>
+                </>
+            )}
+        </div>
+    )
+}
+```
+
+```tsx
+// Real-time notifications
+function NotificationCenter() {
+    const [notifications, setNotifications] = useState([])
+    
+    const { lastMessage } = useWebSocket('wss://api.example.com/notifications', {
+        onMessage: (event) => {
+            const notification = JSON.parse(event.data)
+            toast.info(notification.message)
+        }
+    })
+    
+    useEffect(() => {
+        if (lastMessage) {
+            const notification = JSON.parse(lastMessage.data)
+            setNotifications(prev => [notification, ...prev].slice(0, 10))
+        }
+    }, [lastMessage])
+    
+    return (
+        <div>
+            <h3>Recent Notifications</h3>
+            {notifications.map((n, i) => (
+                <Notification key={i} {...n} />
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Live chat with typing indicator
+function LiveChat() {
+    const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
+        'wss://chat.example.com',
+        {
+            reconnect: true,
+            onOpen: () => {
+                sendJsonMessage({ type: 'join', user: userId })
+            }
+        }
+    )
+    
+    const [messages, setMessages] = useState([])
+    const [typingUsers, setTypingUsers] = useState([])
+    
+    useEffect(() => {
+        if (lastMessage) {
+            const msg = JSON.parse(lastMessage.data)
+            if (msg.type === 'message') {
+                setMessages(prev => [...prev, msg])
+            } else if (msg.type === 'typing') {
+                setTypingUsers(msg.users)
+            }
+        }
+    }, [lastMessage])
+    
+    const handleSend = (text) => {
+        sendJsonMessage({ type: 'message', text, user: userId })
+    }
+    
+    const handleTyping = () => {
+        sendJsonMessage({ type: 'typing', user: userId })
+    }
+    
+    return (
+        <ChatUI
+            messages={messages}
+            typingUsers={typingUsers}
+            onSend={handleSend}
+            onTyping={handleTyping}
+            connected={readyState === 'OPEN'}
+        />
+    )
+}
+```
+
+```tsx
+// Stock price ticker
+function StockTicker({ symbols }) {
+    const [prices, setPrices] = useState({})
+    
+    const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
+        'wss://market-data.example.com',
+        {
+            reconnect: true,
+            reconnectAttempts: 0, // infinite
+            onOpen: () => {
+                sendJsonMessage({ action: 'subscribe', symbols })
+            }
+        }
+    )
+    
+    useEffect(() => {
+        if (lastMessage) {
+            const update = JSON.parse(lastMessage.data)
+            setPrices(prev => ({ ...prev, [update.symbol]: update.price }))
+        }
+    }, [lastMessage])
+    
+    return (
+        <div>
+            <div>Connection: {readyState}</div>
+            {symbols.map(symbol => (
+                <div key={symbol}>
+                    {symbol}: ${prices[symbol] || 'Loading...'}
+                </div>
+            ))}
+        </div>
+    )
+}
+```
+
+```tsx
+// Game server connection
+function GameConnection() {
+    const [gameState, setGameState] = useState(null)
+    
+    const { sendJsonMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
+        'wss://game.example.com/room/123',
+        {
+            reconnect: true,
+            reconnectInterval: 5000,
+            onOpen: () => {
+                sendJsonMessage({ type: 'join', player: playerId })
+            },
+            onClose: (event) => {
+                if (!event.wasClean) {
+                    toast.error('Connection lost. Reconnecting...')
+                }
+            }
+        }
+    )
+    
+    useEffect(() => {
+        if (lastMessage) {
+            const data = JSON.parse(lastMessage.data)
+            if (data.type === 'state') {
+                setGameState(data.state)
+            }
+        }
+    }, [lastMessage])
+    
+    const sendAction = (action) => {
+        sendJsonMessage({ type: 'action', action, player: playerId })
+    }
+    
+    return (
+        <GameUI
+            state={gameState}
+            onAction={sendAction}
+            connected={readyState === 'OPEN'}
+        />
+    )
+}
+```
+
+```tsx
+// IoT device monitoring
+function DeviceMonitor({ deviceId }) {
+    const [metrics, setMetrics] = useState([])
+    
+    const url = deviceId ? `wss://iot.example.com/device/${deviceId}` : null
+    
+    const { lastMessage, readyState } = useWebSocket(url, {
+        reconnect: true,
+        onMessage: (event) => {
+            const metric = JSON.parse(event.data)
+            setMetrics(prev => [...prev.slice(-99), metric]) // Keep last 100
+        }
+    })
+    
+    return (
+        <div>
+            <h3>Device {deviceId}</h3>
+            <StatusBadge status={readyState} />
+            <MetricsChart data={metrics} />
+        </div>
+    )
+}
+```
+
+```tsx
+// Collaborative editing
+function CollaborativeEditor() {
+    const [content, setContent] = useState('')
+    const [cursors, setCursors] = useState({})
+    const lastChangeRef = useRef(null)
+    
+    const { sendJsonMessage, lastMessage } = useWebSocket(
+        'wss://collab.example.com/doc/abc123',
+        {
+            reconnect: true,
+            onOpen: () => {
+                sendJsonMessage({ type: 'join', user: userId })
+            }
+        }
+    )
+    
+    useEffect(() => {
+        if (lastMessage) {
+            const msg = JSON.parse(lastMessage.data)
+            if (msg.type === 'edit' && msg.user !== userId) {
+                setContent(msg.content)
+            } else if (msg.type === 'cursor') {
+                setCursors(prev => ({ ...prev, [msg.user]: msg.position }))
+            }
+        }
+    }, [lastMessage])
+    
+    const handleChange = (newContent) => {
+        if (newContent !== lastChangeRef.current) {
+            setContent(newContent)
+            sendJsonMessage({ type: 'edit', content: newContent, user: userId })
+            lastChangeRef.current = newContent
+        }
+    }
+    
+    return (
+        <Editor
+            content={content}
+            onChange={handleChange}
+            cursors={cursors}
+        />
+    )
+}
+```
+
+## How it works
+
+- Creates WebSocket connection using native WebSocket API
+- Tracks connection state (CONNECTING, OPEN, CLOSING, CLOSED)
+- Stores the most recent message received
+- Provides methods to send string or JSON messages
+- Supports automatic reconnection with configurable attempts and intervals
+- Allows manual connection control (connect/disconnect)
+- Cleans up connection and timers on unmount
+- Handles URL changes by reconnecting to new endpoint
+
+## When to use
+
+- Real-time chat applications
+- Live data streams (stock prices, sports scores, etc.)
+- Notifications and alerts
+- Collaborative editing
+- Multiplayer games
+- IoT device monitoring
+- Live dashboards and metrics
+- Server-sent updates
+- Bidirectional client-server communication
+- Push notifications
+
+## Notes
+
+- URL can be null to defer connection
+- Set `autoConnect: false` for manual connection control
+- Reconnection is disabled by default - enable with `reconnect: true`
+- `reconnectAttempts: 0` means infinite reconnection attempts
+- Messages are not queued - sending while disconnected logs a warning
+- `lastMessage` updates on every message, store in state if history is needed
+- Use `sendJsonMessage` for automatic JSON serialization
+- Access raw WebSocket with `getWebSocket()` for advanced use cases
+- Reconnection resets after successful connection
+- Manual `disconnect()` disables automatic reconnection
+- Supports both `ws://` (insecure) and `wss://` (secure) protocols
+- No automatic ping/pong - implement at application level if needed
+- Consider message rate limiting to avoid overwhelming the connection
+
+## Browser support
+
+All modern browsers supporting WebSocket API:
+- Chrome 16+
+- Firefox 11+
+- Safari 7+
+- Edge (all versions)
+- Opera 12.1+
+
+## Tests
+
+See `src/utility/hooks/__tests__/useWebSocket.test.tsx` for comprehensive tests covering connection lifecycle, message handling, automatic reconnection, manual control, error handling, cleanup, and URL changes.

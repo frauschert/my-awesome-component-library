@@ -40,6 +40,7 @@ import useSearchParam from './useSearchParam'
 import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
 import useColorScheme from './useColorScheme'
+import useWebSocket from './useWebSocket'
 
 export {
     useDebounceEffect,
@@ -86,6 +87,7 @@ export {
     useFullscreen,
     useIdle,
     useColorScheme,
+    useWebSocket,
 }
 
 export default {
@@ -133,4 +135,5 @@ export default {
     useFullscreen,
     useIdle,
     useColorScheme,
+    useWebSocket,
 }
