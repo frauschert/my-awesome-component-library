@@ -4690,3 +4690,473 @@ All modern browsers (uses `navigator.language` and `languagechange` event)
 ## Tests
 
 See `src/utility/hooks/__tests__/usePreferredLanguage.test.tsx` for comprehensive tests covering browser language detection, different language codes, languages without region, language change events, multiple changes, event listener cleanup, default fallback, common language codes, stable references, script subtags, lowercase codes, and various language formats (14 tests).
+
+---
+
+# Hook: useWakeLock
+
+Prevents the screen from sleeping using the Screen Wake Lock API. Perfect for presentations, video players, reading apps, and any scenario where you want to keep the screen active.
+
+## API
+
+```ts
+useWakeLock(options?: UseWakeLockOptions): UseWakeLockReturn
+
+interface UseWakeLockOptions {
+    requestOnMount?: boolean // default: false
+    onAcquire?: () => void
+    onRelease?: () => void
+    onError?: (error: Error) => void
+}
+
+interface UseWakeLockReturn {
+    isActive: boolean // Whether wake lock is currently active
+    isSupported: boolean // Whether API is supported
+    request: () => Promise<void> // Request wake lock
+    release: () => Promise<void> // Release wake lock
+}
+```
+
+## Parameters
+
+-   `options.requestOnMount` (boolean, optional): Automatically request wake lock on mount
+-   `options.onAcquire` (function, optional): Callback when lock is acquired
+-   `options.onRelease` (function, optional): Callback when lock is released
+-   `options.onError` (function, optional): Callback when errors occur
+
+## Returns
+
+-   `isActive`: Whether a wake lock is currently active
+-   `isSupported`: Whether the Screen Wake Lock API is supported
+-   `request()`: Async function to request a wake lock
+-   `release()`: Async function to release the current wake lock
+
+## Usage
+
+### Basic usage
+
+```tsx
+import { useWakeLock } from 'my-awesome-component-library'
+
+function VideoPlayer() {
+    const { isActive, isSupported, request, release } = useWakeLock()
+
+    if (!isSupported) {
+        return <p>Wake Lock API not supported</p>
+    }
+
+    return (
+        <div>
+            <video onPlay={request} onPause={release} />
+            <p>Screen lock: {isActive ? 'Active' : 'Inactive'}</p>
+        </div>
+    )
+}
+```
+
+### Automatic activation on mount
+
+```tsx
+function Presentation() {
+    const { isActive } = useWakeLock({ requestOnMount: true })
+
+    return (
+        <div>
+            <h1>Presentation Mode</h1>
+            <p>Screen will stay awake: {isActive ? '✓' : '✗'}</p>
+        </div>
+    )
+}
+```
+
+### Reading app with manual controls
+
+```tsx
+function EbookReader() {
+    const { isActive, request, release } = useWakeLock()
+    const [keepAwake, setKeepAwake] = useState(false)
+
+    useEffect(() => {
+        if (keepAwake) {
+            request()
+        } else {
+            release()
+        }
+    }, [keepAwake])
+
+    return (
+        <div>
+            <article>{/* Book content */}</article>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={keepAwake}
+                    onChange={(e) => setKeepAwake(e.target.checked)}
+                />
+                Keep screen awake while reading
+            </label>
+            <p>Status: {isActive ? 'Active' : 'Inactive'}</p>
+        </div>
+    )
+}
+```
+
+### Video player with callbacks
+
+```tsx
+function StreamingPlayer() {
+    const { isActive, request, release } = useWakeLock({
+        onAcquire: () => console.log('Screen will stay awake'),
+        onRelease: () => console.log('Screen can sleep now'),
+        onError: (error) => console.error('Wake lock error:', error),
+    })
+
+    const [playing, setPlaying] = useState(false)
+
+    const handlePlay = () => {
+        setPlaying(true)
+        request()
+    }
+
+    const handlePause = () => {
+        setPlaying(false)
+        release()
+    }
+
+    return (
+        <div>
+            <video onPlay={handlePlay} onPause={handlePause} />
+            <button onClick={playing ? handlePause : handlePlay}>
+                {playing ? 'Pause' : 'Play'}
+            </button>
+            <p>{isActive ? '🔒 Screen locked' : '💤 Screen can sleep'}</p>
+        </div>
+    )
+}
+```
+
+### Conditional wake lock for specific content
+
+```tsx
+function MediaViewer({ type }: { type: 'image' | 'video' }) {
+    const { request, release } = useWakeLock()
+
+    useEffect(() => {
+        // Only keep screen awake for videos
+        if (type === 'video') {
+            request()
+        }
+
+        return () => {
+            release()
+        }
+    }, [type])
+
+    return <div>{/* Media content */}</div>
+}
+```
+
+### Dashboard with auto-refresh
+
+```tsx
+function LiveDashboard() {
+    const { isActive, isSupported, request } = useWakeLock({
+        requestOnMount: true,
+        onError: (error) => {
+            console.warn('Could not keep screen awake:', error.message)
+        },
+    })
+
+    if (!isSupported) {
+        return <p>⚠️ This dashboard works best with wake lock support</p>
+    }
+
+    return (
+        <div>
+            <h1>Live Dashboard</h1>
+            <p>Auto-refresh enabled {isActive && '(Screen stays awake)'}</p>
+            {/* Dashboard content */}
+        </div>
+    )
+}
+```
+
+### Exercise timer
+
+```tsx
+function WorkoutTimer() {
+    const [isWorkingOut, setIsWorkingOut] = useState(false)
+    const { isActive, request, release } = useWakeLock()
+
+    const startWorkout = async () => {
+        setIsWorkingOut(true)
+        await request()
+    }
+
+    const endWorkout = async () => {
+        setIsWorkingOut(false)
+        await release()
+    }
+
+    return (
+        <div>
+            <h2>Workout Timer</h2>
+            <button onClick={isWorkingOut ? endWorkout : startWorkout}>
+                {isWorkingOut ? 'End Workout' : 'Start Workout'}
+            </button>
+            {isActive && <p>✓ Screen will stay on during workout</p>}
+        </div>
+    )
+}
+```
+
+### Recipe viewer
+
+```tsx
+function RecipeViewer() {
+    const [isCooking, setIsCooking] = useState(false)
+    const { request, release, isActive } = useWakeLock()
+
+    const toggleCookingMode = () => {
+        if (isCooking) {
+            release()
+        } else {
+            request()
+        }
+        setIsCooking(!isCooking)
+    }
+
+    return (
+        <div>
+            <h1>Recipe</h1>
+            <button onClick={toggleCookingMode}>
+                {isCooking ? '✓ Cooking Mode Active' : 'Start Cooking Mode'}
+            </button>
+            {isActive && <p>📱 Screen will stay on while you cook</p>}
+            <div>{/* Recipe steps */}</div>
+        </div>
+    )
+}
+```
+
+### Slideshow presentation
+
+```tsx
+function Slideshow() {
+    const [currentSlide, setCurrentSlide] = useState(0)
+    const { isActive, request, release } = useWakeLock()
+
+    const startPresentation = async () => {
+        await request()
+        setCurrentSlide(0)
+    }
+
+    const endPresentation = async () => {
+        await release()
+    }
+
+    return (
+        <div>
+            {currentSlide === 0 ? (
+                <button onClick={startPresentation}>Start Presentation</button>
+            ) : (
+                <>
+                    <div>Slide {currentSlide}</div>
+                    <button onClick={() => setCurrentSlide(currentSlide + 1)}>
+                        Next
+                    </button>
+                    <button onClick={endPresentation}>End</button>
+                    {isActive && <p>🔒 Presentation mode active</p>}
+                </>
+            )}
+        </div>
+    )
+}
+```
+
+### Music player with lyrics
+
+```tsx
+function MusicPlayerWithLyrics() {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [showLyrics, setShowLyrics] = useState(false)
+    const { request, release, isActive } = useWakeLock()
+
+    useEffect(() => {
+        // Keep screen awake when playing AND showing lyrics
+        if (isPlaying && showLyrics) {
+            request()
+        } else {
+            release()
+        }
+    }, [isPlaying, showLyrics])
+
+    return (
+        <div>
+            <audio
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+            />
+            <label>
+                <input
+                    type="checkbox"
+                    checked={showLyrics}
+                    onChange={(e) => setShowLyrics(e.target.checked)}
+                />
+                Show lyrics
+            </label>
+            {isActive && <p>Screen will stay on for lyrics</p>}
+        </div>
+    )
+}
+```
+
+### Game with pause functionality
+
+```tsx
+function Game() {
+    const [isPaused, setIsPaused] = useState(false)
+    const { isActive, request, release } = useWakeLock({
+        requestOnMount: true,
+    })
+
+    const togglePause = () => {
+        if (isPaused) {
+            request()
+        } else {
+            release()
+        }
+        setIsPaused(!isPaused)
+    }
+
+    return (
+        <div>
+            <canvas />
+            <button onClick={togglePause}>
+                {isPaused ? 'Resume' : 'Pause'}
+            </button>
+            {isActive && <p>Game active - screen stays on</p>}
+        </div>
+    )
+}
+```
+
+### Conference call viewer
+
+```tsx
+function ConferenceCall() {
+    const [inCall, setInCall] = useState(false)
+    const { request, release, isSupported } = useWakeLock({
+        onAcquire: () => console.log('Screen locked for call'),
+        onRelease: () => console.log('Call ended, screen can sleep'),
+    })
+
+    const joinCall = async () => {
+        setInCall(true)
+        if (isSupported) {
+            await request()
+        }
+    }
+
+    const leaveCall = async () => {
+        setInCall(false)
+        await release()
+    }
+
+    return (
+        <div>
+            <h2>Conference Call</h2>
+            {inCall ? (
+                <>
+                    <video />
+                    <button onClick={leaveCall}>Leave Call</button>
+                </>
+            ) : (
+                <button onClick={joinCall}>Join Call</button>
+            )}
+        </div>
+    )
+}
+```
+
+## How it works
+
+1. Uses the Screen Wake Lock API (`navigator.wakeLock.request('screen')`)
+2. Requests a wake lock when `request()` is called
+3. Monitors lock state and handles automatic releases
+4. Listens to the lock's `release` event (e.g., when tab is hidden)
+5. Attempts to reacquire lock when tab becomes visible again
+6. Automatically releases lock on component unmount
+7. Handles errors gracefully when API is unavailable
+
+## When to use
+
+-   Video/audio players during playback
+-   Presentations and slideshows
+-   Reading apps and e-books
+-   Recipe viewers during cooking
+-   Exercise timers and workout apps
+-   Live dashboards with auto-refresh
+-   Games and interactive content
+-   Conference calls and video chats
+-   Any long-form content consumption
+-   Navigation apps
+
+## When NOT to use
+
+-   For background tasks (wake lock only works when tab is visible)
+-   When content doesn't require visual attention
+-   If battery life is a critical concern
+-   For short interactions (< 30 seconds)
+
+## Key features
+
+-   **Automatic reacquisition**: Reacquires lock when tab becomes visible
+-   **Auto-cleanup**: Releases lock on unmount
+-   **Error handling**: Graceful fallback when API unavailable
+-   **State tracking**: Know when lock is active
+-   **Browser support detection**: Check if API is available
+-   **Callback support**: React to acquire/release/error events
+-   **TypeScript support**: Fully typed API
+
+## Browser support
+
+Modern browsers (Chrome 84+, Edge 84+, Safari 16.4+). Check `isSupported` before using.
+
+## Notes
+
+-   Wake lock is automatically released when tab is hidden
+-   Some browsers require user interaction before granting wake lock
+-   Wake lock doesn't prevent device from sleeping when screen is off
+-   Permission may be denied on low battery
+-   Only one wake lock per tab is allowed
+-   Tab must be visible for wake lock to be active
+-   Reacquisition happens automatically on visibility change
+
+## Common patterns
+
+### Pattern 1: Media playback
+
+```tsx
+<video onPlay={request} onPause={release} />
+```
+
+### Pattern 2: Toggle button
+
+```tsx
+const toggle = () => (isActive ? release() : request())
+```
+
+### Pattern 3: Conditional based on user preference
+
+```tsx
+useEffect(() => {
+    if (userPreference.keepScreenOn) {
+        request()
+    }
+}, [userPreference])
+```
+
+## Tests
+
+See `src/utility/hooks/__tests__/useWakeLock.test.tsx` for comprehensive tests covering initial state, unsupported browsers, request/release, callbacks (onAcquire, onRelease, onError), requestOnMount option, unmount cleanup, release events from sentinel, visibility change handling, releasing before new requests, rapid requests, and error handling (17 tests).

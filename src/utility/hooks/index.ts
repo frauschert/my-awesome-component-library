@@ -47,6 +47,7 @@ import useHotkeys, { useHotkeysMap } from './useHotkeys'
 import useIsMounted from './useIsMounted'
 import useMutationObserver from './useMutationObserver'
 import usePreferredLanguage from './usePreferredLanguage'
+import useWakeLock from './useWakeLock'
 
 export {
     useDebounceEffect,
@@ -101,6 +102,7 @@ export {
     useIsMounted,
     useMutationObserver,
     usePreferredLanguage,
+    useWakeLock,
 }
 
 export default {
@@ -156,4 +158,5 @@ export default {
     useIsMounted,
     useMutationObserver,
     usePreferredLanguage,
+    useWakeLock,
 }
