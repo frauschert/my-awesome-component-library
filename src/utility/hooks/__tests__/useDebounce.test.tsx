@@ -258,7 +258,10 @@ describe('useDebounce', () => {
             const { result, rerender } = renderHook(
                 ({ value, delay }) => useDebounce(value, delay),
                 {
-                    initialProps: { value: null as string | null, delay: 500 },
+                    initialProps: {
+                        value: null as string | null | undefined,
+                        delay: 500,
+                    },
                 }
             )
 
@@ -272,7 +275,7 @@ describe('useDebounce', () => {
 
             expect(result.current).toBe('not null')
 
-            rerender({ value: undefined as string | undefined, delay: 500 })
+            rerender({ value: undefined, delay: 500 })
 
             act(() => {
                 jest.advanceTimersByTime(500)
