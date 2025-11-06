@@ -263,6 +263,7 @@ import {
     useFocusWithin,
     useIndexedDB,
     useForm,
+    useTextSelection,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -273,6 +274,8 @@ import type {
     UseFormOptions,
     FieldState,
     UseFormReturn,
+    TextSelectionState,
+    UseTextSelectionOptions,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -519,6 +522,7 @@ export {
     useFocusWithin,
     useIndexedDB,
     useForm,
+    useTextSelection,
     memoize,
     throttle,
     chunk,
@@ -552,6 +556,8 @@ export type {
     UseFormOptions,
     FieldState,
     UseFormReturn,
+    TextSelectionState,
+    UseTextSelectionOptions,
     GridProps,
     GridItemProps,
     StackProps,

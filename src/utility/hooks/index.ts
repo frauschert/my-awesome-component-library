@@ -20,6 +20,7 @@ import useAsync from './useAsync'
 import { useFetch } from './useFetch'
 import useCounter from './useCounter'
 import useForm from './useForm'
+import useTextSelection from './useTextSelection'
 import { useDoubleClick } from './useDoubleClick'
 import useUndoRedo from './useUndoRedo'
 import useDidUpdate from './useDidUpdate'
@@ -121,6 +122,7 @@ export {
     useFocusWithin,
     useIndexedDB,
     useForm,
+    useTextSelection,
 }
 
 export type { UseSetActions } from './useSet'
@@ -132,6 +134,10 @@ export type {
     FieldState,
     UseFormReturn,
 } from './useForm'
+export type {
+    TextSelectionState,
+    UseTextSelectionOptions,
+} from './useTextSelection'
 
 export default {
     useDebounceEffect,
@@ -196,4 +202,5 @@ export default {
     useFocusWithin,
     useIndexedDB,
     useForm,
+    useTextSelection,
 }
