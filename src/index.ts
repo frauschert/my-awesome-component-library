@@ -264,6 +264,7 @@ import {
     useIndexedDB,
     useForm,
     useTextSelection,
+    useDropzone,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -276,6 +277,9 @@ import type {
     UseFormReturn,
     TextSelectionState,
     UseTextSelectionOptions,
+    UseDropzoneOptions,
+    UseDropzoneState,
+    UseDropzoneReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -523,6 +527,7 @@ export {
     useIndexedDB,
     useForm,
     useTextSelection,
+    useDropzone,
     memoize,
     throttle,
     chunk,
@@ -558,6 +563,9 @@ export type {
     UseFormReturn,
     TextSelectionState,
     UseTextSelectionOptions,
+    UseDropzoneOptions,
+    UseDropzoneState,
+    UseDropzoneReturn,
     GridProps,
     GridItemProps,
     StackProps,

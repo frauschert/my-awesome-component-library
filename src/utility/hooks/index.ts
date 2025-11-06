@@ -21,6 +21,7 @@ import { useFetch } from './useFetch'
 import useCounter from './useCounter'
 import useForm from './useForm'
 import useTextSelection from './useTextSelection'
+import useDropzone from './useDropzone'
 import { useDoubleClick } from './useDoubleClick'
 import useUndoRedo from './useUndoRedo'
 import useDidUpdate from './useDidUpdate'
@@ -123,6 +124,7 @@ export {
     useIndexedDB,
     useForm,
     useTextSelection,
+    useDropzone,
 }
 
 export type { UseSetActions } from './useSet'
@@ -138,6 +140,11 @@ export type {
     TextSelectionState,
     UseTextSelectionOptions,
 } from './useTextSelection'
+export type {
+    UseDropzoneOptions,
+    UseDropzoneState,
+    UseDropzoneReturn,
+} from './useDropzone'
 
 export default {
     useDebounceEffect,
@@ -203,4 +210,5 @@ export default {
     useIndexedDB,
     useForm,
     useTextSelection,
+    useDropzone,
 }
