@@ -257,6 +257,7 @@ import {
     useShare,
     useMap,
     useSet,
+    useQueue,
     useEvent,
     useTitle,
     useFavicon,
@@ -268,6 +269,8 @@ import {
 } from './utility/hooks'
 import type {
     UseSetActions,
+    UseQueueActions,
+    UseQueueReturn,
     UseIndexedDBOptions,
     UseIndexedDBReturn,
     ValidationRule,
@@ -520,6 +523,7 @@ export {
     useShare,
     useMap,
     useSet,
+    useQueue,
     useEvent,
     useTitle,
     useFavicon,
@@ -554,6 +558,8 @@ export type {
     ReadOnlyAtom,
     WritableAtom,
     UseSetActions,
+    UseQueueActions,
+    UseQueueReturn,
     UseIndexedDBOptions,
     UseIndexedDBReturn,
     ValidationRule,
