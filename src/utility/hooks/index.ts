@@ -55,6 +55,7 @@ import useShare from './useShare'
 import useMap from './useMap'
 import useSet from './useSet'
 import useQueue from './useQueue'
+import useStack from './useStack'
 import useEvent from './useEvent'
 import useTitle from './useTitle'
 import useFavicon from './useFavicon'
@@ -119,6 +120,7 @@ export {
     useMap,
     useSet,
     useQueue,
+    useStack,
     useEvent,
     useTitle,
     useFavicon,
@@ -131,6 +133,7 @@ export {
 
 export type { UseSetActions } from './useSet'
 export type { UseQueueActions, UseQueueReturn } from './useQueue'
+export type { UseStackActions, UseStackReturn } from './useStack'
 export type { UseIndexedDBOptions, UseIndexedDBReturn } from './useIndexedDB'
 export type {
     ValidationRule,
@@ -207,6 +210,7 @@ export default {
     useMap,
     useSet,
     useQueue,
+    useStack,
     useEvent,
     useTitle,
     useFavicon,
