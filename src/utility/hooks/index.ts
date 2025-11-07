@@ -70,6 +70,7 @@ import useBreakpoint from './useBreakpoint'
 import useVibrate from './useVibrate'
 import useGeolocation from './useGeolocation'
 import useClipboard from './useClipboard'
+import useSwipe from './useSwipe'
 
 export {
     useDebounceEffect,
@@ -147,6 +148,7 @@ export {
     useVibrate,
     useGeolocation,
     useClipboard,
+    useSwipe,
 }
 
 export type { UseSetActions } from './useSet'
@@ -192,6 +194,12 @@ export type {
     UseGeolocationReturn,
 } from './useGeolocation'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard'
+export type {
+    SwipeDirection,
+    SwipeEvent,
+    UseSwipeOptions,
+    UseSwipeReturn,
+} from './useSwipe'
 
 export default {
     useDebounceEffect,
@@ -269,4 +277,5 @@ export default {
     useVibrate,
     useGeolocation,
     useClipboard,
+    useSwipe,
 }

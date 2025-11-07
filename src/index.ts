@@ -264,6 +264,7 @@ import {
     useVibrate,
     useGeolocation,
     useClipboard,
+    useSwipe,
     useMap,
     useSet,
     useQueue,
@@ -317,6 +318,10 @@ import type {
     UseGeolocationReturn,
     UseClipboardOptions,
     UseClipboardReturn,
+    SwipeDirection,
+    SwipeEvent,
+    UseSwipeOptions,
+    UseSwipeReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -780,6 +785,7 @@ export type {
     useVibrate,
     useGeolocation,
     useClipboard,
+    useSwipe,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -802,4 +808,8 @@ export type {
     UseGeolocationReturn,
     UseClipboardOptions,
     UseClipboardReturn,
+    SwipeDirection,
+    SwipeEvent,
+    UseSwipeOptions,
+    UseSwipeReturn,
 }
