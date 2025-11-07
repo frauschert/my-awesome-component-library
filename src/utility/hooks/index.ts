@@ -72,6 +72,7 @@ import useGeolocation from './useGeolocation'
 import useClipboard from './useClipboard'
 import useSwipe from './useSwipe'
 import usePinch from './usePinch'
+import usePageVisibility from './usePageVisibility'
 
 export {
     useDebounceEffect,
@@ -151,6 +152,7 @@ export {
     useClipboard,
     useSwipe,
     usePinch,
+    usePageVisibility,
 }
 
 export type { UseSetActions } from './useSet'
@@ -203,6 +205,11 @@ export type {
     UseSwipeReturn,
 } from './useSwipe'
 export type { PinchEvent, UsePinchOptions, UsePinchReturn } from './usePinch'
+export type {
+    VisibilityState,
+    UsePageVisibilityOptions,
+    UsePageVisibilityReturn,
+} from './usePageVisibility'
 
 export default {
     useDebounceEffect,
@@ -282,4 +289,5 @@ export default {
     useClipboard,
     useSwipe,
     usePinch,
+    usePageVisibility,
 }

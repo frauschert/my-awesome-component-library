@@ -266,6 +266,7 @@ import {
     useClipboard,
     useSwipe,
     usePinch,
+    usePageVisibility,
     useMap,
     useSet,
     useQueue,
@@ -326,6 +327,9 @@ import type {
     PinchEvent,
     UsePinchOptions,
     UsePinchReturn,
+    VisibilityState,
+    UsePageVisibilityOptions,
+    UsePageVisibilityReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -791,6 +795,7 @@ export type {
     useClipboard,
     useSwipe,
     usePinch,
+    usePageVisibility,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -820,4 +825,7 @@ export type {
     PinchEvent,
     UsePinchOptions,
     UsePinchReturn,
+    VisibilityState,
+    UsePageVisibilityOptions,
+    UsePageVisibilityReturn,
 }
