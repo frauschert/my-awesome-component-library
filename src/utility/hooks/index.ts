@@ -63,6 +63,9 @@ import useFocusWithin from './useFocusWithin'
 import useIndexedDB from './useIndexedDB'
 import useNetwork from './useNetwork'
 import useOnline from './useOnline'
+import useMouse from './useMouse'
+import useDraggable from './useDraggable'
+import useWorker from './useWorker'
 
 export {
     useDebounceEffect,
@@ -133,6 +136,9 @@ export {
     useDropzone,
     useNetwork,
     useOnline,
+    useMouse,
+    useDraggable,
+    useWorker,
 }
 
 export type { UseSetActions } from './useSet'
@@ -156,6 +162,9 @@ export type {
     UseDropzoneReturn,
 } from './useDropzone'
 export type { NetworkState, NetworkInformation } from './useNetwork'
+export type { MouseState, UseMouseOptions } from './useMouse'
+export type { UseDraggableOptions, UseDraggableReturn } from './useDraggable'
+export type { UseWorkerOptions, UseWorkerReturn } from './useWorker'
 
 export default {
     useDebounceEffect,

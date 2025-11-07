@@ -257,6 +257,9 @@ import {
     useShare,
     useNetwork,
     useOnline,
+    useMouse,
+    useDraggable,
+    useWorker,
     useMap,
     useSet,
     useQueue,
@@ -290,6 +293,12 @@ import type {
     UseDropzoneReturn,
     NetworkState,
     NetworkInformation,
+    MouseState,
+    UseMouseOptions,
+    UseDraggableOptions,
+    UseDraggableReturn,
+    UseWorkerOptions,
+    UseWorkerReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -746,6 +755,15 @@ export type {
     DataGridColumnPinning,
     useNetwork,
     useOnline,
+    useMouse,
+    useDraggable,
+    useWorker,
     NetworkState,
     NetworkInformation,
+    MouseState,
+    UseMouseOptions,
+    UseDraggableOptions,
+    UseDraggableReturn,
+    UseWorkerOptions,
+    UseWorkerReturn,
 }
