@@ -262,6 +262,7 @@ import {
     useWorker,
     useBreakpoint,
     useVibrate,
+    useGeolocation,
     useMap,
     useSet,
     useQueue,
@@ -308,6 +309,11 @@ import type {
     VibrationPattern,
     UseVibrateOptions,
     UseVibrateReturn,
+    GeolocationCoordinates,
+    GeolocationPosition,
+    GeolocationError,
+    UseGeolocationOptions,
+    UseGeolocationReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -769,6 +775,7 @@ export type {
     useWorker,
     useBreakpoint,
     useVibrate,
+    useGeolocation,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -784,4 +791,9 @@ export type {
     VibrationPattern,
     UseVibrateOptions,
     UseVibrateReturn,
+    GeolocationCoordinates,
+    GeolocationPosition,
+    GeolocationError,
+    UseGeolocationOptions,
+    UseGeolocationReturn,
 }

@@ -68,6 +68,7 @@ import useDraggable from './useDraggable'
 import useWorker from './useWorker'
 import useBreakpoint from './useBreakpoint'
 import useVibrate from './useVibrate'
+import useGeolocation from './useGeolocation'
 
 export {
     useDebounceEffect,
@@ -143,6 +144,7 @@ export {
     useWorker,
     useBreakpoint,
     useVibrate,
+    useGeolocation,
 }
 
 export type { UseSetActions } from './useSet'
@@ -180,6 +182,13 @@ export type {
     UseVibrateOptions,
     UseVibrateReturn,
 } from './useVibrate'
+export type {
+    GeolocationCoordinates,
+    GeolocationPosition,
+    GeolocationError,
+    UseGeolocationOptions,
+    UseGeolocationReturn,
+} from './useGeolocation'
 
 export default {
     useDebounceEffect,
