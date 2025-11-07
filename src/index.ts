@@ -267,6 +267,7 @@ import {
     useSwipe,
     usePinch,
     usePageVisibility,
+    useBattery,
     useMap,
     useSet,
     useQueue,
@@ -330,6 +331,8 @@ import type {
     VisibilityState,
     UsePageVisibilityOptions,
     UsePageVisibilityReturn,
+    BatteryState,
+    UseBatteryReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -796,6 +799,7 @@ export type {
     useSwipe,
     usePinch,
     usePageVisibility,
+    useBattery,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -828,4 +832,6 @@ export type {
     VisibilityState,
     UsePageVisibilityOptions,
     UsePageVisibilityReturn,
+    BatteryState,
+    UseBatteryReturn,
 }

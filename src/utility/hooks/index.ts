@@ -73,6 +73,7 @@ import useClipboard from './useClipboard'
 import useSwipe from './useSwipe'
 import usePinch from './usePinch'
 import usePageVisibility from './usePageVisibility'
+import useBattery from './useBattery'
 
 export {
     useDebounceEffect,
@@ -153,6 +154,7 @@ export {
     useSwipe,
     usePinch,
     usePageVisibility,
+    useBattery,
 }
 
 export type { UseSetActions } from './useSet'
@@ -210,6 +212,7 @@ export type {
     UsePageVisibilityOptions,
     UsePageVisibilityReturn,
 } from './usePageVisibility'
+export type { BatteryState, UseBatteryReturn } from './useBattery'
 
 export default {
     useDebounceEffect,
@@ -290,4 +293,5 @@ export default {
     useSwipe,
     usePinch,
     usePageVisibility,
+    useBattery,
 }
