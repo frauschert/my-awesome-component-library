@@ -69,6 +69,7 @@ import useWorker from './useWorker'
 import useBreakpoint from './useBreakpoint'
 import useVibrate from './useVibrate'
 import useGeolocation from './useGeolocation'
+import useClipboard from './useClipboard'
 
 export {
     useDebounceEffect,
@@ -145,6 +146,7 @@ export {
     useBreakpoint,
     useVibrate,
     useGeolocation,
+    useClipboard,
 }
 
 export type { UseSetActions } from './useSet'
@@ -189,6 +191,7 @@ export type {
     UseGeolocationOptions,
     UseGeolocationReturn,
 } from './useGeolocation'
+export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard'
 
 export default {
     useDebounceEffect,
@@ -259,4 +262,11 @@ export default {
     useDropzone,
     useNetwork,
     useOnline,
+    useMouse,
+    useDraggable,
+    useWorker,
+    useBreakpoint,
+    useVibrate,
+    useGeolocation,
+    useClipboard,
 }

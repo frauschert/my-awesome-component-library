@@ -263,6 +263,7 @@ import {
     useBreakpoint,
     useVibrate,
     useGeolocation,
+    useClipboard,
     useMap,
     useSet,
     useQueue,
@@ -314,6 +315,8 @@ import type {
     GeolocationError,
     UseGeolocationOptions,
     UseGeolocationReturn,
+    UseClipboardOptions,
+    UseClipboardReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -776,6 +779,7 @@ export type {
     useBreakpoint,
     useVibrate,
     useGeolocation,
+    useClipboard,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -796,4 +800,6 @@ export type {
     GeolocationError,
     UseGeolocationOptions,
     UseGeolocationReturn,
+    UseClipboardOptions,
+    UseClipboardReturn,
 }
