@@ -71,6 +71,7 @@ import useVibrate from './useVibrate'
 import useGeolocation from './useGeolocation'
 import useClipboard from './useClipboard'
 import useSwipe from './useSwipe'
+import usePinch from './usePinch'
 
 export {
     useDebounceEffect,
@@ -149,6 +150,7 @@ export {
     useGeolocation,
     useClipboard,
     useSwipe,
+    usePinch,
 }
 
 export type { UseSetActions } from './useSet'
@@ -200,6 +202,7 @@ export type {
     UseSwipeOptions,
     UseSwipeReturn,
 } from './useSwipe'
+export type { PinchEvent, UsePinchOptions, UsePinchReturn } from './usePinch'
 
 export default {
     useDebounceEffect,
@@ -278,4 +281,5 @@ export default {
     useGeolocation,
     useClipboard,
     useSwipe,
+    usePinch,
 }

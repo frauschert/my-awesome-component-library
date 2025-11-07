@@ -265,6 +265,7 @@ import {
     useGeolocation,
     useClipboard,
     useSwipe,
+    usePinch,
     useMap,
     useSet,
     useQueue,
@@ -322,6 +323,9 @@ import type {
     SwipeEvent,
     UseSwipeOptions,
     UseSwipeReturn,
+    PinchEvent,
+    UsePinchOptions,
+    UsePinchReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -786,6 +790,7 @@ export type {
     useGeolocation,
     useClipboard,
     useSwipe,
+    usePinch,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -812,4 +817,7 @@ export type {
     SwipeEvent,
     UseSwipeOptions,
     UseSwipeReturn,
+    PinchEvent,
+    UsePinchOptions,
+    UsePinchReturn,
 }
