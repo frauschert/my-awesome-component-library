@@ -1,81 +1,258 @@
 # Copilot Instructions for my-awesome-component-library
 
-These are practical rules for AI coding agents working in this repo. Keep answers concise and code-first.
+AI coding guide for this TypeScript + React component library. Keep answers concise and code-first.
 
-## Project overview
+## Project Overview
 
--   TypeScript + React component library with Storybook and Jest.
--   Build: Rollup emits CJS/ESM into `lib/` from `src/`. Styles use SCSS via PostCSS.
--   Demos/Visuals: Storybook 8 (React). Tests use Jest + React Testing Library.
--   Public entrypoint: `src/index.ts` (exports components and utilities).
+**Stack**: TypeScript 4.x • React 18 • SCSS modules • Storybook 8 • Jest 29 • Rollup bundler  
+**Outputs**: CJS (`lib/index.js`) + ESM (`lib/index.esm.js`) + types (`lib/index.d.ts`)  
+**Dev server**: `yarn storybook` (port 9001) • Tests: `yarn test` • Build: `yarn build`
 
-## Core architecture
+## Architecture
 
--   Components live under `src/components/<Name>/` with `Name.tsx`, `index.ts`, and optional `*.stories.tsx`, `*.test.tsx`, and `*.scss`.
-    -   Example: `src/components/Button` shows style, accessibility props, and event handling patterns.
--   Utility functions in `src/utility/` are small, focused, and thoroughly tested (e.g., `curry.ts`, `scan.ts`, `atom.ts`).
--   State primitives: `src/utility/atom.ts` provides minimal atoms with:
-    -   Writable atoms: `atom(initial) -> { get, set, reset, subscribe }`.
-    -   Derived atoms: `atom(get => expr) -> { get, subscribe }` (read-only, throws on set).
-    -   Behavior: derived atoms lazily subscribe to deps and coalesce multiple dependency updates within a tick.
--   React hooks: `src/utility/hooks/useAtom.ts` exposes `useAtom`, `useAtomValue`, `useSetAtom`, `useAtomSelector`, `useResetAtom` built on `useSyncExternalStore`.
+### Component Structure
 
-## Conventions and patterns
+```
+src/components/<Name>/
+├── Name.tsx          # Component implementation
+├── Name.scss         # Colocated styles (CSS modules)
+├── Name.stories.tsx  # Storybook demos (optional)
+├── Name.test.tsx     # Jest tests (optional)
+└── index.ts          # Re-export: export { default } from './Name'
+```
 
--   Keep components self-contained: colocate styles (`*.scss`), tests, and stories with the component.
--   Accessibility: prefer semantic HTML, ARIA attributes, and controlled/disabled behaviors (see `Button.tsx`).
--   Exports: components are default-exported from their folder `index.ts`; package exports are wired in `src/index.ts`.
--   Utilities are pure and documented in `src/utility/README.md`. Add focused tests under `src/utility/__tests__/`.
--   Atoms:
-    -   Do not expose setters for derived atoms (runtime error if forced).
-    -   `subscribe(cb, notifyImmediately=true)` returns an unsubscribe.
-    -   For UI, use hooks rather than manual subscribe where possible.
+**Key patterns**:
 
-## Build, test, and docs
+-   Accessibility-first: semantic HTML, ARIA attributes, keyboard nav (see `Button.tsx`)
+-   Discriminated unions for variant props (see `ButtonProps` circle vs standard variants)
+-   Forward refs for DOM access: `forwardRef<HTMLElement, Props>`
+-   Use `utility/classnames` for conditional classes
+-   SCSS uses CSS variables for theming (see Theming section)
 
--   Build library: run Rollup using the repo’s config.
-    -   Task: `yarn build` (Rollup reads `rollup.config.mjs`). Output `lib/`.
--   Storybook for development demos:
-    -   Start: `yarn storybook` (port 9001). Build: `yarn build-storybook`.
--   Tests:
-    -   Run all: `yarn test` or `npm test`. Coverage: `yarn coverage`.
-    -   Jest config uses `babel-jest`, JSDOM, and maps CSS to `__mocks__/styleMock.js`.
+### State Management
 
-## File map (use these as references)
+**Atoms** (`src/utility/atom.ts`) — lightweight observables:
 
--   Components: `src/components/*` (e.g., `Button/Button.tsx`, `Button/Button.stories.tsx`).
--   Utilities: `src/utility/*` (e.g., `atom.ts`, `curry.ts`, `scan.ts`). Docs at `src/utility/README.md`.
--   Hooks: `src/utility/hooks/useAtom.ts` (React entrypoints for atoms).
--   Entrypoint: `src/index.ts` (exports for library consumers).
--   Tooling: `rollup.config.mjs`, `jest.config.ts`, `babel.config.js`, `tsconfig.json`.
+```ts
+// Writable: atom(initial) -> { get, set, reset, subscribe }
+const count = atom(0)
+const [n, setN] = useAtom(count)
 
-## Coding expectations for agents
+// Derived (read-only): atom(get => expr)
+const doubled = atom((get) => get(count) * 2)
+const value = useAtomValue(doubled) // no setter
+```
 
--   Follow existing patterns and naming. Prefer small, composable utilities.
--   Keep public APIs stable; when you add new public exports, update `src/index.ts`, tests, and Storybook if relevant.
--   Tests first (or together): add minimal happy-path + edge-case tests when changing utilities or hooks.
--   Don’t introduce new runtime deps lightly; prefer dev-only tooling. Use existing stack (React 18, TS4.x, Storybook 8, Jest 29).
--   TypeScript: maintain strict typings, especially for utility generics and atom read-only vs writable distinctions.
--   Styling: keep SCSS co-located with components; use BEM-like classnames; leverage `utility/classnames` for conditional classes.
+-   Derived atoms lazy-subscribe and coalesce updates within a tick
+-   React hooks: `useAtom`, `useAtomValue`, `useSetAtom`, `useAtomSelector`, `useResetAtom` (via `useSyncExternalStore`)
+-   Don't expose setters for derived atoms (throws at runtime)
 
-## Integration guidance
+### Utilities (`src/utility/`)
 
--   The library should not depend on app-level stores. Use atoms internally for examples; consumers can integrate with Redux or others externally.
--   Storybook is the showcase—new interactive behavior should include a small story for discoverability.
+Small, pure, well-tested FP helpers: `curry`, `pipe`, `scan`, `memoize`, `debounce`, `throttle`, `lens`, etc.  
+**Docs**: `src/utility/README.md` has full API + examples for each.  
+**Tests**: `src/utility/__tests__/*.test.ts` — write focused tests for new utilities.
 
-## Example patterns
+### Hooks (`src/utility/hooks/`)
 
--   Writable atom usage:
-    -   `const count = atom(0); const [n, setN] = useAtom(count); const reset = useResetAtom(count);`
--   Derived atom usage:
-    -   `const total = atom(get => get(subtotal) + get(tax)); const value = useAtomValue(total);`
--   Component export pattern:
-    -   `src/components/Foo/index.ts` -> `export { default } from './Foo'`
+30+ React hooks documented in `src/utility/hooks/README.md`:
 
-## What to avoid
+-   State: `useLocalStorage`, `useSessionStorage`, `usePrevious`, `useDebounce`, `useThrottle`
+-   Events: `useKeyPress`, `useEventListener`, `useOnClickOutside`, `useClickAway`
+-   Browser: `useMediaQuery`, `useColorScheme`, `useWindowSize`, `useFullscreen`, `useIdle`
+-   Observables: `useIntersectionObserver`, `useResizeObserver`, `useOnScreen`
+-   Perf: `useWhyDidYouUpdate` (debug re-renders)
 
--   Adding global state or side effects in components or utilities.
--   Re-render-heavy patterns; prefer selectors and derived atoms.
--   Over-engineering: keep utilities tiny and focused.
+## Theming System
 
-If anything here is unclear or missing (e.g., a component pattern you want documented), let me know and I’ll refine this file.
+**CSS Custom Properties** (not SCSS themify mixin — deprecated for Portal compatibility).
+
+**How it works**:
+
+1. `ThemeProvider` applies `theme--light` or `theme--dark` class to `<html>`
+2. Components use CSS variables: `background-color: var(--theme-bg-primary)`
+3. Works in Portals (Select dropdowns, Modals, ContextMenus) — theme propagates globally
+
+**Variables** (`src/styles/_theme-vars.scss`):
+
+```scss
+:root {
+    --theme-primary: #408bbd;
+    --theme-bg-primary: #ffffff;
+    --theme-text-primary: #333333;
+    // ... 40+ tokens
+}
+.theme--dark {
+    --theme-primary: #61b0e7;
+    --theme-bg-primary: #222222;
+    // ...
+}
+```
+
+**Migration**: Replace `@include themify() { background: themed('primaryColor') }` with `background: var(--theme-primary)`.  
+**Context**: `useTheme()` from `ThemeContext` — returns `{ theme, resolvedTheme, systemTheme }`.
+
+## Styling Options
+
+### 1. SCSS (Primary — for components)
+
+```scss
+@import '../../styles/theme-vars';
+.button {
+    background: var(--theme-primary);
+    padding: var(--spacing-4);
+}
+```
+
+### 2. CSS-in-JS (Optional — for app-level customization)
+
+```ts
+import {
+    tokens,
+    createStyles,
+    useThemeStyles,
+} from '@frauschert/my-awesome-component-library'
+
+// Access tokens
+const padding = tokens.spacing[4] // '1rem'
+
+// Theme-aware styles
+const cardStyles = createStyles(
+    (theme) => ({
+        backgroundColor: theme.cardBackground,
+        padding: tokens.spacing[4],
+    }),
+    'light'
+)
+```
+
+**Docs**: `src/styles/README.md`, `CSS_IN_JS_FEATURE.md`  
+**Use for**: dynamic theming, runtime styling, user-generated components  
+**Prefer SCSS for**: library components (smaller bundles, compile-time optimization)
+
+## Build & Test Workflows
+
+### Build Commands
+
+```bash
+yarn build          # Rollup: src/ -> lib/ (CJS+ESM+types)
+yarn storybook      # Dev server on :9001
+yarn build-storybook # Static Storybook build
+```
+
+**Rollup config** (`rollup.config.mjs`):
+
+-   Plugins: typescript2, postcss (SCSS), svgr, peerDepsExternal
+-   Outputs: `lib/index.js` (CJS), `lib/index.esm.js` (ESM), `lib/index.d.ts`
+-   CSS extracted to `lib/index.css` and `lib/index.esm.css`
+
+### Test Commands
+
+```bash
+yarn test           # Jest with React Testing Library
+yarn coverage       # Jest coverage report
+```
+
+**Jest config** (`jest.config.ts`):
+
+-   Environment: jsdom
+-   Setup: `src/jest-setup.ts` (imports `@testing-library/jest-dom`)
+-   Mocks: `__mocks__/styleMock.js` (CSS), `__mocks__/svgMock.js` (SVGs)
+-   Transform: babel-jest
+-   Coverage: excludes stories, types, index files
+
+### Linting
+
+```bash
+yarn lint           # ESLint (eslint.config.mjs)
+yarn lint:fix       # Auto-fix issues
+```
+
+## Public API Maintenance
+
+**When adding components/utilities**:
+
+1. Export from `src/index.ts` (components + types)
+2. Add Storybook story for discoverability
+3. Write tests (happy path + edge cases)
+4. Update relevant README (utility/README.md or hooks/README.md)
+
+**Type exports**: Export both component and prop types separately:
+
+```ts
+import Button from './components/Button'
+import type {
+    ButtonProps,
+    ButtonVariant,
+    ButtonSize,
+} from './components/Button'
+export { Button, type ButtonProps, type ButtonVariant, type ButtonSize }
+```
+
+## Critical Don'ts
+
+-   ❌ **No runtime deps without justification** — peer deps only (React, React-DOM). Tooling deps go to devDependencies.
+-   ❌ **No global state** — atoms are internal; consumers integrate externally.
+-   ❌ **No SCSS themify mixin** — use CSS variables (`var(--theme-*)`) for Portal compatibility.
+-   ❌ **No direct DOM manipulation** — use refs + React patterns.
+-   ❌ **No object/array recreation in render** — memoize with `useMemo`/`useCallback` (debug with `useWhyDidYouUpdate`).
+-   ❌ **No export from nested paths** — consumers import from package root only.
+
+## TypeScript Patterns
+
+**Strict mode enabled** — maintain type safety:
+
+-   Discriminated unions for variant props
+-   Generic constraints for utilities: `<T extends Record<string, unknown>>`
+-   Atom type distinctions: `WritableAtom<T>` vs `ReadOnlyAtom<T>`
+-   Ref types: `RefObject<HTMLDivElement>` not `any`
+
+**forwardRef pattern**:
+
+```tsx
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ variant = 'primary', ...rest }, ref) => {
+        return <button ref={ref} className={`button--${variant}`} {...rest} />
+    }
+)
+Button.displayName = 'Button'
+```
+
+## Testing Strategy
+
+**Component tests**: User-centric (Testing Library queries), accessibility checks, interactions.  
+**Utility tests**: Edge cases, type transformations, immutability, performance (see `__tests__/` examples).  
+**Hook tests**: Mock timers (`jest.useFakeTimers()`), cleanup verification, SSR safety.
+
+**Example**:
+
+```tsx
+test('Button handles click', () => {
+    const handleClick = jest.fn()
+    render(<Button onClick={handleClick}>Click</Button>)
+    fireEvent.click(screen.getByRole('button'))
+    expect(handleClick).toHaveBeenCalledTimes(1)
+})
+```
+
+## Reference Examples
+
+**Best component examples**: `Button`, `Tooltip`, `Modal`, `Select`, `DataGrid`  
+**Best utility examples**: `atom`, `lens`, `scan`, `memoize`, `debounce`  
+**Best hook examples**: `useAtom`, `useKeyPress`, `useOnScreen`, `useMediaQuery`, `useLocalStorage`
+
+**Documentation sources**:
+
+-   Component patterns: Storybook stories
+-   Utility APIs: `src/utility/README.md` (8600+ lines, 42 utilities documented)
+-   Hook APIs: `src/utility/hooks/README.md` (4300+ lines, 30+ hooks documented)
+-   Theming: `THEMING-GUIDE.md`
+-   CSS-in-JS: `CSS_IN_JS_FEATURE.md`, `src/styles/README.md`
+
+## Common Tasks
+
+**Add component**: Create folder, implement with forwardRef, add SCSS with CSS vars, write story, export from `src/index.ts`.  
+**Add utility**: Implement in `src/utility/`, add tests, document in `README.md`, export from `src/index.ts`.  
+**Add hook**: Implement in `src/utility/hooks/`, add tests with fake timers/cleanup checks, document in `hooks/README.md`, export from `src/index.ts`.  
+**Fix theming**: Replace `themify()` with CSS variables, test in both light/dark modes in Storybook.  
+**Debug re-renders**: Use `useWhyDidYouUpdate` hook to identify prop changes causing unnecessary renders.
