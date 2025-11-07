@@ -1,5 +1,12 @@
 import { useEffect, useState, useCallback } from 'react'
 
+// Wake Lock API types (experimental feature)
+interface WakeLockSentinel extends EventTarget {
+    readonly released: boolean
+    readonly type: 'screen'
+    release(): Promise<void>
+}
+
 export interface UseWakeLockOptions {
     /**
      * Automatically request wake lock on mount
@@ -80,7 +87,11 @@ export function useWakeLock(
     const isSupported =
         typeof window !== 'undefined' &&
         'wakeLock' in window.navigator &&
-        typeof window.navigator.wakeLock?.request === 'function'
+        typeof (
+            window.navigator as Navigator & {
+                wakeLock?: { request: unknown }
+            }
+        ).wakeLock?.request === 'function'
 
     const release = useCallback(async () => {
         if (wakeLock) {
@@ -119,7 +130,10 @@ export function useWakeLock(
         }
 
         try {
-            const lock = await window.navigator.wakeLock.request('screen')
+            const nav = window.navigator as Navigator & {
+                wakeLock: { request(type: 'screen'): Promise<WakeLockSentinel> }
+            }
+            const lock = await nav.wakeLock.request('screen')
             setWakeLock(lock)
             setIsActive(true)
             setShouldReacquire(true)

@@ -61,6 +61,8 @@ import useTitle from './useTitle'
 import useFavicon from './useFavicon'
 import useFocusWithin from './useFocusWithin'
 import useIndexedDB from './useIndexedDB'
+import useNetwork from './useNetwork'
+import useOnline from './useOnline'
 
 export {
     useDebounceEffect,
@@ -129,6 +131,8 @@ export {
     useForm,
     useTextSelection,
     useDropzone,
+    useNetwork,
+    useOnline,
 }
 
 export type { UseSetActions } from './useSet'
@@ -151,6 +155,7 @@ export type {
     UseDropzoneState,
     UseDropzoneReturn,
 } from './useDropzone'
+export type { NetworkState, NetworkInformation } from './useNetwork'
 
 export default {
     useDebounceEffect,
@@ -219,4 +224,6 @@ export default {
     useForm,
     useTextSelection,
     useDropzone,
+    useNetwork,
+    useOnline,
 }

@@ -16,7 +16,7 @@ AI coding guide for this TypeScript + React component library. Keep answers conc
 src/components/<Name>/
 ├── Name.tsx          # Component implementation
 ├── Name.scss         # Colocated styles (CSS modules)
-├── Name.stories.tsx  # Storybook demos (optional)
+├── Name.stories.tsx  # Storybook demos (optional, MUST include `import React from 'react'`)
 ├── Name.test.tsx     # Jest tests (optional)
 └── index.ts          # Re-export: export { default } from './Name'
 ```
@@ -28,6 +28,7 @@ src/components/<Name>/
 -   Forward refs for DOM access: `forwardRef<HTMLElement, Props>`
 -   Use `utility/classnames` for conditional classes
 -   SCSS uses CSS variables for theming (see Theming section)
+-   **Storybook stories**: Always include `import React from 'react'` as the first import to avoid runtime errors
 
 ### State Management
 

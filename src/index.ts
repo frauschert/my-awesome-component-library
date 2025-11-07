@@ -255,6 +255,8 @@ import {
     usePreferredLanguage,
     useWakeLock,
     useShare,
+    useNetwork,
+    useOnline,
     useMap,
     useSet,
     useQueue,
@@ -286,6 +288,8 @@ import type {
     UseDropzoneOptions,
     UseDropzoneState,
     UseDropzoneReturn,
+    NetworkState,
+    NetworkInformation,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -740,4 +744,8 @@ export type {
     DataGridProps,
     DataGridColumn,
     DataGridColumnPinning,
+    useNetwork,
+    useOnline,
+    NetworkState,
+    NetworkInformation,
 }
