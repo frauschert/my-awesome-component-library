@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import usePageVisibility from './usePageVisibility'
 
