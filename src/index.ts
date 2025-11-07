@@ -260,6 +260,7 @@ import {
     useMouse,
     useDraggable,
     useWorker,
+    useBreakpoint,
     useMap,
     useSet,
     useQueue,
@@ -299,6 +300,10 @@ import type {
     UseDraggableReturn,
     UseWorkerOptions,
     UseWorkerReturn,
+    Breakpoints,
+    BreakpointName,
+    UseBreakpointOptions,
+    UseBreakpointReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -758,6 +763,7 @@ export type {
     useMouse,
     useDraggable,
     useWorker,
+    useBreakpoint,
     NetworkState,
     NetworkInformation,
     MouseState,
@@ -766,4 +772,8 @@ export type {
     UseDraggableReturn,
     UseWorkerOptions,
     UseWorkerReturn,
+    Breakpoints,
+    BreakpointName,
+    UseBreakpointOptions,
+    UseBreakpointReturn,
 }

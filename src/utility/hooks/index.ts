@@ -66,6 +66,7 @@ import useOnline from './useOnline'
 import useMouse from './useMouse'
 import useDraggable from './useDraggable'
 import useWorker from './useWorker'
+import useBreakpoint from './useBreakpoint'
 
 export {
     useDebounceEffect,
@@ -139,6 +140,7 @@ export {
     useMouse,
     useDraggable,
     useWorker,
+    useBreakpoint,
 }
 
 export type { UseSetActions } from './useSet'
@@ -165,6 +167,12 @@ export type { NetworkState, NetworkInformation } from './useNetwork'
 export type { MouseState, UseMouseOptions } from './useMouse'
 export type { UseDraggableOptions, UseDraggableReturn } from './useDraggable'
 export type { UseWorkerOptions, UseWorkerReturn } from './useWorker'
+export type {
+    Breakpoints,
+    BreakpointName,
+    UseBreakpointOptions,
+    UseBreakpointReturn,
+} from './useBreakpoint'
 
 export default {
     useDebounceEffect,
