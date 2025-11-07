@@ -67,6 +67,7 @@ import useMouse from './useMouse'
 import useDraggable from './useDraggable'
 import useWorker from './useWorker'
 import useBreakpoint from './useBreakpoint'
+import useVibrate from './useVibrate'
 
 export {
     useDebounceEffect,
@@ -141,6 +142,7 @@ export {
     useDraggable,
     useWorker,
     useBreakpoint,
+    useVibrate,
 }
 
 export type { UseSetActions } from './useSet'
@@ -173,6 +175,11 @@ export type {
     UseBreakpointOptions,
     UseBreakpointReturn,
 } from './useBreakpoint'
+export type {
+    VibrationPattern,
+    UseVibrateOptions,
+    UseVibrateReturn,
+} from './useVibrate'
 
 export default {
     useDebounceEffect,
