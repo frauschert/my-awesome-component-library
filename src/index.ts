@@ -449,6 +449,8 @@ import type {
     SplitDirection,
     SplitPaneSize,
 } from './components/SplitPane'
+import FloatingIsland from './components/FloatingIsland'
+import type { FloatingIslandProps } from './components/FloatingIsland'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -539,6 +541,7 @@ export {
     Resizable,
     SplitPane,
     Pane,
+    FloatingIsland,
     atom,
     useAtom,
     useAtomValue,
@@ -674,6 +677,7 @@ export type {
     PaneProps,
     SplitDirection,
     SplitPaneSize,
+    FloatingIslandProps,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
