@@ -1,0 +1,380 @@
+@import '../../styles/theme-vars';
+
+.laser-spinner {
+    --laser-spinner-speed: 1200ms;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+
+    // Size variants
+    &--sm {
+        --spinner-size: 40px;
+        --spark-length: 18px;
+        --spark-width: 3px;
+        --center-size: 8px;
+        --glow-size: 32px;
+        --bloom-size: 48px;
+    }
+
+    &--md {
+        --spinner-size: 60px;
+        --spark-length: 28px;
+        --spark-width: 4px;
+        --center-size: 12px;
+        --glow-size: 48px;
+        --bloom-size: 72px;
+    }
+
+    &--lg {
+        --spinner-size: 80px;
+        --spark-length: 38px;
+        --spark-width: 5px;
+        --center-size: 16px;
+        --glow-size: 64px;
+        --bloom-size: 96px;
+    }
+
+    &--xl {
+        --spinner-size: 120px;
+        --spark-length: 56px;
+        --spark-width: 6px;
+        --center-size: 24px;
+        --glow-size: 96px;
+        --bloom-size: 144px;
+    }
+
+    // Welding color variants
+    &--primary {
+        --spark-color-hot: #ffa500;
+        --spark-color-warm: #ff6b00;
+        --spark-color-cool: rgba(255, 165, 0, 0.2);
+        --glow-color: rgba(255, 140, 0, 0.7);
+        --bloom-color: rgba(255, 165, 0, 0.3);
+        --center-color: #fff;
+        --hotspot-color: #ffffcc;
+    }
+
+    &--hot {
+        --spark-color-hot: #ffff00;
+        --spark-color-warm: #ff8c00;
+        --spark-color-cool: rgba(255, 140, 0, 0.15);
+        --glow-color: rgba(255, 200, 0, 0.8);
+        --bloom-color: rgba(255, 140, 0, 0.4);
+        --center-color: #fff;
+        --hotspot-color: #fffacd;
+    }
+
+    &--electric {
+        --spark-color-hot: #00ffff;
+        --spark-color-warm: #00bfff;
+        --spark-color-cool: rgba(0, 191, 255, 0.15);
+        --glow-color: rgba(0, 255, 255, 0.8);
+        --bloom-color: rgba(0, 191, 255, 0.4);
+        --center-color: #f0f8ff;
+        --hotspot-color: #e0ffff;
+    }
+
+    &--plasma {
+        --spark-color-hot: #ff00ff;
+        --spark-color-warm: #9400d3;
+        --spark-color-cool: rgba(138, 43, 226, 0.15);
+        --glow-color: rgba(148, 0, 211, 0.8);
+        --bloom-color: rgba(138, 43, 226, 0.4);
+        --center-color: #ffe4ff;
+        --hotspot-color: #ffd1ff;
+    }
+
+    &__ring {
+        position: relative;
+        width: var(--spinner-size);
+        height: var(--spinner-size);
+        filter: contrast(1.2) brightness(1.1);
+    }
+
+    &__glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--glow-size);
+        height: var(--glow-size);
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+            circle,
+            var(--glow-color) 0%,
+            transparent 65%
+        );
+        border-radius: 50%;
+        animation: welding-pulse var(--laser-spinner-speed) ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    &__bloom {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--bloom-size);
+        height: var(--bloom-size);
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+            circle,
+            var(--bloom-color) 0%,
+            transparent 50%
+        );
+        border-radius: 50%;
+        animation: welding-bloom calc(var(--laser-spinner-speed) * 0.7)
+            ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.6;
+    }
+
+    &__center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--center-size);
+        height: var(--center-size);
+        transform: translate(-50%, -50%);
+        background: var(--center-color);
+        border-radius: 50%;
+        box-shadow: 0 0 calc(var(--center-size) * 1.5) var(--glow-color),
+            0 0 calc(var(--center-size) * 0.5) var(--spark-color-hot),
+            inset 0 0 calc(var(--center-size) * 0.3) var(--hotspot-color);
+        z-index: 3;
+        animation: welding-hotspot calc(var(--laser-spinner-speed) * 0.3)
+            ease-in-out infinite;
+    }
+
+    &__hotspot {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 40%;
+        height: 40%;
+        background: var(--hotspot-color);
+        border-radius: 50%;
+        box-shadow: 0 0 calc(var(--center-size) * 0.5) var(--hotspot-color);
+        animation: welding-hotspot-shimmer
+            calc(var(--laser-spinner-speed) * 0.2) ease-in-out infinite;
+    }
+
+    &__sparks {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        animation: welding-rotate var(--laser-spinner-speed) linear infinite;
+        z-index: 2;
+    }
+
+    &__spark-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        animation: spark-flicker 0.1s infinite;
+    }
+
+    &__spark {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        width: var(--spark-length);
+        height: var(--spark-width);
+        transform: translateY(-50%);
+        transform-origin: right center;
+        animation: spark-fly 1000ms ease-out infinite;
+    }
+
+    &__spark-core {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 25%;
+        height: 100%;
+        transform: translateY(-50%);
+        background: var(--spark-color-hot);
+        border-radius: var(--spark-width);
+        box-shadow: 0 0 calc(var(--spark-width) * 3) var(--spark-color-hot),
+            0 0 calc(var(--spark-width) * 1.5) var(--spark-color-warm);
+        animation: spark-brightness 0.15s ease-in-out infinite;
+    }
+
+    &__spark-trail {
+        position: absolute;
+        right: 20%;
+        top: 50%;
+        width: 60%;
+        height: 100%;
+        transform: translateY(-50%);
+        background: linear-gradient(
+            to left,
+            var(--spark-color-hot),
+            var(--spark-color-warm) 40%,
+            var(--spark-color-cool)
+        );
+        border-radius: var(--spark-width);
+        opacity: 0.9;
+        animation: spark-fade 1000ms ease-out infinite;
+    }
+
+    &__spark-particle {
+        position: absolute;
+        right: -10%;
+        top: 50%;
+        width: 30%;
+        height: 150%;
+        transform: translateY(-50%);
+        background: radial-gradient(
+            ellipse,
+            var(--spark-color-hot) 0%,
+            var(--spark-color-warm) 30%,
+            transparent 60%
+        );
+        opacity: 0.7;
+        animation: spark-particle 1000ms ease-out infinite;
+    }
+
+    &__label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--theme-text-secondary);
+        text-align: center;
+    }
+}
+
+// Keyframe animations
+@keyframes welding-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes welding-pulse {
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(0.85);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+}
+
+@keyframes welding-bloom {
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+@keyframes welding-hotspot {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        filter: brightness(1.2);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        filter: brightness(1.5);
+    }
+}
+
+@keyframes welding-hotspot-shimmer {
+    0%,
+    100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes spark-fly {
+    0% {
+        transform: translateY(-50%) translateX(0) scale(1);
+        opacity: 1;
+    }
+    70% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-50%) translateX(-5px) scale(0.7);
+        opacity: 0;
+    }
+}
+
+@keyframes spark-fade {
+    0% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes spark-brightness {
+    0%,
+    100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.3);
+    }
+}
+
+@keyframes spark-particle {
+    0% {
+        opacity: 0.8;
+        transform: translateY(-50%) scale(1) translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50%) scale(1.5) translateX(-8px);
+    }
+}
+
+@keyframes spark-flicker {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.95;
+    }
+}
+
+// Dark theme adjustments - enhance brightness in dark mode
+.theme--dark {
+    .laser-spinner {
+        filter: contrast(1.3) brightness(1.15);
+
+        &--primary {
+            --spark-color-hot: #ffb84d;
+            --spark-color-warm: #ff8c1a;
+            --glow-color: rgba(255, 165, 0, 0.8);
+        }
+
+        &--hot {
+            --spark-color-hot: #ffff66;
+            --glow-color: rgba(255, 220, 0, 0.9);
+        }
+    }
+}

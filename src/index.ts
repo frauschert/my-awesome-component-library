@@ -118,6 +118,8 @@ import type {
     SkeletonLineProps,
     SkeletonImageProps,
 } from './components/Skeleton'
+import LaserSpinner from './components/LaserSpinner'
+import type { LaserSpinnerProps } from './components/LaserSpinner'
 import DropdownMenu from './components/DropdownMenu'
 import type {
     DropdownMenuProps,
@@ -488,6 +490,7 @@ export {
     Skeleton,
     SkeletonLine,
     SkeletonImage,
+    LaserSpinner,
     DropdownMenu,
     ProgressCircular,
     QRCode,
@@ -675,6 +678,7 @@ export type {
     SkeletonProps,
     SkeletonLineProps,
     SkeletonImageProps,
+    LaserSpinnerProps,
     DropdownMenuProps,
     DropdownMenuItem,
     ProgressCircularProps,
