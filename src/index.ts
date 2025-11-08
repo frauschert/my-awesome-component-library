@@ -125,6 +125,11 @@ import type {
 } from './components/DropdownMenu'
 import ProgressCircular from './components/ProgressCircular'
 import type { ProgressCircularProps } from './components/ProgressCircular'
+import QRCode from './components/QRCode'
+import type {
+    QRCodeProps,
+    QRCodeErrorCorrectionLevel,
+} from './components/QRCode'
 import CommandPalette from './components/CommandPalette'
 import type {
     CommandItem,
@@ -485,6 +490,7 @@ export {
     SkeletonImage,
     DropdownMenu,
     ProgressCircular,
+    QRCode,
     CommandPalette,
     NavBar,
     Kanban,
@@ -672,6 +678,8 @@ export type {
     DropdownMenuProps,
     DropdownMenuItem,
     ProgressCircularProps,
+    QRCodeProps,
+    QRCodeErrorCorrectionLevel,
     CommandItem,
     CommandPaletteProps,
     NavBarProps,
