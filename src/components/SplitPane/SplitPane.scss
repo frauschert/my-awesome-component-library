@@ -1,0 +1,169 @@
+@import '../../styles/theme-vars';
+
+.split-pane {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &--horizontal {
+        flex-direction: row;
+    }
+
+    &--vertical {
+        flex-direction: column;
+    }
+
+    &--dragging {
+        user-select: none;
+
+        * {
+            user-select: none;
+        }
+    }
+
+    &__pane-wrapper {
+        position: relative;
+        overflow: hidden;
+        transition: width 0.2s ease, height 0.2s ease;
+        min-width: 0;
+        min-height: 0;
+
+        &--collapsed {
+            overflow: hidden;
+            min-width: 0 !important;
+            min-height: 0 !important;
+        }
+    }
+
+    &__pane {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        position: relative;
+    }
+
+    &__gutter {
+        position: relative;
+        flex-shrink: 0;
+        background-color: var(--theme-border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: var(--theme-primary);
+
+            .split-pane__collapse-btn {
+                opacity: 1;
+            }
+        }
+
+        &--active {
+            background-color: var(--theme-primary);
+        }
+    }
+
+    &--horizontal &__gutter {
+        cursor: col-resize;
+        width: 8px;
+
+        &:hover,
+        &--active {
+            width: 8px;
+        }
+    }
+
+    &--vertical &__gutter {
+        cursor: row-resize;
+        height: 8px;
+
+        &:hover,
+        &--active {
+            height: 8px;
+        }
+    }
+
+    &__gutter-line {
+        position: absolute;
+        background-color: currentColor;
+        opacity: 0.3;
+    }
+
+    &--horizontal &__gutter-line {
+        width: 1px;
+        height: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &--vertical &__gutter-line {
+        height: 1px;
+        width: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &__collapse-btn {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: none;
+        background-color: var(--theme-bg-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s ease, background-color 0.2s ease,
+            transform 0.1s ease;
+        color: var(--theme-text-primary);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+
+        &:hover {
+            background-color: var(--theme-bg-secondary);
+            transform: scale(1.1);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--theme-focus-ring);
+            opacity: 1;
+        }
+
+        svg {
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    &--horizontal &__collapse-btn {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &--vertical &__collapse-btn {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &--horizontal &__collapse-btn:hover {
+        transform: translateX(-50%) scale(1.1);
+    }
+
+    &--vertical &__collapse-btn:hover {
+        transform: translateY(-50%) scale(1.1);
+    }
+}
+
+// Dark theme adjustments are handled automatically by CSS variables
+// The --theme-border-color, --theme-bg-primary, etc. change when .theme--dark is applied to <html>

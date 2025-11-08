@@ -442,6 +442,13 @@ import type {
     ResizableProps,
     ResizableHandle,
 } from './components/Resizable/Resizable'
+import SplitPane, { Pane } from './components/SplitPane'
+import type {
+    SplitPaneProps,
+    PaneProps,
+    SplitDirection,
+    SplitPaneSize,
+} from './components/SplitPane'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -530,6 +537,8 @@ export {
     FormActions,
     Portal,
     Resizable,
+    SplitPane,
+    Pane,
     atom,
     useAtom,
     useAtomValue,
@@ -661,6 +670,10 @@ export type {
     FormActionsAlign,
     ResizableProps,
     ResizableHandle,
+    SplitPaneProps,
+    PaneProps,
+    SplitDirection,
+    SplitPaneSize,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
