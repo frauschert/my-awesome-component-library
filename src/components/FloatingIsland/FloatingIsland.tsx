@@ -86,7 +86,7 @@ export const FloatingIsland = forwardRef<HTMLDivElement, FloatingIslandProps>(
     ) => {
         const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
         const islandRef = useRef<HTMLDivElement>(null)
-        const animationFrameRef = useRef<number>()
+        const animationFrameRef = useRef<number | null>(null)
 
         useEffect(() => {
             if (!interactive) return

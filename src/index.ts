@@ -1,6 +1,13 @@
 import Button from './components/Button'
 import Box from './components/Box'
 import Table from './components/Table'
+import ActivityFeed from './components/ActivityFeed'
+import type {
+    ActivityFeedProps,
+    ActivityItem,
+    ActivityType,
+    ActivityGroup,
+} from './components/ActivityFeed'
 import Accordion from './components/Accordion'
 import type {
     AccordionProps,
@@ -459,6 +466,7 @@ export {
     Button,
     Box,
     Table,
+    ActivityFeed,
     Grid,
     GridItem,
     Stack,
@@ -643,6 +651,10 @@ export type {
     UseFormReturn,
     TextSelectionState,
     UseTextSelectionOptions,
+    ActivityFeedProps,
+    ActivityItem,
+    ActivityType,
+    ActivityGroup,
     UseDropzoneOptions,
     UseDropzoneState,
     UseDropzoneReturn,
