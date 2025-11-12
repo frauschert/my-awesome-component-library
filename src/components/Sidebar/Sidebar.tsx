@@ -231,7 +231,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {itemElement}
                 {hasChildren && isExpanded && !isCollapsed && (
                     <div className="sidebar__children" role="group">
-                        {item.children!.map((child) =>
+                        {item.children?.map((child) =>
                             renderSidebarItem(child, level + 1)
                         )}
                     </div>
