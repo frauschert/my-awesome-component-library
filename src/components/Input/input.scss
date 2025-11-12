@@ -117,13 +117,28 @@
     display: flex;
     align-items: center;
     color: var(--theme-text-secondary);
+    pointer-events: none;
 }
 .field__adornment--start {
-    left: 8px;
+    left: 12px;
 }
 .field__adornment--end {
     right: 8px;
     gap: 4px;
+    pointer-events: all;
+}
+
+/* Adjust padding when start adornment is present */
+.field:has(.field__adornment--start) input {
+    padding-left: 40px;
+}
+
+.field:has(.field__adornment--start) input + label {
+    left: 40px;
+}
+
+.field.focussed:has(.field__adornment--start) input {
+    padding-left: 40px;
 }
 
 /* Clear button */
