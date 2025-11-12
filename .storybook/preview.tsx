@@ -1,7 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
 import React, { useEffect } from 'react'
-import ThemeProvider from '../src/components/Theme/ThemeProvider'
-import { useTheme } from '../src/components/Theme/ThemeContext'
+import { Provider } from '../src/components/Theme/ThemeContext'
 import type { ThemeKey } from '../src/components/Theme/ThemeContext'
 
 // Import Inter font
@@ -10,24 +9,6 @@ import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
-
-// Wrapper component to sync Storybook global theme with context
-function ThemeSync({
-    theme,
-    children,
-}: {
-    theme: ThemeKey
-    children: React.ReactNode
-}) {
-    const [, setTheme] = useTheme()
-
-    // Sync Storybook global to context on mount and when theme changes
-    useEffect(() => {
-        setTheme({ theme })
-    }, [theme, setTheme])
-
-    return <>{children}</>
-}
 
 const preview: Preview = {
     tags: ['autodocs'],
@@ -53,7 +34,7 @@ const preview: Preview = {
         (Story, context) => {
             const theme = context.globals.theme as ThemeKey
 
-            // Apply theme immediately to document (before React renders)
+            // Apply theme class directly to html element
             useEffect(() => {
                 document.documentElement.classList.remove(
                     'theme--light',
@@ -63,13 +44,11 @@ const preview: Preview = {
             }, [theme])
 
             return (
-                <ThemeProvider>
-                    <ThemeSync theme={theme}>
-                        <div style={{ padding: '1rem' }}>
-                            <Story />
-                        </div>
-                    </ThemeSync>
-                </ThemeProvider>
+                <Provider>
+                    <div style={{ padding: '1rem' }}>
+                        <Story />
+                    </div>
+                </Provider>
             )
         },
     ],

@@ -85,7 +85,7 @@
         }
 
         .accordion-button {
-            background-color: var(--theme-header-bg);
+            background-color: var(--theme-bg-secondary);
 
             &:hover:not(:disabled) {
                 background-color: var(--theme-hover-bg);
