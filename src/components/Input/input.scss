@@ -48,6 +48,18 @@
     appearance: none;
     -webkit-appearance: none;
 }
+
+/* Hide native number spinners completely */
+.field input[type='number']::-webkit-outer-spin-button,
+.field input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.field input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .field input::-webkit-input-placeholder {
     color: var(--theme-text-muted);
 }
@@ -131,6 +143,47 @@
 .field__clear:focus-visible {
     outline: 2px solid var(--theme-primary);
     outline-offset: 2px;
+}
+
+/* Custom number input controls */
+.field__number-controls {
+    display: flex;
+    flex-direction: column;
+    margin-left: 4px;
+    gap: 1px;
+}
+
+.field__number-button {
+    all: unset;
+    cursor: pointer;
+    width: 20px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--theme-text-secondary);
+    border-radius: 2px;
+    transition: all 0.15s ease;
+}
+
+.field__number-button:hover {
+    background: var(--theme-hover);
+    color: var(--theme-text-primary);
+}
+
+.field__number-button:active {
+    background: var(--theme-hover-bg);
+    transform: scale(0.95);
+}
+
+.field__number-button:focus-visible {
+    outline: 1px solid var(--theme-primary);
+    outline-offset: 1px;
+}
+
+.field__number-button svg {
+    width: 12px;
+    height: 12px;
 }
 
 /* Disabled/readOnly visuals */

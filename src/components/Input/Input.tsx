@@ -118,6 +118,34 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         innerRef.current?.focus()
     }
 
+    const handleIncrement = () => {
+        if (type !== 'number') return
+        const currentValue =
+            typeof value === 'number' ? value : parseFloat(String(value)) || 0
+        const step = rest.step ? Number(rest.step) : 1
+        const max = rest.max !== undefined ? Number(rest.max) : undefined
+        const newValue = currentValue + step
+
+        if (max !== undefined && newValue > max) return
+
+        setValue(newValue)
+        onValueChange?.(newValue)
+    }
+
+    const handleDecrement = () => {
+        if (type !== 'number') return
+        const currentValue =
+            typeof value === 'number' ? value : parseFloat(String(value)) || 0
+        const step = rest.step ? Number(rest.step) : 1
+        const min = rest.min !== undefined ? Number(rest.min) : undefined
+        const newValue = currentValue - step
+
+        if (min !== undefined && newValue < min) return
+
+        setValue(newValue)
+        onValueChange?.(newValue)
+    }
+
     const showClear =
         !!clearable &&
         ((typeof value === 'string' && value.length > 0) ||
@@ -158,9 +186,51 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
                     {label}
                 </label>
             )}
-            {(endAdornment || showClear) && (
+            {(endAdornment || showClear || type === 'number') && (
                 <div className="field__adornment field__adornment--end">
                     {endAdornment}
+                    {type === 'number' && (
+                        <div className="field__number-controls">
+                            <button
+                                type="button"
+                                className="field__number-button field__number-button--up"
+                                aria-label="Increment value"
+                                onClick={handleIncrement}
+                                tabIndex={-1}
+                            >
+                                <svg
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 12 12"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M6 3L9 7H3L6 3Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </button>
+                            <button
+                                type="button"
+                                className="field__number-button field__number-button--down"
+                                aria-label="Decrement value"
+                                onClick={handleDecrement}
+                                tabIndex={-1}
+                            >
+                                <svg
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 12 12"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M6 9L3 5H9L6 9Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                     {showClear && (
                         <button
                             type="button"
