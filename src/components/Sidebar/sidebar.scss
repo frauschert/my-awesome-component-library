@@ -92,6 +92,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: 8px 0;
+    padding-bottom: 56px; // Space for collapse button
 
     &::-webkit-scrollbar {
         width: 6px;

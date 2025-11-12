@@ -130,7 +130,7 @@ const Grid: React.FC<GridProps> = ({
 }) => {
     const classes = classNames(
         'grid',
-        gap !== 'md' && `grid--gap-${gap}`,
+        `grid--gap-${gap}`,
         justifyItems && `grid--justify-items-${justifyItems}`,
         alignItems && `grid--align-items-${alignItems}`,
         justifyContent && `grid--justify-content-${justifyContent}`,
