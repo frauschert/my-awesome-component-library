@@ -164,6 +164,11 @@ import type {
 } from './components/ButtonGroup'
 import VirtualList from './components/VirtualList'
 import type { VirtualListProps } from './components/VirtualList'
+import InfiniteScroll from './components/InfiniteScroll'
+import type {
+    InfiniteScrollProps,
+    InfiniteScrollDirection,
+} from './components/InfiniteScroll'
 import TreeView from './components/TreeView'
 import JsonViewer from './components/JsonViewer'
 import type {
@@ -516,6 +521,7 @@ export {
     Kanban,
     ButtonGroup,
     VirtualList,
+    InfiniteScroll,
     TreeView,
     JsonViewer,
     Sidebar,
@@ -729,6 +735,8 @@ export type {
     ButtonGroupOrientation,
     ButtonGroupSelectionMode,
     VirtualListProps,
+    InfiniteScrollProps,
+    InfiniteScrollDirection,
     TreeViewProps,
     TreeNode,
     JsonViewerProps,

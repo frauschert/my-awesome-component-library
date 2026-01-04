@@ -30,7 +30,7 @@ export type UseIntersectionObserverOptions = {
  * ```
  */
 export default function useIntersectionObserver<T extends HTMLElement>(
-    ref: RefObject<T>,
+    ref: RefObject<T | null>,
     options: UseIntersectionObserverOptions = {}
 ): IntersectionObserverEntry | null {
     const {
