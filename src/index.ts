@@ -463,6 +463,13 @@ import type {
 } from './components/SplitPane'
 import FloatingIsland from './components/FloatingIsland'
 import type { FloatingIslandProps } from './components/FloatingIsland'
+import ScrollArea from './components/ScrollArea'
+import type {
+    ScrollAreaProps,
+    ScrollAreaRef,
+    ScrollAreaSize,
+    ScrollAreaType,
+} from './components/ScrollArea'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -556,6 +563,7 @@ export {
     SplitPane,
     Pane,
     FloatingIsland,
+    ScrollArea,
     atom,
     useAtom,
     useAtomValue,
@@ -696,6 +704,10 @@ export type {
     SplitDirection,
     SplitPaneSize,
     FloatingIslandProps,
+    ScrollAreaProps,
+    ScrollAreaRef,
+    ScrollAreaSize,
+    ScrollAreaType,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
