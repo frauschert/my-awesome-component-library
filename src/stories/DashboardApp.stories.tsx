@@ -341,6 +341,8 @@ const DashboardApp = () => {
             {/* Top Navigation */}
             <NavBar
                 items={navItems}
+                variant="elevated"
+                position="sticky"
                 actions={
                     <Stack direction="horizontal" align="center" gap="md">
                         {/* Theme Switcher */}
@@ -373,6 +375,7 @@ const DashboardApp = () => {
             <div style={{ display: 'flex', flex: 1 }}>
                 {/* Sidebar */}
                 <Sidebar
+                    variant="floating"
                     collapsed={!sidebarOpen}
                     onCollapsedChange={(collapsed) =>
                         setSidebarOpen(!collapsed)
@@ -382,234 +385,250 @@ const DashboardApp = () => {
                 />
 
                 {/* Main Content */}
-                <Container center={false}>
-                    {/* Breadcrumb */}
-                    <div style={{ marginBottom: '24px' }}>
-                        <Breadcrumb
-                            items={[
-                                { label: 'Home', href: '#' },
-                                { label: 'Dashboard', href: '#dashboard' },
-                                { label: 'Overview' },
-                            ]}
-                        />
-                    </div>
-
-                    {/* Page Header */}
-                    <Stack
-                        direction="horizontal"
-                        justify="space-between"
-                        align="center"
-                        style={{ margin: '24px 0' }}
-                    >
-                        <div>
-                            <Typography variant="h1">Dashboard</Typography>
-                            <Typography
-                                variant="body2"
-                                style={{ color: 'var(--theme-text-muted)' }}
-                            >
-                                Welcome back, {userData.name}
-                            </Typography>
+                <div style={{ paddingTop: '24px' }}>
+                    <Container center as="main">
+                        {/* Breadcrumb */}
+                        <div style={{ marginBottom: '24px' }}>
+                            <Breadcrumb
+                                items={[
+                                    { label: 'Home', href: '#' },
+                                    { label: 'Dashboard', href: '#dashboard' },
+                                    { label: 'Overview' },
+                                ]}
+                            />
                         </div>
-                        <Stack direction="horizontal" gap="sm">
-                            <Button variant="secondary">Export</Button>
-                            <Button
-                                variant="primary"
-                                onClick={() => setShowModal(true)}
-                            >
-                                + New Project
-                            </Button>
-                        </Stack>
-                    </Stack>
 
-                    {/* Stats Grid */}
-                    <div style={{ marginBottom: '24px' }}>
-                        <Grid columns={4} gap="md">
-                            <Card>
+                        {/* Page Header */}
+                        <Stack
+                            direction="horizontal"
+                            justify="space-between"
+                            align="center"
+                            style={{ margin: '24px 0' }}
+                        >
+                            <div>
+                                <Typography variant="h1">Dashboard</Typography>
                                 <Typography
                                     variant="body2"
-                                    style={{
-                                        color: 'var(--theme-text-muted)',
-                                    }}
+                                    style={{ color: 'var(--theme-text-muted)' }}
                                 >
-                                    Total Projects
+                                    Welcome back, {userData.name}
                                 </Typography>
-                                <Typography variant="h2">24</Typography>
-                                <ProgressBar
-                                    value={85}
-                                    color="primary"
-                                    size="small"
-                                />
-                            </Card>
-                            <Card>
-                                <Typography
-                                    variant="body2"
-                                    style={{
-                                        color: 'var(--theme-text-muted)',
-                                    }}
+                            </div>
+                            <Stack direction="horizontal" gap="sm">
+                                <Button variant="secondary">Export</Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => setShowModal(true)}
                                 >
-                                    Completed
-                                </Typography>
-                                <Typography variant="h2">18</Typography>
-                                <ProgressBar
-                                    value={92}
-                                    color="success"
-                                    size="small"
-                                />
-                            </Card>
-                            <Card>
-                                <Typography
-                                    variant="body2"
-                                    style={{
-                                        color: 'var(--theme-text-muted)',
-                                    }}
-                                >
-                                    In Progress
-                                </Typography>
-                                <Typography variant="h2">5</Typography>
-                                <ProgressBar
-                                    value={78}
-                                    color="info"
-                                    size="small"
-                                />
-                            </Card>
-                            <Card>
-                                <Typography
-                                    variant="body2"
-                                    style={{
-                                        color: 'var(--theme-text-muted)',
-                                    }}
-                                >
-                                    Team Members
-                                </Typography>
-                                <Typography variant="h2">12</Typography>
-                                <Stack
-                                    direction="horizontal"
-                                    align="center"
-                                    gap="sm"
-                                >
-                                    <Avatar
-                                        size="xs"
-                                        src="https://i.pravatar.cc/150?img=5"
-                                    />
-                                    <Avatar
-                                        size="xs"
-                                        src="https://i.pravatar.cc/150?img=6"
-                                    />
-                                    <Avatar
-                                        size="xs"
-                                        src="https://i.pravatar.cc/150?img=7"
-                                    />
-                                    <Typography variant="caption">
-                                        +9
-                                    </Typography>
-                                </Stack>
-                            </Card>
-                        </Grid>
-                    </div>
-
-                    <div style={{ margin: '24px 0' }}>
-                        <Divider />
-                    </div>
-
-                    {/* Main Content Tabs */}
-                    <Tabs items={tabItems} defaultActiveId="overview" />
-
-                    <div style={{ margin: '24px 0' }}>
-                        <Divider />
-                    </div>
-
-                    {/* Bottom Section with Metrics */}
-                    <Grid columns={2} gap="lg">
-                        <Card>
-                            <Typography
-                                variant="h3"
-                                style={{ marginBottom: '16px' }}
-                            >
-                                Performance Metrics
-                            </Typography>
-                            <Stack direction="vertical" gap="md">
-                                <div>
-                                    <Typography variant="body2">
-                                        Code Quality
-                                    </Typography>
-                                    <ProgressBar value={85} color="primary" />
-                                </div>
-                                <div>
-                                    <Typography variant="body2">
-                                        Test Coverage
-                                    </Typography>
-                                    <ProgressBar value={92} color="success" />
-                                </div>
-                                <div>
-                                    <Typography variant="body2">
-                                        Performance Score
-                                    </Typography>
-                                    <ProgressBar value={78} color="info" />
-                                </div>
+                                    + New Project
+                                </Button>
                             </Stack>
-                        </Card>
-                        <Card>
-                            <Typography
-                                variant="h3"
-                                style={{ marginBottom: '16px' }}
-                            >
-                                Quick Actions
-                            </Typography>
-                            <Stack direction="vertical" gap="sm">
-                                <Stack
-                                    direction="horizontal"
-                                    align="center"
-                                    gap="sm"
-                                >
-                                    <Checkbox />{' '}
-                                    <Typography>
-                                        Enable notifications
-                                    </Typography>
-                                </Stack>
-                                <Stack
-                                    direction="horizontal"
-                                    align="center"
-                                    gap="sm"
-                                >
-                                    <Checkbox />{' '}
-                                    <Typography>Auto-save changes</Typography>
-                                </Stack>
-                                <Stack
-                                    direction="horizontal"
-                                    align="center"
-                                    gap="sm"
-                                >
-                                    <Checkbox />{' '}
-                                    <Typography>Show activity feed</Typography>
-                                </Stack>
-                                <Divider />
-                                <div>
+                        </Stack>
+
+                        {/* Stats Grid */}
+                        <div style={{ marginBottom: '24px' }}>
+                            <Grid columns={4} gap="md">
+                                <Card variant="elevated">
                                     <Typography
                                         variant="body2"
-                                        style={{ marginBottom: '8px' }}
+                                        style={{
+                                            color: 'var(--theme-text-muted)',
+                                        }}
                                     >
-                                        Team Satisfaction
+                                        Total Projects
                                     </Typography>
+                                    <Typography variant="h2">24</Typography>
+                                    <ProgressBar
+                                        value={85}
+                                        color="primary"
+                                        size="small"
+                                    />
+                                </Card>
+                                <Card variant="elevated">
+                                    <Typography
+                                        variant="body2"
+                                        style={{
+                                            color: 'var(--theme-text-muted)',
+                                        }}
+                                    >
+                                        Completed
+                                    </Typography>
+                                    <Typography variant="h2">18</Typography>
+                                    <ProgressBar
+                                        value={92}
+                                        color="success"
+                                        size="small"
+                                    />
+                                </Card>
+                                <Card variant="elevated">
+                                    <Typography
+                                        variant="body2"
+                                        style={{
+                                            color: 'var(--theme-text-muted)',
+                                        }}
+                                    >
+                                        In Progress
+                                    </Typography>
+                                    <Typography variant="h2">5</Typography>
+                                    <ProgressBar
+                                        value={78}
+                                        color="info"
+                                        size="small"
+                                    />
+                                </Card>
+                                <Card variant="elevated">
+                                    <Typography
+                                        variant="body2"
+                                        style={{
+                                            color: 'var(--theme-text-muted)',
+                                        }}
+                                    >
+                                        Team Members
+                                    </Typography>
+                                    <Typography variant="h2">12</Typography>
                                     <Stack
                                         direction="horizontal"
                                         align="center"
                                         gap="sm"
                                     >
-                                        <Rating
-                                            value={4.5}
-                                            precision="half"
-                                            readOnly
-                                            size="medium"
+                                        <Avatar
+                                            size="xs"
+                                            src="https://i.pravatar.cc/150?img=5"
+                                        />
+                                        <Avatar
+                                            size="xs"
+                                            src="https://i.pravatar.cc/150?img=6"
+                                        />
+                                        <Avatar
+                                            size="xs"
+                                            src="https://i.pravatar.cc/150?img=7"
                                         />
                                         <Typography variant="caption">
-                                            4.5/5
+                                            +9
                                         </Typography>
                                     </Stack>
-                                </div>
-                            </Stack>
-                        </Card>
-                    </Grid>
-                </Container>
+                                </Card>
+                            </Grid>
+                        </div>
+
+                        <div style={{ margin: '24px 0' }}>
+                            <Divider />
+                        </div>
+
+                        {/* Main Content Tabs */}
+                        <Tabs
+                            variant="line"
+                            items={tabItems}
+                            defaultActiveId="overview"
+                        />
+
+                        <div style={{ margin: '24px 0' }}>
+                            <Divider />
+                        </div>
+
+                        {/* Bottom Section with Metrics */}
+                        <Grid columns={2} gap="lg">
+                            <Card variant="elevated">
+                                <Typography
+                                    variant="h3"
+                                    style={{ marginBottom: '16px' }}
+                                >
+                                    Performance Metrics
+                                </Typography>
+                                <Stack direction="vertical" gap="md">
+                                    <div>
+                                        <Typography variant="body2">
+                                            Code Quality
+                                        </Typography>
+                                        <ProgressBar
+                                            value={85}
+                                            color="primary"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Typography variant="body2">
+                                            Test Coverage
+                                        </Typography>
+                                        <ProgressBar
+                                            value={92}
+                                            color="success"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Typography variant="body2">
+                                            Performance Score
+                                        </Typography>
+                                        <ProgressBar value={78} color="info" />
+                                    </div>
+                                </Stack>
+                            </Card>
+                            <Card variant="elevated">
+                                <Typography
+                                    variant="h3"
+                                    style={{ marginBottom: '16px' }}
+                                >
+                                    Quick Actions
+                                </Typography>
+                                <Stack direction="vertical" gap="sm">
+                                    <Stack
+                                        direction="horizontal"
+                                        align="center"
+                                        gap="sm"
+                                    >
+                                        <Checkbox />{' '}
+                                        <Typography>
+                                            Enable notifications
+                                        </Typography>
+                                    </Stack>
+                                    <Stack
+                                        direction="horizontal"
+                                        align="center"
+                                        gap="sm"
+                                    >
+                                        <Checkbox />{' '}
+                                        <Typography>
+                                            Auto-save changes
+                                        </Typography>
+                                    </Stack>
+                                    <Stack
+                                        direction="horizontal"
+                                        align="center"
+                                        gap="sm"
+                                    >
+                                        <Checkbox />{' '}
+                                        <Typography>
+                                            Show activity feed
+                                        </Typography>
+                                    </Stack>
+                                    <Divider />
+                                    <div>
+                                        <Typography
+                                            variant="body2"
+                                            style={{ marginBottom: '8px' }}
+                                        >
+                                            Team Satisfaction
+                                        </Typography>
+                                        <Stack
+                                            direction="horizontal"
+                                            align="center"
+                                            gap="sm"
+                                        >
+                                            <Rating
+                                                value={4.5}
+                                                precision="half"
+                                                readOnly
+                                                size="medium"
+                                            />
+                                            <Typography variant="caption">
+                                                4.5/5
+                                            </Typography>
+                                        </Stack>
+                                    </div>
+                                </Stack>
+                            </Card>
+                        </Grid>
+                    </Container>
+                </div>
             </div>
 
             {/* Modal for New Project */}

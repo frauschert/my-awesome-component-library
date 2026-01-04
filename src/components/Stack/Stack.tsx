@@ -104,7 +104,7 @@ const Stack: React.FC<StackProps> = ({
             direction.lg && `stack--lg-${direction.lg}`,
             direction.xl && `stack--xl-${direction.xl}`,
         ],
-        gap !== 'md' && `stack--gap-${gap}`,
+        `stack--gap-${gap}`,
         align !== 'stretch' && `stack--align-${align}`,
         justify !== 'start' && `stack--justify-${justify}`,
         wrap && 'stack--wrap',
