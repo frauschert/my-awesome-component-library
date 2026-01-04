@@ -8,6 +8,7 @@ const mockObserve = jest.fn()
 const mockUnobserve = jest.fn()
 const mockDisconnect = jest.fn()
 
+// eslint-disable-next-line no-unused-vars
 let intersectionCallback: (entries: IntersectionObserverEntry[]) => void
 
 beforeEach(() => {
@@ -30,11 +31,11 @@ const triggerIntersection = (isIntersecting: boolean) => {
                 isIntersecting,
                 intersectionRatio: isIntersecting ? 1 : 0,
                 target: document.createElement('div'),
-                boundingClientRect: {} as DOMRectReadOnly,
-                intersectionRect: {} as DOMRectReadOnly,
+                boundingClientRect: {} as any,
+                intersectionRect: {} as any,
                 rootBounds: null,
                 time: Date.now(),
-            },
+            } as IntersectionObserverEntry,
         ])
     })
 }
