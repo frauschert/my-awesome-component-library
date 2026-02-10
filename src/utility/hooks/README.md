@@ -24,6 +24,7 @@ Custom React hooks for common use cases in the component library.
 -   [useHash](#usehash)
 -   [useSearchParam](#usesearchparam)
 -   [useFullscreen](#usefullscreen)
+-   [usePortal](#useportal)
 -   [useDebounce (effect)](#usedebounce)
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
@@ -3722,6 +3723,45 @@ When entering fullscreen, the hook calls `requestFullscreen()` on the element. W
 ### Tests
 
 See `src/utility/hooks/__tests__/useFullscreen.test.tsx` for comprehensive tests covering API detection, enter/exit operations, toggle functionality, error handling, event callbacks, and browser support checking.
+
+---
+
+## usePortal
+
+Creates or reuses a DOM node for rendering React portals.
+
+### API
+
+```ts
+usePortal(options?: {
+  id?: string
+  className?: string
+  parent?: HTMLElement | null
+}): HTMLElement | null
+```
+
+### Usage
+
+```tsx
+import { createPortal } from 'react-dom'
+import { usePortal } from './utility/hooks'
+
+function Modal({ children }) {
+    const portalNode = usePortal({ id: 'modal-root' })
+
+    if (!portalNode) {
+        return null
+    }
+
+    return createPortal(children, portalNode)
+}
+```
+
+### Notes
+
+-   Reuses an existing element when `id` matches an element in the DOM
+-   Automatically cleans up created nodes on unmount
+-   SSR-safe (returns `null` before `document` is available)
 
 ---
 
