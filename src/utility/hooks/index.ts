@@ -74,6 +74,7 @@ import useSwipe from './useSwipe'
 import usePinch from './usePinch'
 import usePageVisibility from './usePageVisibility'
 import useBattery from './useBattery'
+import usePortal from './usePortal'
 
 export {
     useDebounceEffect,
@@ -155,6 +156,7 @@ export {
     usePinch,
     usePageVisibility,
     useBattery,
+    usePortal,
 }
 
 export type { UseSetActions } from './useSet'
@@ -294,4 +296,5 @@ export default {
     usePinch,
     usePageVisibility,
     useBattery,
+    usePortal,
 }
