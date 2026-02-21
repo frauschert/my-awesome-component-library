@@ -526,6 +526,18 @@ import type {
     AutocompleteOption,
     AutocompleteSize,
 } from './components/Autocomplete/Autocomplete'
+import PasswordInput from './components/PasswordInput'
+import type {
+    PasswordInputProps,
+    PasswordInputSize,
+} from './components/PasswordInput/PasswordInput'
+import SegmentedControl from './components/SegmentedControl'
+import type {
+    SegmentedControlProps,
+    SegmentedControlItem,
+    SegmentedControlSize,
+    SegmentedControlOrientation,
+} from './components/SegmentedControl/SegmentedControl'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -624,6 +636,8 @@ export {
     EmptyState,
     ErrorBoundary,
     Autocomplete,
+    PasswordInput,
+    SegmentedControl,
     atom,
     useAtom,
     useAtomValue,
@@ -806,6 +820,12 @@ export type {
     AutocompleteProps,
     AutocompleteOption,
     AutocompleteSize,
+    PasswordInputProps,
+    PasswordInputSize,
+    SegmentedControlProps,
+    SegmentedControlItem,
+    SegmentedControlSize,
+    SegmentedControlOrientation,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
