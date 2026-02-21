@@ -218,7 +218,6 @@ export const useResize = (
             ref.current.style.height = `${newHeight}px`
 
             const newSize = { width: newWidth, height: newHeight }
-            setSize(newSize)
             onResizeRef.current?.(newSize)
         },
         handlePointerUp: () => {

@@ -3,6 +3,22 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { Resizable } from './Resizable'
 
+// JSDOM doesn't support PointerEvent, polyfill so fireEvent.pointerDown/Move
+// carry clientX/clientY properly.
+if (typeof globalThis.PointerEvent === 'undefined') {
+    ;(globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
+        readonly pointerId: number
+        readonly pressure: number
+        readonly pointerType: string
+        constructor(type: string, params: PointerEventInit = {}) {
+            super(type, params)
+            this.pointerId = params.pointerId ?? 0
+            this.pressure = params.pressure ?? 0
+            this.pointerType = params.pointerType ?? ''
+        }
+    }
+}
+
 describe('Resizable', () => {
     describe('rendering', () => {
         it('should render children', () => {

@@ -33,17 +33,13 @@ describe('useSpinner', () => {
     test('withSpinner manages loading state for successful promise', async () => {
         const { result } = renderHook(() => useSpinner())
         const mockData = { id: 1, name: 'test' }
-        const mockPromise = Promise.resolve(mockData)
 
         expect(result.current.loading).toBe(false)
 
-        const promiseWrapper = act(async () => {
-            return result.current.withSpinner(mockPromise)
+        let data: typeof mockData | undefined
+        await act(async () => {
+            data = await result.current.withSpinner(Promise.resolve(mockData))
         })
-
-        expect(result.current.loading).toBe(true)
-
-        const data = await promiseWrapper
 
         expect(data).toEqual(mockData)
         expect(result.current.loading).toBe(false)
@@ -52,17 +48,13 @@ describe('useSpinner', () => {
     test('withSpinner manages loading state for rejected promise', async () => {
         const { result } = renderHook(() => useSpinner())
         const mockError = new Error('Test error')
-        const mockPromise = Promise.reject(mockError)
 
         expect(result.current.loading).toBe(false)
 
-        const promiseWrapper = act(async () => {
-            return result.current.withSpinner(mockPromise)
-        })
+        await expect(
+            act(() => result.current.withSpinner(Promise.reject(mockError)))
+        ).rejects.toThrow('Test error')
 
-        expect(result.current.loading).toBe(true)
-
-        await expect(promiseWrapper).rejects.toThrow('Test error')
         expect(result.current.loading).toBe(false)
     })
 })

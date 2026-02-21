@@ -66,6 +66,7 @@ function Toast({
             role={role}
             aria-live="polite"
             aria-atomic="true"
+            onClick={() => removeRef.current()}
             onMouseEnter={pauseTimer}
             onMouseLeave={resumeTimer}
             onFocus={pauseTimer}

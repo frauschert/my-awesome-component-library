@@ -138,7 +138,7 @@ export const Resizable: React.FC<ResizableProps> = ({
         preserveAspectRatio,
     }
 
-    const { isResizing, createResizeHandler, getCursor } = useResize(
+    const { isResizing, size, createResizeHandler, getCursor } = useResize(
         ref,
         resizeOptions
     )

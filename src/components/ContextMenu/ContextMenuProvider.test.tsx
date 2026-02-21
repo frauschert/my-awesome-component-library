@@ -105,11 +105,14 @@ describe('ContextMenuProvider', () => {
         expect(screen.getByText('More Options')).toBeInTheDocument()
     })
 
-    it('hides menu on click', async () => {
+    it('hides menu on click outside', async () => {
         render(
-            <ContextMenuProvider menuEntries={mockMenuEntries}>
-                <div data-testid="child-content">Child Content</div>
-            </ContextMenuProvider>
+            <div>
+                <ContextMenuProvider menuEntries={mockMenuEntries}>
+                    <div data-testid="child-content">Child Content</div>
+                </ContextMenuProvider>
+                <div data-testid="outside">Outside</div>
+            </div>
         )
 
         // Show menu
@@ -119,9 +122,11 @@ describe('ContextMenuProvider', () => {
         })
         expect(screen.getByRole('menu')).toBeInTheDocument()
 
-        // Hide menu
-        fireEvent.click(screen.getByTestId('child-content'))
-        expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+        // Hide menu by clicking outside
+        fireEvent.mouseDown(screen.getByTestId('outside'))
+        await waitFor(() => {
+            expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+        })
     })
 
     it('executes menu item onClick when clicked', () => {
@@ -243,8 +248,10 @@ describe('ContextMenuProvider', () => {
         fireEvent.contextMenu(screen.getByTestId('child-content'))
         expect(screen.getByRole('menu')).toBeInTheDocument()
 
-        // Hide menu via click
-        fireEvent.click(screen.getByTestId('child-content'))
+        // Hide menu via Escape
+        fireEvent.keyDown(screen.getByTestId('child-content'), {
+            key: 'Escape',
+        })
         expect(screen.queryByRole('menu')).not.toBeInTheDocument()
     })
 

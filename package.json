@@ -56,15 +56,14 @@
         "storybook-css-modules": "^1.0.8",
         "ts-node": "^10.9.2",
         "typescript": "^4.9.5",
-        "vite": "^6.4.1"
+        "vite": "^6.4.1",
+        "@fontsource/inter": "^5.2.8"
     },
     "peerDependencies": {
         "react": "^18.0.0",
         "react-dom": "^18.0.0"
     },
     "dependencies": {
-        "@fontsource/inter": "^5.2.8",
-        "echarts": "^5.2.2",
         "qrcode": "^1.5.4"
     },
     "resolutions": {

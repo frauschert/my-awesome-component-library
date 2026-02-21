@@ -42,16 +42,16 @@ export interface UseMouseOptions {
 
 /**
  * Hook to track mouse position and state
- * 
+ *
  * @param ref - Optional ref to track mouse relative to element
  * @param options - Configuration options
  * @returns Mouse state
- * 
+ *
  * @example
  * ```tsx
  * const mouse = useMouse()
  * console.log(mouse.x, mouse.y)
- * 
+ *
  * // With element ref
  * const ref = useRef<HTMLDivElement>(null)
  * const mouse = useMouse(ref)
@@ -87,14 +87,13 @@ export function useMouse<T extends HTMLElement = HTMLElement>(
         if (!target) return
 
         const updateMouseState = (event: MouseEvent) => {
+            const now = Date.now()
+
             // Throttle updates
-            if (throttleMs > 0) {
-                const now = Date.now()
-                if (now - lastUpdateRef.current < throttleMs) {
-                    return
-                }
-                lastUpdateRef.current = now
+            if (throttleMs > 0 && now - lastUpdateRef.current < throttleMs) {
+                return
             }
+            lastUpdateRef.current = now
 
             const newState: MouseState = {
                 x: event.clientX,
@@ -118,10 +117,12 @@ export function useMouse<T extends HTMLElement = HTMLElement>(
 
                 // Calculate percentage position
                 if (rect.width > 0) {
-                    newState.elementPositionX = (newState.elementX / rect.width) * 100
+                    newState.elementPositionX =
+                        (newState.elementX / rect.width) * 100
                 }
                 if (rect.height > 0) {
-                    newState.elementPositionY = (newState.elementY / rect.height) * 100
+                    newState.elementPositionY =
+                        (newState.elementY / rect.height) * 100
                 }
 
                 // Clamp percentage to 0-100
@@ -163,7 +164,10 @@ export function useMouse<T extends HTMLElement = HTMLElement>(
         }
 
         return () => {
-            target.removeEventListener('mousemove', updateMouseState as EventListener)
+            target.removeEventListener(
+                'mousemove',
+                updateMouseState as EventListener
+            )
             if (element && resetOnExit) {
                 element.removeEventListener('mouseleave', handleMouseLeave)
             }

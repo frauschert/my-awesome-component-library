@@ -290,6 +290,18 @@ import {
     usePreferredLanguage,
     useWakeLock,
     useShare,
+    useMap,
+    useSet,
+    useQueue,
+    useStack,
+    useEvent,
+    useTitle,
+    useFavicon,
+    useFocusWithin,
+    useIndexedDB,
+    useForm,
+    useTextSelection,
+    useDropzone,
     useNetwork,
     useOnline,
     useMouse,
@@ -303,18 +315,6 @@ import {
     usePinch,
     usePageVisibility,
     useBattery,
-    useMap,
-    useSet,
-    useQueue,
-    useStack,
-    useEvent,
-    useTitle,
-    useFavicon,
-    useFocusWithin,
-    useIndexedDB,
-    useForm,
-    useTextSelection,
-    useDropzone,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -538,6 +538,20 @@ import type {
     SegmentedControlSize,
     SegmentedControlOrientation,
 } from './components/SegmentedControl/SegmentedControl'
+import {
+    inject,
+    withErrorBoundary,
+    withSuspense,
+    withClickOutside,
+} from './utility/hoc'
+import type { ErrorBoundaryOptions } from './utility/hoc/withErrorBoundary'
+import type { WithSuspenseOptions } from './utility/hoc/withSuspense'
+import type { WithClickOutsideOptions } from './utility/hoc/withClickOutside'
+import { filterAsync, mapAsync } from './utility/filterAsync'
+import none from './utility/none'
+import { createSubscribable } from './utility/createSubscribable'
+import { MemoryPool } from './utility/MemoryPool'
+import { RingBuffer } from './utility/RingBuffer'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -749,6 +763,16 @@ export {
     view,
     set,
     over,
+    inject,
+    withErrorBoundary,
+    withSuspense,
+    withClickOutside,
+    filterAsync,
+    mapAsync,
+    none,
+    createSubscribable,
+    MemoryPool,
+    RingBuffer,
 }
 export type {
     ReadOnlyAtom,
@@ -1018,4 +1042,7 @@ export type {
     UsePageVisibilityReturn,
     BatteryState,
     UseBatteryReturn,
+    ErrorBoundaryOptions,
+    WithSuspenseOptions,
+    WithClickOutsideOptions,
 }
