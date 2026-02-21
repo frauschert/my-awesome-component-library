@@ -1,0 +1,122 @@
+@use '../../styles/theme-vars';
+
+.pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &--disabled {
+        opacity: 0.55;
+        pointer-events: none;
+    }
+}
+
+.pagination__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--theme-border-radius);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--theme-text-primary);
+    cursor: pointer;
+    font-family: var(--theme-font-family);
+    font-weight: 500;
+    line-height: 1;
+    transition: background-color 120ms ease, color 120ms ease,
+        border-color 120ms ease;
+    user-select: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--theme-bg-secondary);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--theme-primary-light);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
+
+    &--active {
+        background-color: var(--theme-primary);
+        color: var(--theme-primary-text);
+        border-color: var(--theme-primary);
+
+        &:hover:not(:disabled) {
+            background-color: var(--theme-primary-dark);
+            border-color: var(--theme-primary-dark);
+        }
+    }
+}
+
+.pagination__dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--theme-text-secondary);
+    user-select: none;
+}
+
+// Sizes
+.pagination--small {
+    .pagination__btn,
+    .pagination__dots {
+        min-width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.75rem;
+        padding: 0 0.25rem;
+    }
+}
+
+.pagination--medium {
+    .pagination__btn,
+    .pagination__dots {
+        min-width: 2.25rem;
+        height: 2.25rem;
+        font-size: 0.875rem;
+        padding: 0 0.375rem;
+    }
+}
+
+.pagination--large {
+    .pagination__btn,
+    .pagination__dots {
+        min-width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1rem;
+        padding: 0 0.5rem;
+    }
+}
+
+// Variants
+.pagination--outlined {
+    .pagination__btn {
+        border-color: var(--theme-border);
+
+        &--active {
+            border-color: var(--theme-primary);
+        }
+    }
+}
+
+.pagination--filled {
+    .pagination__btn {
+        background-color: var(--theme-bg-secondary);
+
+        &--active {
+            background-color: var(--theme-primary);
+            color: var(--theme-primary-text);
+        }
+
+        &:hover:not(:disabled) {
+            background-color: var(--theme-bg-tertiary);
+        }
+    }
+}

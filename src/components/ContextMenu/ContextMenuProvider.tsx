@@ -5,7 +5,7 @@ import type { MenuEntry } from './types'
 import { ContextMenuEntry } from './MenuEntry'
 import { ContextMenuContext } from './ContextMenuContext'
 
-interface ContextMenuProviderProps {
+export interface ContextMenuProviderProps {
     menuEntries: MenuEntry[]
     children: React.ReactNode
 }

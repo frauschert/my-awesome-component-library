@@ -94,6 +94,13 @@ import type {
     DataGridColumnPinning,
 } from './components/DataGrid'
 import { ContextMenuProvider } from './components/ContextMenu'
+import type {
+    ContextMenuProviderProps,
+    MenuEntry,
+    MenuItem,
+    MenuDivider,
+    MenuSubmenu,
+} from './components/ContextMenu'
 import RangeInput from './components/RangeInput'
 import type { RangeInputProps } from './components/RangeInput'
 import Popover from './components/Popover'
@@ -229,6 +236,15 @@ import {
     useAtomSelector,
     useResetAtom,
 } from './utility/hooks/useAtom'
+import useDebounceEffect from './utility/hooks/useDebounceEffect'
+import usePrevious from './utility/hooks/usePrevious'
+import { useLocalStorage, useSessionStorage } from './utility/hooks/useStorage'
+import useOnClickOutside from './utility/hooks/useOnClickOutside'
+import useKeyPress from './utility/hooks/useKeyPress'
+import useOnScreen from './utility/hooks/useOnScreen'
+import useEventListener from './utility/hooks/useEventListener'
+import useSize from './utility/hooks/useSize'
+import useTimeout from './utility/hooks/useTimeout'
 import {
     useMediaQuery,
     useWhyDidYouUpdate,
@@ -366,6 +382,24 @@ import { mergeDeep } from './utility/mergeDeep'
 import { times } from './utility/times'
 import { delay } from './utility/delay'
 import { toggle } from './utility/toggle'
+import curry from './utility/curry'
+import debounce from './utility/debounce'
+import deepEqual from './utility/deepEqual'
+import groupBy from './utility/groupBy'
+import sort from './utility/sort'
+import pick from './utility/pick'
+import omit from './utility/omit'
+import clamp from './utility/clamp'
+import { scan } from './utility/scan'
+import { search } from './utility/search'
+import zip from './utility/zip'
+import pluck from './utility/pluck'
+import uniqueId from './utility/uniqueId'
+import { compose } from './utility/compose'
+import sumBy from './utility/sumBy'
+import distinctBy from './utility/distinctBy'
+import capitalize from './utility/capitalize'
+import intersectionBy from './utility/intersectionBy'
 import type { Lens } from './utility/lens'
 import {
     createLens,
@@ -470,6 +504,28 @@ import type {
     ScrollAreaSize,
     ScrollAreaType,
 } from './components/ScrollArea'
+import Pagination from './components/Pagination'
+import type {
+    PaginationProps,
+    PaginationSize,
+    PaginationVariant,
+} from './components/Pagination/Pagination'
+import EmptyState from './components/EmptyState'
+import type {
+    EmptyStateProps,
+    EmptyStateSize,
+} from './components/EmptyState/EmptyState'
+import ErrorBoundary from './components/ErrorBoundary'
+import type {
+    ErrorBoundaryProps,
+    FallbackProps,
+} from './components/ErrorBoundary/ErrorBoundary'
+import Autocomplete from './components/Autocomplete'
+import type {
+    AutocompleteProps,
+    AutocompleteOption,
+    AutocompleteSize,
+} from './components/Autocomplete/Autocomplete'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -564,6 +620,10 @@ export {
     Pane,
     FloatingIsland,
     ScrollArea,
+    Pagination,
+    EmptyState,
+    ErrorBoundary,
+    Autocomplete,
     atom,
     useAtom,
     useAtomValue,
@@ -626,6 +686,16 @@ export {
     useForm,
     useTextSelection,
     useDropzone,
+    useDebounceEffect,
+    usePrevious,
+    useLocalStorage,
+    useSessionStorage,
+    useOnClickOutside,
+    useKeyPress,
+    useOnScreen,
+    useEventListener,
+    useSize,
+    useTimeout,
     memoize,
     throttle,
     chunk,
@@ -639,6 +709,24 @@ export {
     times,
     delay,
     toggle,
+    curry,
+    debounce,
+    deepEqual,
+    groupBy,
+    sort,
+    pick,
+    omit,
+    clamp,
+    scan,
+    search,
+    zip,
+    pluck,
+    uniqueId,
+    compose,
+    sumBy,
+    distinctBy,
+    capitalize,
+    intersectionBy,
     createLens,
     prop,
     index,
@@ -708,6 +796,16 @@ export type {
     ScrollAreaRef,
     ScrollAreaSize,
     ScrollAreaType,
+    PaginationProps,
+    PaginationSize,
+    PaginationVariant,
+    EmptyStateProps,
+    EmptyStateSize,
+    ErrorBoundaryProps,
+    FallbackProps,
+    AutocompleteProps,
+    AutocompleteOption,
+    AutocompleteSize,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
@@ -781,6 +879,11 @@ export type {
     LoadingBoundaryProps,
     UseSpinnerReturn,
     Lens,
+    ContextMenuProviderProps,
+    MenuEntry,
+    MenuItem,
+    MenuDivider,
+    MenuSubmenu,
     RowDefinitionType,
     ColumnDefinitionType,
     SortConfig,
