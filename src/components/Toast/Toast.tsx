@@ -1,6 +1,6 @@
 import React, { useEffect, ReactNode, useRef } from 'react'
 import { useLatestRef } from '../../utility/hooks/useLatestRef'
-import './toast.css'
+import './toast.scss'
 
 type ToastProps = {
     children: ReactNode

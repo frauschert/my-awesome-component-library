@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react'
-import './fileupload.css'
+import './fileupload.scss'
 
 export type FileUploadProps = {
     dragging: boolean

@@ -1,5 +1,5 @@
 import React from 'react'
-import './progressCircular.css'
+import './progressCircular.scss'
 
 export type ProgressCircularProps = {
     size?: number

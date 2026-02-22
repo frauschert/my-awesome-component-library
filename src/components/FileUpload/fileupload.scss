@@ -1,14 +1,18 @@
+@use '../../styles/theme-vars';
+
 .file-uploader {
     width: 300px;
     height: 150px;
-    border: 2px solid steelblue;
+    border: 2px solid var(--theme-border-color, steelblue);
     border-radius: 8px;
     padding: 10px;
     font-size: 16px;
+    color: var(--theme-text-primary);
+    background-color: var(--theme-bg-primary);
 }
 
 .file-uploader--dragging {
-    background-color: lightblue;
+    background-color: var(--theme-primary-light, lightblue);
 }
 
 .file-uploader__contents {

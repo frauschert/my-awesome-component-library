@@ -5,6 +5,22 @@
     "main": "lib/index.js",
     "module": "lib/index.esm.js",
     "types": "lib/index.d.ts",
+    "sideEffects": [
+        "**/*.css",
+        "**/*.scss"
+    ],
+    "files": [
+        "lib",
+        "README.md"
+    ],
+    "exports": {
+        ".": {
+            "import": "./lib/index.esm.js",
+            "require": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        },
+        "./styles": "./lib/index.css"
+    },
     "repository": "git://github.com/frauschert/my-awesome-component-library.git",
     "author": "Fabian Rauschert",
     "license": "MIT",
@@ -60,8 +76,8 @@
         "@fontsource/inter": "^5.2.8"
     },
     "peerDependencies": {
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0"
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
     },
     "dependencies": {
         "qrcode": "^1.5.4"

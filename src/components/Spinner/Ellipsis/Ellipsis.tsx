@@ -2,7 +2,7 @@ import React from 'react'
 import { classNames } from '../../../utility/classnames'
 import { SpinnerProps } from '../types'
 import { defaultSpinnerProps, getSpinnerSize, getSpinnerColor } from '../utils'
-import './ellipsis.css'
+import './ellipsis.scss'
 
 /**
  * Ellipsis - An animated ellipsis loading indicator with bouncing dots

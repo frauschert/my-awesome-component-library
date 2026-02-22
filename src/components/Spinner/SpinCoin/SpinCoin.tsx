@@ -2,7 +2,7 @@ import React from 'react'
 import { classNames } from '../../../utility/classnames'
 import { SpinnerProps } from '../types'
 import { defaultSpinnerProps, getSpinnerSize, getSpinnerColor } from '../utils'
-import './spin-coin.css'
+import './spin-coin.scss'
 
 /**
  * SpinCoin - A spinning circular loading indicator
