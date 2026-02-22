@@ -47,7 +47,7 @@ export default function useFocusTrap({
 
     // Save previously focused element and move focus into the trap
     useEffect(() => {
-        if (!enabled) return
+        if (!enabled || typeof document === 'undefined') return
 
         previouslyFocusedRef.current =
             (document.activeElement as HTMLElement) || null

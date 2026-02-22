@@ -118,6 +118,7 @@ export const VirtualList = <T,>({
             <div
                 className={classNames(containerClasses, 'virtual-list--empty')}
                 style={{ ...style, height, width }}
+                role="list"
             >
                 {emptyState || (
                     <div className="virtual-list__empty-state">
@@ -134,6 +135,7 @@ export const VirtualList = <T,>({
             className={containerClasses}
             style={{ ...style, height, width }}
             onScroll={handleScroll}
+            role="list"
         >
             <div
                 className="virtual-list__content"
@@ -150,6 +152,7 @@ export const VirtualList = <T,>({
                                 key={actualIndex}
                                 className="virtual-list__item"
                                 style={{ height: itemHeight }}
+                                role="listitem"
                             >
                                 {renderItem(item, actualIndex)}
                             </div>

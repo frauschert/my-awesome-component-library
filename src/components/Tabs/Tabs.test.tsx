@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { axe } from 'jest-axe'
 import Tabs from './Tabs'
 
 // JSDOM doesn't implement scrollIntoView
@@ -113,5 +114,13 @@ describe('Tabs', () => {
     it('applies fullWidth class', () => {
         const { container } = render(<Tabs items={items} fullWidth />)
         expect(container.firstChild).toHaveClass('tabs--full-width')
+    })
+
+    it('should have no accessibility violations', async () => {
+        const { container } = render(
+            <Tabs items={items} ariaLabel="Test tabs" />
+        )
+        const results = await axe(container)
+        expect(results).toHaveNoViolations()
     })
 })

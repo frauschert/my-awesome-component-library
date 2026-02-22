@@ -94,7 +94,7 @@ const TimelineItem: React.FC<
     )
 
     return (
-        <div className={itemClasses}>
+        <div className={itemClasses} role="listitem">
             <div className="timeline-item__marker">
                 {icon ? (
                     <div className="timeline-item__icon">{icon}</div>
@@ -134,7 +134,7 @@ const Timeline: React.FC<TimelineProps> = ({
     )
 
     return (
-        <div className={timelineClasses}>
+        <div className={timelineClasses} role="list" aria-label="Timeline">
             {items.map((item, index) => (
                 <TimelineItem
                     key={index}

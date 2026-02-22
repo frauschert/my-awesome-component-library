@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { axe } from 'jest-axe'
 import Form from './Form'
 import FormGroup from './FormGroup'
 import FormActions from './FormActions'
@@ -108,6 +109,17 @@ describe('Form', () => {
 
         fireEvent.click(screen.getByText('Submit'))
         expect(handleError).toHaveBeenCalled()
+    })
+
+    it('should have no accessibility violations', async () => {
+        const { container } = render(
+            <Form aria-label="Test form">
+                <input type="text" aria-label="Name" />
+                <button type="submit">Submit</button>
+            </Form>
+        )
+        const results = await axe(container)
+        expect(results).toHaveNoViolations()
     })
 })
 

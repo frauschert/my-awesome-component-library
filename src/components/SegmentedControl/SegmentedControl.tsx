@@ -1,4 +1,5 @@
 import React, { forwardRef, useId, useRef } from 'react'
+import useControllableState from '../../utility/hooks/useControllableState'
 import './SegmentedControl.scss'
 import { classNames } from '../../utility/classnames'
 
@@ -61,21 +62,20 @@ const SegmentedControl = forwardRef<HTMLDivElement, SegmentedControlProps>(
         ref
     ) => {
         const groupId = useId()
-
-        const [internalValue, setInternalValue] = React.useState<
-            string | undefined
-        >(defaultValue ?? items.find((i) => !i.disabled)?.value)
-
-        const isControlled = controlledValue !== undefined
-        const selectedValue = isControlled ? controlledValue : internalValue
+        const { value: selectedValue, setValue: setSelectedValue } =
+            useControllableState({
+                value: controlledValue,
+                defaultValue:
+                    defaultValue ?? items.find((i) => !i.disabled)?.value ?? '',
+                onChange,
+            })
 
         const itemRefs = useRef<(HTMLButtonElement | null)[]>([])
 
         const handleSelect = (item: SegmentedControlItem) => {
             if (disabled || item.disabled) return
             if (item.value === selectedValue) return
-            if (!isControlled) setInternalValue(item.value)
-            onChange?.(item.value)
+            setSelectedValue(item.value)
         }
 
         const handleKeyDown = (

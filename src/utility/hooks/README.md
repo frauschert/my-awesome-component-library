@@ -28,6 +28,9 @@ Custom React hooks for common use cases in the component library.
 -   [usePrevious](#useprevious)
 -   [useLocalStorage](#uselocalstorage)
 -   [useSessionStorage](#usesessionstorage)
+-   [useControllableState](#usecontrollablestate)
+-   [useFocusTrap](#usefocustrap)
+-   [useScrollLock](#usescrolllock)
 
 ---
 
@@ -4320,6 +4323,152 @@ function SearchBox() {
 ### Tests
 
 See `src/utility/hooks/__tests__/useTimeout.test.ts` for comprehensive tests covering basic functionality, clear/reset/start operations, isActive status, callback updates without re-subscribing, cleanup on unmount, edge cases (zero delay, very long delays, rapid calls), and practical use cases (auto-save, debounced actions, delayed notifications).
+
+---
+
+## useControllableState
+
+Manages the controlled vs uncontrolled state pattern, providing a unified value + setter regardless of mode.
+
+### API
+
+```ts
+useControllableState<T>(options: UseControllableStateOptions<T>): UseControllableStateReturn<T>
+```
+
+### Parameters (options object)
+
+-   **value** (optional `T`): The controlled value. When provided, the component operates in controlled mode.
+-   **defaultValue** (`T`): The initial value for uncontrolled mode.
+-   **onChange** (optional `(value: T) => void`): Called whenever the value changes (in both modes).
+
+### Returns
+
+-   **value** (`T`): The current value (controlled or internal).
+-   **setValue** (`(next: T | ((prev: T) => T)) => void`): Updates the value. In uncontrolled mode, sets internal state. Always calls `onChange`.
+-   **isControlled** (`boolean`): Whether the component is currently in controlled mode.
+
+### Usage
+
+```tsx
+import { useControllableState } from './utility/hooks'
+
+function Toggle({ value, defaultValue = false, onChange }) {
+    const { value: isOn, setValue } = useControllableState({
+        value,
+        defaultValue,
+        onChange,
+    })
+
+    return (
+        <button onClick={() => setValue((prev) => !prev)}>
+            {isOn ? 'ON' : 'OFF'}
+        </button>
+    )
+}
+```
+
+### Behavior and limitations
+
+-   Warns in development when switching between controlled and uncontrolled modes
+-   Supports functional updates via the setter (like `useState`)
+-   SSR-safe (pure React state)
+
+### Tests
+
+See `src/utility/hooks/__tests__/useControllableState.test.ts`
+
+---
+
+## useFocusTrap
+
+Traps focus within a container element. Handles Tab/Shift+Tab cycling, initial focus placement, and focus restoration on deactivation.
+
+### API
+
+```ts
+useFocusTrap(options?: UseFocusTrapOptions): UseFocusTrapReturn
+```
+
+### Parameters (options object)
+
+-   **enabled** (optional `boolean`, default `true`): Whether the trap is active.
+-   **initialFocusRef** (optional `React.RefObject<HTMLElement>`): Ref to the element that should receive initial focus.
+-   **restoreFocus** (optional `boolean`, default `true`): Whether to restore focus to the previously focused element on deactivation.
+
+### Returns
+
+-   **containerRef** (`React.RefObject<HTMLElement | null>`): Ref to attach to the container element.
+-   **onKeyDown** (`(e: React.KeyboardEvent) => void`): Key handler to attach to the container.
+
+### Usage
+
+```tsx
+import { useFocusTrap } from './utility/hooks'
+
+function Dialog({ open, children }) {
+    const { containerRef, onKeyDown } = useFocusTrap({
+        enabled: open,
+        restoreFocus: true,
+    })
+
+    return (
+        <div ref={containerRef} onKeyDown={onKeyDown} tabIndex={-1}>
+            {children}
+        </div>
+    )
+}
+```
+
+### Behavior and limitations
+
+-   Focuses the first focusable element (or `initialFocusRef`) when enabled
+-   Cycles focus with Tab/Shift+Tab (wraps from last to first and vice versa)
+-   Restores focus to the previously focused element when disabled (if `restoreFocus` is true)
+-   SSR-safe (DOM access is guarded with `typeof document` check)
+-   Recognizes: `a[href]`, `button`, `textarea`, `input`, `select`, `[tabindex]` (excludes `tabindex="-1"`, disabled, and `aria-hidden` elements)
+
+### Tests
+
+See `src/utility/hooks/__tests__/useFocusTrap.test.ts`
+
+---
+
+## useScrollLock
+
+Locks body scroll when enabled. Saves and restores the previous `overflow` value on cleanup.
+
+### API
+
+```ts
+useScrollLock(options?: UseScrollLockOptions): void
+```
+
+### Parameters (options object)
+
+-   **enabled** (optional `boolean`, default `true`): Whether scroll lock is active.
+
+### Usage
+
+```tsx
+import { useScrollLock } from './utility/hooks'
+
+function Modal({ open, children }) {
+    useScrollLock({ enabled: open })
+
+    return open ? <div className="modal">{children}</div> : null
+}
+```
+
+### Behavior and limitations
+
+-   Saves and restores the previous `document.body.style.overflow` value
+-   SSR-safe (DOM access is guarded with `typeof document` check)
+-   Multiple concurrent locks nest correctly (each saves/restores the value it found)
+
+### Tests
+
+See `src/utility/hooks/__tests__/useScrollLock.test.ts`
 
 ---
 

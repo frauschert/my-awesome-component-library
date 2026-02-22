@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { axe } from 'jest-axe'
 import Modal from './Modal'
 
 describe('Modal', () => {
@@ -103,5 +104,15 @@ describe('Modal', () => {
         // The role is on content element; ensure it has the size modifier class
         expect(dialog).toHaveClass('modal__content--lg')
         expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument()
+    })
+
+    it('should have no accessibility violations', async () => {
+        const { container } = render(
+            <Modal open title="Accessible Modal">
+                <p>Accessible content</p>
+            </Modal>
+        )
+        const results = await axe(container)
+        expect(results).toHaveNoViolations()
     })
 })

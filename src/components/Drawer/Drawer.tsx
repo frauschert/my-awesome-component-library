@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { classNames } from '../../utility/classnames'
+import useFocusTrap from '../../utility/hooks/useFocusTrap'
+import useScrollLock from '../../utility/hooks/useScrollLock'
 import './Drawer.scss'
 
 export interface DrawerProps {
@@ -47,7 +49,11 @@ export const Drawer: React.FC<DrawerProps> = ({
     title,
     showCloseButton = true,
 }) => {
-    const drawerRef = useRef<HTMLDivElement>(null)
+    useScrollLock({ enabled: isOpen })
+    const { containerRef, onKeyDown: handleFocusTrapKeyDown } = useFocusTrap({
+        enabled: isOpen,
+        restoreFocus: true,
+    })
 
     useEffect(() => {
         if (!isOpen || !closeOnEscape) return
@@ -61,21 +67,6 @@ export const Drawer: React.FC<DrawerProps> = ({
         document.addEventListener('keydown', handleEscape)
         return () => document.removeEventListener('keydown', handleEscape)
     }, [isOpen, closeOnEscape, onClose])
-
-    useEffect(() => {
-        if (isOpen) {
-            // Prevent body scroll when drawer is open
-            document.body.style.overflow = 'hidden'
-            // Focus the drawer
-            drawerRef.current?.focus()
-        } else {
-            document.body.style.overflow = ''
-        }
-
-        return () => {
-            document.body.style.overflow = ''
-        }
-    }, [isOpen])
 
     const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (closeOnBackdropClick && event.target === event.currentTarget) {
@@ -101,7 +92,7 @@ export const Drawer: React.FC<DrawerProps> = ({
             role="presentation"
         >
             <div
-                ref={drawerRef}
+                ref={containerRef as React.Ref<HTMLDivElement>}
                 className={classNames(
                     'drawer',
                     `drawer--${placement}`,
@@ -112,6 +103,7 @@ export const Drawer: React.FC<DrawerProps> = ({
                 aria-modal="true"
                 aria-label={title || 'Drawer'}
                 tabIndex={-1}
+                onKeyDown={handleFocusTrapKeyDown}
             >
                 {(title || showCloseButton) && (
                     <div className="drawer__header">

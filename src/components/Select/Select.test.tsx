@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { axe } from 'jest-axe'
 import Select from './Select'
 import type { SelectOption } from './Select'
 
@@ -134,5 +135,13 @@ describe('Select', () => {
 
         fireEvent.keyDown(trigger, { key: 'Escape' })
         expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    })
+
+    it('should have no accessibility violations', async () => {
+        const { container } = render(
+            <Select options={mockOptions} label="Test select" />
+        )
+        const results = await axe(container)
+        expect(results).toHaveNoViolations()
     })
 })

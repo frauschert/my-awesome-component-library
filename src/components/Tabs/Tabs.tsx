@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { classNames } from '../../utility/classnames'
+import useControllableState from '../../utility/hooks/useControllableState'
 import './tabs.scss'
 
 export type TabVariant = 'default' | 'card' | 'line'
@@ -117,12 +118,12 @@ const Tabs: React.FC<TabsProps> = ({
     fullWidth = false,
 }) => {
     // Determine if controlled or uncontrolled
-    const isControlled = activeId !== undefined
-    const [internalActiveId, setInternalActiveId] = useState(
-        defaultActiveId || items[0]?.id || ''
-    )
-
-    const currentActiveId = isControlled ? activeId : internalActiveId
+    const { value: currentActiveId, setValue: setActiveId } =
+        useControllableState({
+            value: activeId,
+            defaultValue: defaultActiveId || items[0]?.id || '',
+            onChange,
+        })
 
     const tabsRef = useRef<HTMLDivElement>(null)
     const activeTabRef = useRef<HTMLButtonElement>(null)
@@ -133,10 +134,7 @@ const Tabs: React.FC<TabsProps> = ({
             const tab = items.find((item) => item.id === newTabId)
             if (tab?.disabled) return
 
-            if (!isControlled) {
-                setInternalActiveId(newTabId)
-            }
-            onChange?.(newTabId)
+            setActiveId(newTabId)
 
             // Scroll active tab into view on mobile
             if (scrollable && activeTabRef.current) {
@@ -147,7 +145,7 @@ const Tabs: React.FC<TabsProps> = ({
                 })
             }
         },
-        [items, isControlled, onChange, scrollable]
+        [items, setActiveId, scrollable]
     )
 
     // Keyboard navigation

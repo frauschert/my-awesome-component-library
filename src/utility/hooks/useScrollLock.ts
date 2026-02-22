@@ -13,7 +13,7 @@ export default function useScrollLock({
     enabled = true,
 }: UseScrollLockOptions = {}): void {
     useEffect(() => {
-        if (!enabled) return
+        if (!enabled || typeof document === 'undefined') return
 
         const previousOverflow = document.body.style.overflow
         document.body.style.overflow = 'hidden'
