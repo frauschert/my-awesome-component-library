@@ -166,7 +166,6 @@ describe('TagsInput', () => {
     })
 
     test('disabled state prevents interaction', async () => {
-        const user = userEvent.setup()
         render(<TagsInput disabled defaultValue={['Tag']} />)
 
         const input = screen.getByRole('textbox')

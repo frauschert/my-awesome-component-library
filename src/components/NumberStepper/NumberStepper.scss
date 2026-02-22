@@ -1,0 +1,125 @@
+@use '../../styles/theme-vars';
+
+.number-stepper {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: var(--theme-font-family);
+}
+
+.number-stepper__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--theme-text-primary);
+}
+
+.number-stepper__controls {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid
+        var(--theme-input-border, var(--theme-border-color, #d1d5db));
+    border-radius: var(--theme-border-radius, 6px);
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+
+    &:focus-within {
+        border-color: var(--theme-input-focus, var(--theme-primary));
+        box-shadow: 0 0 0 2px var(--theme-focus-ring, rgba(59, 130, 246, 0.25));
+    }
+}
+
+.number-stepper__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    color: var(--theme-text-secondary);
+    background-color: var(--theme-bg-secondary, #f9fafb);
+    transition: background-color 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+
+    &:hover:not(:disabled) {
+        background-color: var(--theme-hover-bg, #f3f4f6);
+        color: var(--theme-text-primary);
+    }
+
+    &:active:not(:disabled) {
+        background-color: var(--theme-border-color, #e5e7eb);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
+.number-stepper__input {
+    border: none;
+    text-align: center;
+    font-family: inherit;
+    color: var(--theme-text-primary);
+    background-color: var(--theme-input-bg, var(--theme-bg-primary, #fff));
+    outline: none;
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+        appearance: none;
+        margin: 0;
+    }
+}
+
+// Sizes
+.number-stepper--small {
+    .number-stepper__btn {
+        width: 28px;
+        padding: 0.125rem;
+    }
+    .number-stepper__input {
+        width: 48px;
+        padding: 0.25rem 0.125rem;
+        font-size: 0.75rem;
+    }
+}
+
+.number-stepper--medium {
+    .number-stepper__btn {
+        width: 36px;
+        padding: 0.25rem;
+    }
+    .number-stepper__input {
+        width: 64px;
+        padding: 0.375rem 0.25rem;
+        font-size: 0.875rem;
+    }
+}
+
+.number-stepper--large {
+    .number-stepper__btn {
+        width: 44px;
+        padding: 0.375rem;
+    }
+    .number-stepper__input {
+        width: 80px;
+        padding: 0.5rem 0.375rem;
+        font-size: 1rem;
+    }
+}
+
+// States
+.number-stepper--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.number-stepper--error {
+    .number-stepper__controls {
+        border-color: var(--theme-error, #ef4444);
+    }
+}
+
+.number-stepper__error {
+    font-size: 0.75rem;
+    color: var(--theme-error, #ef4444);
+}

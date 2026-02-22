@@ -4,7 +4,6 @@ import React, {
     useContext,
     useEffect,
     useMemo,
-    useLayoutEffect,
     useRef,
 } from 'react'
 import { classNames } from '../../utility/classnames'
@@ -13,7 +12,7 @@ import groupBy from '../../utility/groupBy'
 import Portal from '../Portal'
 import Toast from './Toast'
 
-import './toast.css'
+import './toast.scss'
 import type { Position, ToastItem, ToastItemWithoutId } from './types'
 import { useToasts } from './useToasts'
 

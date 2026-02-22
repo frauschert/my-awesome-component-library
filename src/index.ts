@@ -565,6 +565,36 @@ import none from './utility/none'
 import { createSubscribable } from './utility/createSubscribable'
 import { MemoryPool } from './utility/MemoryPool'
 import { RingBuffer } from './utility/RingBuffer'
+import AspectRatio from './components/AspectRatio'
+import type { AspectRatioProps } from './components/AspectRatio'
+import Carousel from './components/Carousel'
+import type { CarouselProps } from './components/Carousel'
+import CopyToClipboard from './components/CopyToClipboard'
+import type {
+    CopyToClipboardProps,
+    CopyToClipboardSize,
+    CopyToClipboardVariant,
+} from './components/CopyToClipboard'
+import DateRangePicker from './components/DateRangePicker'
+import type {
+    DateRangePickerProps,
+    DateRangePickerSize,
+    DateRange,
+} from './components/DateRangePicker'
+import NumberStepper from './components/NumberStepper'
+import type {
+    NumberStepperProps,
+    NumberStepperSize,
+} from './components/NumberStepper'
+import OTPInput from './components/OTPInput'
+import type { OTPInputProps, OTPInputSize } from './components/OTPInput'
+import TimePicker from './components/TimePicker'
+import type {
+    TimePickerProps,
+    TimePickerSize,
+    TimeFormat,
+    TimeValue,
+} from './components/TimePicker'
 
 // CSS-in-JS exports
 export * from './styles'
@@ -787,6 +817,13 @@ export {
     createSubscribable,
     MemoryPool,
     RingBuffer,
+    AspectRatio,
+    Carousel,
+    CopyToClipboard,
+    DateRangePicker,
+    NumberStepper,
+    OTPInput,
+    TimePicker,
 }
 export type {
     ReadOnlyAtom,
@@ -1068,4 +1105,20 @@ export type {
     ErrorBoundaryOptions,
     WithSuspenseOptions,
     WithClickOutsideOptions,
+    AspectRatioProps,
+    CarouselProps,
+    CopyToClipboardProps,
+    CopyToClipboardSize,
+    CopyToClipboardVariant,
+    DateRangePickerProps,
+    DateRangePickerSize,
+    DateRange,
+    NumberStepperProps,
+    NumberStepperSize,
+    OTPInputProps,
+    OTPInputSize,
+    TimePickerProps,
+    TimePickerSize,
+    TimeFormat,
+    TimeValue,
 }
