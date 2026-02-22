@@ -8,7 +8,7 @@ function createWrapperAndAppendToBody(wrapperId: string) {
     return wrapperElement
 }
 
-type PortalProps = {
+export type PortalProps = {
     children: React.ReactNode
     wrapperId?: string
 }

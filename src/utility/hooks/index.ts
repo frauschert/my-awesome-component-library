@@ -1,5 +1,5 @@
-import * as useDebounceEffect from './useDebounceEffect'
-import * as usePrevious from './usePrevious'
+import useDebounceEffect from './useDebounceEffect'
+import usePrevious from './usePrevious'
 import { useLocalStorage, useSessionStorage } from './useStorage'
 import useOnClickOutside from './useOnClickOutside'
 import useKeyPress from './useKeyPress'

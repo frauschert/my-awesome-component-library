@@ -1,5 +1,15 @@
 import Button from './components/Button'
+import type {
+    ButtonProps,
+    ButtonVariant,
+    ButtonSize,
+} from './components/Button'
 import Box from './components/Box'
+import type {
+    PolymorphicComponentProps,
+    PolymorphicComponentPropsWithRef,
+    PolymorphicRef,
+} from './components/Box'
 import Table from './components/Table'
 import ActivityFeed from './components/ActivityFeed'
 import type {
@@ -31,6 +41,8 @@ import type {
 } from './components/Card'
 import Tabs from './components/Tabs'
 import type { TabsProps, TabItem, TabVariant } from './components/Tabs'
+import TagsInput from './components/TagsInput'
+import type { TagsInputProps, TagsInputSize } from './components/TagsInput'
 import Toolbar from './components/Toolbar'
 import type {
     ToolbarProps,
@@ -483,6 +495,7 @@ import type {
     FormActionsAlign,
 } from './components/Form'
 import Portal from './components/Portal'
+import type { PortalProps } from './components/Portal'
 import Resizable from './components/Resizable'
 import type {
     ResizableProps,
@@ -570,6 +583,7 @@ export {
     Badge,
     Card,
     Tabs,
+    TagsInput,
     Toolbar,
     Tooltip,
     Typography,
@@ -823,6 +837,10 @@ export type {
     FormGroupProps,
     FormActionsProps,
     FormActionsAlign,
+    PolymorphicComponentProps,
+    PolymorphicComponentPropsWithRef,
+    PolymorphicRef,
+    PortalProps,
     ResizableProps,
     ResizableHandle,
     SplitPaneProps,
@@ -888,6 +906,9 @@ export type {
     ButtonGroupVariant,
     ButtonGroupOrientation,
     ButtonGroupSelectionMode,
+    ButtonProps,
+    ButtonVariant,
+    ButtonSize,
     VirtualListProps,
     InfiniteScrollProps,
     InfiniteScrollDirection,
@@ -957,6 +978,8 @@ export type {
     TabsProps,
     TabItem,
     TabVariant,
+    TagsInputProps,
+    TagsInputSize,
     ToolbarProps,
     ToolbarVariant,
     ToolbarSize,
