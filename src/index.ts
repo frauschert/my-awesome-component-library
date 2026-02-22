@@ -327,6 +327,9 @@ import {
     usePinch,
     usePageVisibility,
     useBattery,
+    useControllableState,
+    useFocusTrap,
+    useScrollLock,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -380,6 +383,11 @@ import type {
     UsePageVisibilityReturn,
     BatteryState,
     UseBatteryReturn,
+    UseControllableStateOptions,
+    UseControllableStateReturn,
+    UseFocusTrapOptions,
+    UseFocusTrapReturn,
+    UseScrollLockOptions,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -545,6 +553,11 @@ import type {
     PasswordInputSize,
 } from './components/PasswordInput/PasswordInput'
 import SegmentedControl from './components/SegmentedControl'
+import AlertDialog from './components/AlertDialog'
+import type {
+    AlertDialogProps,
+    AlertDialogVariant,
+} from './components/AlertDialog'
 import type {
     SegmentedControlProps,
     SegmentedControlItem,
@@ -560,6 +573,7 @@ import {
 import type { ErrorBoundaryOptions } from './utility/hoc/withErrorBoundary'
 import type { WithSuspenseOptions } from './utility/hoc/withSuspense'
 import type { WithClickOutsideOptions } from './utility/hoc/withClickOutside'
+import { makeRouteMap, makeNavigate } from './utility/routing/makeRouteMap'
 import { filterAsync, mapAsync } from './utility/filterAsync'
 import none from './utility/none'
 import { createSubscribable } from './utility/createSubscribable'
@@ -696,6 +710,7 @@ export {
     Autocomplete,
     PasswordInput,
     SegmentedControl,
+    AlertDialog,
     atom,
     useAtom,
     useAtomValue,
@@ -768,6 +783,9 @@ export {
     useEventListener,
     useSize,
     useTimeout,
+    useControllableState,
+    useFocusTrap,
+    useScrollLock,
     memoize,
     throttle,
     chunk,
@@ -815,6 +833,8 @@ export {
     mapAsync,
     none,
     createSubscribable,
+    makeRouteMap,
+    makeNavigate,
     MemoryPool,
     RingBuffer,
     AspectRatio,
@@ -905,6 +925,8 @@ export type {
     SegmentedControlItem,
     SegmentedControlSize,
     SegmentedControlOrientation,
+    AlertDialogProps,
+    AlertDialogVariant,
     RangeInputProps,
     PopoverProps,
     PopoverPlacement,
@@ -1102,6 +1124,11 @@ export type {
     UsePageVisibilityReturn,
     BatteryState,
     UseBatteryReturn,
+    UseControllableStateOptions,
+    UseControllableStateReturn,
+    UseFocusTrapOptions,
+    UseFocusTrapReturn,
+    UseScrollLockOptions,
     ErrorBoundaryOptions,
     WithSuspenseOptions,
     WithClickOutsideOptions,

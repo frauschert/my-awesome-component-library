@@ -74,6 +74,9 @@ import useSwipe from './useSwipe'
 import usePinch from './usePinch'
 import usePageVisibility from './usePageVisibility'
 import useBattery from './useBattery'
+import useControllableState from './useControllableState'
+import useFocusTrap from './useFocusTrap'
+import useScrollLock from './useScrollLock'
 
 export {
     useDebounceEffect,
@@ -155,6 +158,9 @@ export {
     usePinch,
     usePageVisibility,
     useBattery,
+    useControllableState,
+    useFocusTrap,
+    useScrollLock,
 }
 
 export type { UseSetActions } from './useSet'
@@ -213,6 +219,12 @@ export type {
     UsePageVisibilityReturn,
 } from './usePageVisibility'
 export type { BatteryState, UseBatteryReturn } from './useBattery'
+export type {
+    UseControllableStateOptions,
+    UseControllableStateReturn,
+} from './useControllableState'
+export type { UseFocusTrapOptions, UseFocusTrapReturn } from './useFocusTrap'
+export type { UseScrollLockOptions } from './useScrollLock'
 
 export default {
     useDebounceEffect,
@@ -294,4 +306,7 @@ export default {
     usePinch,
     usePageVisibility,
     useBattery,
+    useControllableState,
+    useFocusTrap,
+    useScrollLock,
 }

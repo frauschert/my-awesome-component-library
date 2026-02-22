@@ -1,0 +1,64 @@
+.alert-dialog__body {
+    padding: 24px 24px 16px;
+    text-align: center;
+}
+
+.alert-dialog__icon {
+    margin-bottom: 12px;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.alert-dialog__title {
+    margin: 0 0 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--theme-text-primary, #333);
+}
+
+.alert-dialog__description {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--theme-text-secondary, #666);
+    line-height: 1.5;
+}
+
+.alert-dialog__actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Variant colors for the confirm button */
+.alert-dialog__confirm--info {
+    --button-bg: var(--theme-primary, #408bbd);
+}
+
+.alert-dialog__confirm--warning {
+    --button-bg: var(--theme-warning, #e6a700);
+}
+
+.alert-dialog__confirm--danger {
+    --button-bg: var(--theme-danger, #d32f2f);
+    background-color: var(--theme-danger, #d32f2f);
+    color: #fff;
+}
+
+.alert-dialog__confirm--danger:hover {
+    background-color: var(--theme-danger-hover, #b71c1c);
+}
+
+/* Dark theme */
+.theme--dark .alert-dialog__title {
+    color: var(--theme-text-primary, #e8e8e8);
+}
+
+.theme--dark .alert-dialog__description {
+    color: var(--theme-text-secondary, #aaa);
+}
+
+.theme--dark .alert-dialog__actions {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
