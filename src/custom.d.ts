@@ -3,6 +3,11 @@ declare module '*.svg' {
     export default content
 }
 
+declare module '*.scss' {
+    const styles: Record<string, string>
+    export default styles
+}
+
 // Wake Lock API types
 interface WakeLockSentinel extends EventTarget {
     readonly released: boolean
