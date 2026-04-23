@@ -29,7 +29,7 @@ describe('usePinch', () => {
                     screenX: t.clientX,
                     screenY: t.clientY,
                     target: element,
-                } as Touch)
+                } as unknown as Touch)
         )
 
         const event = new Event(type, {
