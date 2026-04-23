@@ -7,7 +7,10 @@ export type CopyToClipboardSize = 'small' | 'medium' | 'large'
 export type CopyToClipboardVariant = 'primary' | 'secondary' | 'ghost'
 
 export interface CopyToClipboardProps
-    extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+    extends Omit<
+        React.ButtonHTMLAttributes<HTMLButtonElement>,
+        'children' | 'onCopy'
+    > {
     /** The text to copy */
     text: string
     /** Button label (default: "Copy") */
@@ -77,7 +80,7 @@ const CopyToClipboard = forwardRef<HTMLButtonElement, CopyToClipboardProps>(
         ref
     ) => {
         const { copy, isSuccess, isCopying, reset } = useCopyToClipboard()
-        const timerRef = useRef<ReturnType<typeof setTimeout>>()
+        const timerRef = useRef<ReturnType<typeof setTimeout>>(null)
 
         useEffect(() => {
             if (isSuccess) {

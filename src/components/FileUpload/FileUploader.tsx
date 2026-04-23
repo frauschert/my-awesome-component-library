@@ -3,7 +3,7 @@ import React, { BaseSyntheticEvent } from 'react'
 import useFileUpload from '../../utility/hooks/useFileUpload'
 import FileUpload from './FileUpload'
 
-import './fileupload.css'
+import './fileupload.scss'
 
 const overrideEventDefault = (ev: Event | BaseSyntheticEvent) => {
     ev.preventDefault()
