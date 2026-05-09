@@ -77,6 +77,7 @@ import useBattery from './useBattery'
 import useControllableState from './useControllableState'
 import useFocusTrap from './useFocusTrap'
 import useScrollLock from './useScrollLock'
+import usePermission from './usePermission'
 
 export {
     useDebounceEffect,
@@ -161,6 +162,7 @@ export {
     useControllableState,
     useFocusTrap,
     useScrollLock,
+    usePermission,
 }
 
 export type { UseSetActions } from './useSet'
@@ -225,6 +227,12 @@ export type {
 } from './useControllableState'
 export type { UseFocusTrapOptions, UseFocusTrapReturn } from './useFocusTrap'
 export type { UseScrollLockOptions } from './useScrollLock'
+export type {
+    PermissionName,
+    PermissionState,
+    UsePermissionOptions,
+    UsePermissionReturn,
+} from './usePermission'
 
 export default {
     useDebounceEffect,

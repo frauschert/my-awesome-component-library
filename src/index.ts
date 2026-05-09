@@ -330,6 +330,7 @@ import {
     useControllableState,
     useFocusTrap,
     useScrollLock,
+    usePermission,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -388,6 +389,10 @@ import type {
     UseFocusTrapOptions,
     UseFocusTrapReturn,
     UseScrollLockOptions,
+    PermissionName,
+    PermissionState,
+    UsePermissionOptions,
+    UsePermissionReturn,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -786,6 +791,7 @@ export {
     useControllableState,
     useFocusTrap,
     useScrollLock,
+    usePermission,
     memoize,
     throttle,
     chunk,
@@ -1129,6 +1135,10 @@ export type {
     UseFocusTrapOptions,
     UseFocusTrapReturn,
     UseScrollLockOptions,
+    PermissionName,
+    PermissionState,
+    UsePermissionOptions,
+    UsePermissionReturn,
     ErrorBoundaryOptions,
     WithSuspenseOptions,
     WithClickOutsideOptions,
