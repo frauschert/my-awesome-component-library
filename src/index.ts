@@ -121,6 +121,8 @@ import type {
     PopoverPlacement,
     PopoverTrigger,
 } from './components/Popover'
+import HoverCard from './components/HoverCard'
+import type { HoverCardProps, HoverCardPlacement } from './components/HoverCard'
 import Modal from './components/Modal'
 import type { ModalProps, ModalSize } from './components/Modal'
 import Select from './components/Select'
@@ -653,6 +655,7 @@ export {
     ContextMenuProvider,
     RangeInput,
     Popover,
+    HoverCard,
     Modal,
     Select,
     Input,
@@ -937,6 +940,8 @@ export type {
     PopoverProps,
     PopoverPlacement,
     PopoverTrigger,
+    HoverCardProps,
+    HoverCardPlacement,
     ModalProps,
     ModalSize,
     SelectProps,

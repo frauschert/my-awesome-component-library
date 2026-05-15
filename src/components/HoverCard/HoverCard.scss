@@ -1,0 +1,154 @@
+@use '../../styles/variables' as *;
+
+.hover-card {
+    background: var(--theme-bg-primary, #ffffff);
+    border: 1px solid var(--theme-border-color, #e5e5e5);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    pointer-events: none;
+    min-width: 200px;
+    max-width: 360px;
+
+    &--visible {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+    }
+}
+
+.hover-card__trigger {
+    display: inline-block;
+}
+
+.hover-card__content {
+    padding: 0;
+    color: var(--theme-text-primary, #333333);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.hover-card__arrow {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--theme-bg-primary, #ffffff);
+    border: 1px solid var(--theme-border-color, #e5e5e5);
+    transform: rotate(45deg);
+    z-index: -1;
+
+    // Top placements
+    &--top,
+    &--top-start,
+    &--top-end {
+        bottom: -7px;
+        border-top: none;
+        border-left: none;
+    }
+
+    &--top {
+        left: 50%;
+        margin-left: -6px;
+    }
+
+    &--top-start {
+        left: 16px;
+    }
+
+    &--top-end {
+        right: 16px;
+    }
+
+    // Bottom placements
+    &--bottom,
+    &--bottom-start,
+    &--bottom-end {
+        top: -7px;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    &--bottom {
+        left: 50%;
+        margin-left: -6px;
+    }
+
+    &--bottom-start {
+        left: 16px;
+    }
+
+    &--bottom-end {
+        right: 16px;
+    }
+
+    // Left placements
+    &--left,
+    &--left-start,
+    &--left-end {
+        right: -7px;
+        border-left: none;
+        border-bottom: none;
+    }
+
+    &--left {
+        top: 50%;
+        margin-top: -6px;
+    }
+
+    &--left-start {
+        top: 12px;
+    }
+
+    &--left-end {
+        bottom: 12px;
+    }
+
+    // Right placements
+    &--right,
+    &--right-start,
+    &--right-end {
+        left: -7px;
+        border-right: none;
+        border-top: none;
+    }
+
+    &--right {
+        top: 50%;
+        margin-top: -6px;
+    }
+
+    &--right-start {
+        top: 12px;
+    }
+
+    &--right-end {
+        bottom: 12px;
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .hover-card {
+        transition: none;
+    }
+}
+
+// Dark theme overrides
+.theme--dark {
+    .hover-card {
+        background: var(--theme-bg-primary, #1a1a1a);
+        border-color: var(--theme-border-color, #2d2d2d);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .hover-card__content {
+        color: var(--theme-text-primary, #e0e0e0);
+    }
+
+    .hover-card__arrow {
+        background: var(--theme-bg-primary, #1a1a1a);
+        border-color: var(--theme-border-color, #2d2d2d);
+    }
+}
