@@ -333,6 +333,7 @@ import {
     useFocusTrap,
     useScrollLock,
     usePermission,
+    useBeforeUnload,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -395,6 +396,7 @@ import type {
     PermissionState,
     UsePermissionOptions,
     UsePermissionReturn,
+    UseBeforeUnloadOptions,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -795,6 +797,7 @@ export {
     useFocusTrap,
     useScrollLock,
     usePermission,
+    useBeforeUnload,
     memoize,
     throttle,
     chunk,
@@ -1144,6 +1147,7 @@ export type {
     PermissionState,
     UsePermissionOptions,
     UsePermissionReturn,
+    UseBeforeUnloadOptions,
     ErrorBoundaryOptions,
     WithSuspenseOptions,
     WithClickOutsideOptions,
