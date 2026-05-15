@@ -17,7 +17,7 @@ function mockElement(rect: Partial<DOMRect> = {}): HTMLDivElement {
                 y: 10,
                 ...rect,
                 toJSON: () => ({}),
-            }) as DOMRect
+            } as DOMRect)
     )
     return el
 }
@@ -33,7 +33,11 @@ describe('useRect', () => {
 
         global.ResizeObserver = jest.fn((cb: ResizeObserverCallback) => {
             resizeObserverCallback = cb
-            return { observe: observeSpy, disconnect: disconnectSpy, unobserve: jest.fn() }
+            return {
+                observe: observeSpy,
+                disconnect: disconnectSpy,
+                unobserve: jest.fn(),
+            }
         }) as unknown as typeof ResizeObserver
     })
 
@@ -108,7 +112,11 @@ describe('useRect', () => {
             resizeObserverCallback([], {} as ResizeObserver)
         })
 
-        expect(result.current).toMatchObject({ width: 300, height: 100, top: 20 })
+        expect(result.current).toMatchObject({
+            width: 300,
+            height: 100,
+            top: 20,
+        })
     })
 
     it('re-measures on window scroll', () => {
@@ -171,7 +179,9 @@ describe('useRect', () => {
             return useRect(ref, { observeScroll: false })
         })
 
-        const scrollCalls = addSpy.mock.calls.filter(([event]) => event === 'scroll')
+        const scrollCalls = addSpy.mock.calls.filter(
+            ([event]) => event === 'scroll'
+        )
         expect(scrollCalls).toHaveLength(0)
     })
 
@@ -183,7 +193,9 @@ describe('useRect', () => {
             return useRect(ref, { observeResize: false })
         })
 
-        const resizeCalls = addSpy.mock.calls.filter(([event]) => event === 'resize')
+        const resizeCalls = addSpy.mock.calls.filter(
+            ([event]) => event === 'resize'
+        )
         expect(resizeCalls).toHaveLength(0)
     })
 
@@ -197,7 +209,11 @@ describe('useRect', () => {
 
         unmount()
 
-        expect(removeSpy).toHaveBeenCalledWith('scroll', expect.any(Function), true)
+        expect(removeSpy).toHaveBeenCalledWith(
+            'scroll',
+            expect.any(Function),
+            true
+        )
         expect(removeSpy).toHaveBeenCalledWith('resize', expect.any(Function))
     })
 })
