@@ -79,6 +79,7 @@ import useFocusTrap from './useFocusTrap'
 import useScrollLock from './useScrollLock'
 import usePermission from './usePermission'
 import useBeforeUnload from './useBeforeUnload'
+import useRect from './useRect'
 
 export {
     useDebounceEffect,
@@ -165,6 +166,7 @@ export {
     useScrollLock,
     usePermission,
     useBeforeUnload,
+    useRect,
 }
 
 export type { UseSetActions } from './useSet'
@@ -236,6 +238,7 @@ export type {
     UsePermissionReturn,
 } from './usePermission'
 export type { UseBeforeUnloadOptions } from './useBeforeUnload'
+export type { Rect, UseRectOptions } from './useRect'
 
 export default {
     useDebounceEffect,
@@ -321,4 +324,5 @@ export default {
     useFocusTrap,
     useScrollLock,
     useBeforeUnload,
+    useRect,
 }

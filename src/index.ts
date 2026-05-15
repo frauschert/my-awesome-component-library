@@ -334,6 +334,7 @@ import {
     useScrollLock,
     usePermission,
     useBeforeUnload,
+    useRect,
 } from './utility/hooks'
 import type {
     UseSetActions,
@@ -397,6 +398,8 @@ import type {
     UsePermissionOptions,
     UsePermissionReturn,
     UseBeforeUnloadOptions,
+    Rect,
+    UseRectOptions,
 } from './utility/hooks'
 import { memoize } from './utility/memoize'
 import { throttle } from './utility/throttle'
@@ -798,6 +801,7 @@ export {
     useScrollLock,
     usePermission,
     useBeforeUnload,
+    useRect,
     memoize,
     throttle,
     chunk,
@@ -1148,6 +1152,8 @@ export type {
     UsePermissionOptions,
     UsePermissionReturn,
     UseBeforeUnloadOptions,
+    Rect,
+    UseRectOptions,
     ErrorBoundaryOptions,
     WithSuspenseOptions,
     WithClickOutsideOptions,
