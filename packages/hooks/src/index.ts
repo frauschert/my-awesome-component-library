@@ -32,6 +32,7 @@ import useEventListener from './useEventListener'
 import useSize from './useSize'
 import useTimeout from './useTimeout'
 import useMediaQuery from './useMediaQuery'
+import useMediaRecorder from './useMediaRecorder'
 import useWhyDidYouUpdate from './useWhyDidYouUpdate'
 import useCopyToClipboard from './useCopyToClipboard'
 import useInterval from './useInterval'
@@ -125,6 +126,7 @@ export {
     useSize,
     useTimeout,
     useMediaQuery,
+    useMediaRecorder,
     useWhyDidYouUpdate,
     useCopyToClipboard,
     useInterval,
@@ -247,6 +249,11 @@ export type {
     UseGeolocationOptions,
     UseGeolocationReturn,
 } from './useGeolocation'
+export type {
+    MediaRecorderStatus,
+    UseMediaRecorderOptions,
+    UseMediaRecorderReturn,
+} from './useMediaRecorder'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard'
 export type {
     SwipeDirection,
@@ -309,6 +316,7 @@ export default {
     useSize,
     useTimeout,
     useMediaQuery,
+    useMediaRecorder,
     useWhyDidYouUpdate,
     useCopyToClipboard,
     useInterval,
