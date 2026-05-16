@@ -106,6 +106,7 @@ import useBeforeUnload from './useBeforeUnload'
 import useRect from './useRect'
 import useScroll from './useScroll'
 import usePointerLock from './usePointerLock'
+import useSound from './useSound'
 
 export {
     useDebounceEffect,
@@ -195,6 +196,7 @@ export {
     useRect,
     useScroll,
     usePointerLock,
+    useSound,
 }
 
 export type { UseSetActions } from './useSet'
@@ -273,6 +275,7 @@ export type {
     UsePointerLockOptions,
     UsePointerLockReturn,
 } from './usePointerLock'
+export type { UseSoundOptions, UseSoundReturn } from './useSound'
 
 export default {
     useDebounceEffect,
@@ -361,4 +364,5 @@ export default {
     useRect,
     useScroll,
     usePointerLock,
+    useSound,
 }
