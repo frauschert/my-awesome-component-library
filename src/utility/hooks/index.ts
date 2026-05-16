@@ -81,6 +81,7 @@ import usePermission from './usePermission'
 import useBeforeUnload from './useBeforeUnload'
 import useRect from './useRect'
 import useScroll from './useScroll'
+import usePointerLock from './usePointerLock'
 
 export {
     useDebounceEffect,
@@ -169,6 +170,7 @@ export {
     useBeforeUnload,
     useRect,
     useScroll,
+    usePointerLock,
 }
 
 export type { UseSetActions } from './useSet'
@@ -242,6 +244,11 @@ export type {
 export type { UseBeforeUnloadOptions } from './useBeforeUnload'
 export type { Rect, UseRectOptions } from './useRect'
 export type { ScrollState, UseScrollOptions } from './useScroll'
+export type {
+    PointerMovement,
+    UsePointerLockOptions,
+    UsePointerLockReturn,
+} from './usePointerLock'
 
 export default {
     useDebounceEffect,
@@ -329,4 +336,5 @@ export default {
     useBeforeUnload,
     useRect,
     useScroll,
+    usePointerLock,
 }
