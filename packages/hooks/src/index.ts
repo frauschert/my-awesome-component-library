@@ -108,6 +108,7 @@ import useScroll from './useScroll'
 import usePointerLock from './usePointerLock'
 import useSound from './useSound'
 import useSpeechRecognition from './useSpeechRecognition'
+import useSpeechSynthesis from './useSpeechSynthesis'
 import useUserMedia from './useUserMedia'
 
 export {
@@ -200,6 +201,7 @@ export {
     usePointerLock,
     useSound,
     useSpeechRecognition,
+    useSpeechSynthesis,
     useUserMedia,
 }
 
@@ -285,6 +287,12 @@ export type {
     UseSpeechRecognitionOptions,
     UseSpeechRecognitionReturn,
 } from './useSpeechRecognition'
+export type {
+    SpeakOptions,
+    SpeechSynthesisVoiceData,
+    UseSpeechSynthesisOptions,
+    UseSpeechSynthesisReturn,
+} from './useSpeechSynthesis'
 export type { UseUserMediaOptions, UseUserMediaReturn } from './useUserMedia'
 
 export default {
@@ -376,5 +384,6 @@ export default {
     usePointerLock,
     useSound,
     useSpeechRecognition,
+    useSpeechSynthesis,
     useUserMedia,
 }
