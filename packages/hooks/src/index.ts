@@ -108,6 +108,7 @@ import useScroll from './useScroll'
 import usePointerLock from './usePointerLock'
 import useSound from './useSound'
 import useSpeechRecognition from './useSpeechRecognition'
+import useUserMedia from './useUserMedia'
 
 export {
     useDebounceEffect,
@@ -199,6 +200,7 @@ export {
     usePointerLock,
     useSound,
     useSpeechRecognition,
+    useUserMedia,
 }
 
 export type { UseSetActions } from './useSet'
@@ -283,6 +285,7 @@ export type {
     UseSpeechRecognitionOptions,
     UseSpeechRecognitionReturn,
 } from './useSpeechRecognition'
+export type { UseUserMediaOptions, UseUserMediaReturn } from './useUserMedia'
 
 export default {
     useDebounceEffect,
@@ -373,4 +376,5 @@ export default {
     usePointerLock,
     useSound,
     useSpeechRecognition,
+    useUserMedia,
 }
