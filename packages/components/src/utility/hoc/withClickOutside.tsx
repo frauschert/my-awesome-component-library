@@ -2,18 +2,18 @@ import React from 'react'
 import useClickOutside from '../hooks/useClickOutside'
 
 export interface WithClickOutsideOptions {
-    onOutsideClick?: (e: MouseEvent) => void
+    onOutsideClick?: (e: MouseEvent | TouchEvent) => void
 }
 
 export function withClickOutside<
-    P extends { onOutsideClick?: (e: MouseEvent) => void }
+    P extends { onOutsideClick?: (e: MouseEvent | TouchEvent) => void }
 >(Component: React.ComponentType<P>, options: WithClickOutsideOptions = {}) {
     const Wrapped: React.FC<P> = (props) => {
         const ref = React.useRef<HTMLDivElement>(null)
 
         const handler = props.onOutsideClick || options.onOutsideClick
-        // useClickOutside expects RefObject<T>, our ref matches that shape
-        useClickOutside(ref as React.RefObject<HTMLDivElement>, (e) => {
+
+        useClickOutside(ref, (e: MouseEvent | TouchEvent) => {
             handler?.(e)
         })
 

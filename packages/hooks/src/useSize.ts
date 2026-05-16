@@ -1,5 +1,5 @@
 import { useState, RefObject, useEffect } from 'react'
-import debounce from '../debounce'
+import debounce from './debounce'
 
 export default function useSize(ref: RefObject<HTMLElement>) {
     const [size, setSize] = useState<{ width: number; height: number }>()

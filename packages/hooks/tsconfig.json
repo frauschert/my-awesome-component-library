@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
         "target": "es6",
+        "outDir": "lib",
         "lib": ["dom", "dom.iterable", "esnext"],
+        "declaration": true,
+        "declarationDir": "lib",
         "allowJs": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
@@ -15,9 +18,6 @@
         "noEmit": true,
         "jsx": "react"
     },
-    "files": [],
-    "references": [
-        { "path": "packages/hooks" },
-        { "path": "packages/components" }
-    ]
+    "include": ["src"],
+    "exclude": ["node_modules", "lib", "src/**/*.stories.tsx"]
 }

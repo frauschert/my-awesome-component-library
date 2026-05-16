@@ -4,8 +4,9 @@ AI coding guide for this TypeScript + React component library. Keep answers conc
 
 ## Project Overview
 
-**Stack**: TypeScript 4.x • React 18 • SCSS modules • Storybook 8 • Jest 29 • Rollup bundler  
-**Outputs**: CJS (`lib/index.js`) + ESM (`lib/index.esm.js`) + types (`lib/index.d.ts`)  
+**Stack**: TypeScript 4.x • React 18 • SCSS modules • Storybook 9 • Jest 29 • Vite bundler  
+**Monorepo**: Yarn workspaces — `packages/hooks` (`@frauschert/react-hooks`) + `packages/components` (`@frauschert/my-awesome-component-library`)  
+**Outputs**: CJS (`lib/index.js`) + ESM (`lib/index.esm.js`) + types (`lib/index.d.ts`) per package  
 **Dev server**: `yarn storybook` (port 9001) • Tests: `yarn test` • Build: `yarn build`
 
 ## Architecture
@@ -13,7 +14,7 @@ AI coding guide for this TypeScript + React component library. Keep answers conc
 ### Component Structure
 
 ```
-src/components/<Name>/
+packages/components/src/components/<Name>/
 ├── Name.tsx          # Component implementation
 ├── Name.scss         # Colocated styles (CSS modules)
 ├── Name.stories.tsx  # Storybook demos (optional, MUST include `import React from 'react'`)
@@ -32,7 +33,7 @@ src/components/<Name>/
 
 ### State Management
 
-**Atoms** (`src/utility/atom.ts`) — lightweight observables:
+**Atoms** (`packages/hooks/src/atom.ts`) — lightweight observables:
 
 ```ts
 // Writable: atom(initial) -> { get, set, reset, subscribe }
@@ -48,15 +49,15 @@ const value = useAtomValue(doubled) // no setter
 -   React hooks: `useAtom`, `useAtomValue`, `useSetAtom`, `useAtomSelector`, `useResetAtom` (via `useSyncExternalStore`)
 -   Don't expose setters for derived atoms (throws at runtime)
 
-### Utilities (`src/utility/`)
+### Utilities (`packages/components/src/utility/`)
 
 Small, pure, well-tested FP helpers: `curry`, `pipe`, `scan`, `memoize`, `debounce`, `throttle`, `lens`, etc.  
-**Docs**: `src/utility/README.md` has full API + examples for each.  
-**Tests**: `src/utility/__tests__/*.test.ts` — write focused tests for new utilities.
+**Docs**: `packages/components/src/utility/README.md` has full API + examples for each.  
+**Tests**: `packages/components/src/utility/__tests__/*.test.ts` — write focused tests for new utilities.
 
-### Hooks (`src/utility/hooks/`)
+### Hooks (`packages/hooks/src/`)
 
-30+ React hooks documented in `src/utility/hooks/README.md`:
+30+ React hooks in `@frauschert/react-hooks`, documented in `packages/hooks/README.md`:
 
 -   State: `useLocalStorage`, `useSessionStorage`, `usePrevious`, `useDebounce`, `useThrottle`
 -   Events: `useKeyPress`, `useEventListener`, `useOnClickOutside`, `useClickAway`
@@ -74,7 +75,7 @@ Small, pure, well-tested FP helpers: `curry`, `pipe`, `scan`, `memoize`, `deboun
 2. Components use CSS variables: `background-color: var(--theme-bg-primary)`
 3. Works in Portals (Select dropdowns, Modals, ContextMenus) — theme propagates globally
 
-**Variables** (`src/styles/_theme-vars.scss`):
+**Variables** (`packages/components/src/styles/_theme-vars.scss`):
 
 ```scss
 :root {
@@ -127,7 +128,7 @@ const cardStyles = createStyles(
 )
 ```
 
-**Docs**: `src/styles/README.md`, `CSS_IN_JS_FEATURE.md`  
+**Docs**: `packages/components/src/styles/README.md`, `CSS_IN_JS_FEATURE.md`  
 **Use for**: dynamic theming, runtime styling, user-generated components  
 **Prefer SCSS for**: library components (smaller bundles, compile-time optimization)
 
@@ -136,16 +137,16 @@ const cardStyles = createStyles(
 ### Build Commands
 
 ```bash
-yarn build          # Rollup: src/ -> lib/ (CJS+ESM+types)
-yarn storybook      # Dev server on :9001
+yarn build          # Vite: builds both packages -> packages/*/lib/
+yarn storybook      # Dev server on :9001 (components package)
 yarn build-storybook # Static Storybook build
 ```
 
-**Rollup config** (`rollup.config.mjs`):
+**Vite config** (per-package `vite.config.ts`):
 
--   Plugins: typescript2, postcss (SCSS), svgr, peerDepsExternal
+-   Plugins: `@vitejs/plugin-react`, `vite-plugin-dts`, `vite-plugin-svgr`
 -   Outputs: `lib/index.js` (CJS), `lib/index.esm.js` (ESM), `lib/index.d.ts`
--   CSS extracted to `lib/index.css` and `lib/index.esm.css`
+-   CSS extracted to `lib/index.css` (components package only)
 
 ### Test Commands
 
@@ -154,10 +155,10 @@ yarn test           # Jest with React Testing Library
 yarn coverage       # Jest coverage report
 ```
 
-**Jest config** (`jest.config.ts`):
+**Jest config** (per-package `jest.config.ts`):
 
 -   Environment: jsdom
--   Setup: `src/jest-setup.ts` (imports `@testing-library/jest-dom`)
+-   Setup: `packages/components/src/jest-setup.ts` (imports `@testing-library/jest-dom`)
 -   Mocks: `__mocks__/styleMock.js` (CSS), `__mocks__/svgMock.js` (SVGs)
 -   Transform: babel-jest
 -   Coverage: excludes stories, types, index files
@@ -173,10 +174,10 @@ yarn lint:fix       # Auto-fix issues
 
 **When adding components/utilities**:
 
-1. Export from `src/index.ts` (components + types)
+1. Export from `packages/components/src/index.ts` (components + types)
 2. Add Storybook story for discoverability
 3. Write tests (happy path + edge cases)
-4. Update relevant README (utility/README.md or hooks/README.md)
+4. Update relevant README (`packages/components/src/utility/README.md` or `packages/hooks/README.md`)
 
 **Type exports**: Export both component and prop types separately:
 
@@ -245,15 +246,15 @@ test('Button handles click', () => {
 **Documentation sources**:
 
 -   Component patterns: Storybook stories
--   Utility APIs: `src/utility/README.md` (8600+ lines, 42 utilities documented)
--   Hook APIs: `src/utility/hooks/README.md` (4300+ lines, 30+ hooks documented)
+-   Utility APIs: `packages/components/src/utility/README.md` (8600+ lines, 42 utilities documented)
+-   Hook APIs: `packages/hooks/README.md` (30+ hooks documented)
 -   Theming: `THEMING-GUIDE.md`
--   CSS-in-JS: `CSS_IN_JS_FEATURE.md`, `src/styles/README.md`
+-   CSS-in-JS: `CSS_IN_JS_FEATURE.md`, `packages/components/src/styles/README.md`
 
 ## Common Tasks
 
-**Add component**: Create folder, implement with forwardRef, add SCSS with CSS vars, write story, export from `src/index.ts`.  
-**Add utility**: Implement in `src/utility/`, add tests, document in `README.md`, export from `src/index.ts`.  
-**Add hook**: Implement in `src/utility/hooks/`, add tests with fake timers/cleanup checks, document in `hooks/README.md`, export from `src/index.ts`.  
+**Add component**: Create folder in `packages/components/src/components/`, implement with forwardRef, add SCSS with CSS vars, write story, export from `packages/components/src/index.ts`.  
+**Add utility**: Implement in `packages/components/src/utility/`, add tests, document in `README.md`, export from `packages/components/src/index.ts`.  
+**Add hook**: Implement in `packages/hooks/src/`, add tests with fake timers/cleanup checks, export from `packages/hooks/src/index.ts`, document in `packages/hooks/README.md`.  
 **Fix theming**: Replace `themify()` with CSS variables, test in both light/dark modes in Storybook.  
 **Debug re-renders**: Use `useWhyDidYouUpdate` hook to identify prop changes causing unnecessary renders.

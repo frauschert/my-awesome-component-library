@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderHook, act } from '@testing-library/react'
-import { atom } from '../../atom'
-import type { ReadOnlyAtom } from '../../atom'
+import { atom } from '../atom'
+import type { ReadOnlyAtom } from '../atom'
 import { useAtom, useAtomValue, useSetAtom, useAtomSelector } from '../useAtom'
 
 describe('useAtom hooks', () => {

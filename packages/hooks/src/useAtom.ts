@@ -1,5 +1,5 @@
 import { useCallback, useSyncExternalStore, useRef } from 'react'
-import type { ReadOnlyAtom, WritableAtom } from '../atom'
+import type { ReadOnlyAtom, WritableAtom } from './atom'
 
 export function useAtom<AtomType>(atom: WritableAtom<AtomType>) {
     const subscribe = useCallback(

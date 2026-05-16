@@ -1,0 +1,100 @@
+name: Publish packages
+
+on:
+    push:
+        tags:
+            - 'v*'
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Build hooks package
+              run: yarn workspace @frauschert/react-hooks build
+
+            - name: Build components package
+              run: yarn workspace @frauschert/my-awesome-component-library build
+
+            - name: Test hooks package
+              run: yarn workspace @frauschert/react-hooks test
+
+            - name: Test components package
+              run: yarn workspace @frauschert/my-awesome-component-library test
+
+    publish-gpr:
+        needs: test
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node.js for GitHub Packages
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+                  registry-url: 'https://npm.pkg.github.com'
+                  scope: '@frauschert'
+
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Build packages
+              run: yarn build
+
+            - name: Publish @frauschert/react-hooks to GitHub Packages
+              run: npm publish
+              working-directory: packages/hooks
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish @frauschert/my-awesome-component-library to GitHub Packages
+              run: npm publish
+              working-directory: packages/components
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    publish-npm:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node.js for npm.org
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+                  registry-url: 'https://registry.npmjs.org'
+                  scope: '@frauschert'
+
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Build packages
+              run: yarn build
+
+            - name: Publish @frauschert/react-hooks to npm.org
+              run: npm publish --access public --registry https://registry.npmjs.org
+              working-directory: packages/hooks
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish @frauschert/my-awesome-component-library to npm.org
+              run: npm publish --access public --registry https://registry.npmjs.org
+              working-directory: packages/components
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

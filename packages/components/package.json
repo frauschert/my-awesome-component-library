@@ -1,0 +1,47 @@
+{
+    "name": "@frauschert/my-awesome-component-library",
+    "version": "0.0.1",
+    "description": "collection of my components",
+    "main": "lib/index.js",
+    "module": "lib/index.esm.js",
+    "types": "lib/index.d.ts",
+    "sideEffects": [
+        "**/*.css",
+        "**/*.scss"
+    ],
+    "files": [
+        "lib",
+        "README.md"
+    ],
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "import": "./lib/index.esm.js",
+            "require": "./lib/index.js"
+        },
+        "./styles": "./lib/index.css"
+    },
+    "scripts": {
+        "storybook": "storybook dev -p 9001 -c .storybook",
+        "build-storybook": "storybook build",
+        "build": "vite build",
+        "test": "jest",
+        "coverage": "jest --coverage",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix"
+    },
+    "dependencies": {
+        "@frauschert/react-hooks": "0.0.1",
+        "qrcode": "^1.5.4"
+    },
+    "peerDependencies": {
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "repository": "git://github.com/frauschert/my-awesome-component-library.git",
+    "author": "Fabian Rauschert",
+    "license": "MIT"
+}

@@ -18,7 +18,7 @@ describe('withClickOutside', () => {
             </div>
         )
 
-        fireEvent.pointerDown(screen.getByTestId('outside'))
+        fireEvent.mouseDown(screen.getByTestId('outside'))
         expect(onOutsideClick).toHaveBeenCalled()
     })
 
@@ -27,7 +27,7 @@ describe('withClickOutside', () => {
         const Wrapped = withClickOutside(Base)
         render(<Wrapped onOutsideClick={onOutsideClick} />)
 
-        fireEvent.pointerDown(screen.getByTestId('inside'))
+        fireEvent.mouseDown(screen.getByTestId('inside'))
         expect(onOutsideClick).not.toHaveBeenCalled()
     })
 })

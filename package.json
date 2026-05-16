@@ -1,29 +1,21 @@
 {
-    "name": "@frauschert/my-awesome-component-library",
-    "version": "0.0.1",
-    "description": "collection of my components",
-    "main": "lib/index.js",
-    "module": "lib/index.esm.js",
-    "types": "lib/index.d.ts",
-    "sideEffects": [
-        "**/*.css",
-        "**/*.scss"
+    "name": "my-awesome-component-library-workspace",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "packages/*"
     ],
-    "files": [
-        "lib",
-        "README.md"
-    ],
-    "exports": {
-        ".": {
-            "types": "./lib/index.d.ts",
-            "import": "./lib/index.esm.js",
-            "require": "./lib/index.js"
-        },
-        "./styles": "./lib/index.css"
-    },
     "repository": "git://github.com/frauschert/my-awesome-component-library.git",
     "author": "Fabian Rauschert",
     "license": "MIT",
+    "scripts": {
+        "build": "yarn workspaces run build",
+        "test": "yarn workspaces run test",
+        "coverage": "yarn workspaces run coverage",
+        "lint": "yarn workspaces run lint",
+        "storybook": "yarn workspace @frauschert/my-awesome-component-library storybook",
+        "build-storybook": "yarn workspace @frauschert/my-awesome-component-library build-storybook"
+    },
     "devDependencies": {
         "@babel/core": "^7.26.10",
         "@babel/preset-env": "^7.26.9",
@@ -73,27 +65,7 @@
         "vite-plugin-dts": "^4.5.4",
         "vite-plugin-svgr": "^5.2.0"
     },
-    "peerDependencies": {
-        "react": "^18.0.0 || ^19.0.0",
-        "react-dom": "^18.0.0 || ^19.0.0"
-    },
-    "dependencies": {
-        "qrcode": "^1.5.4"
-    },
     "resolutions": {
         "trim": "^0.0.3"
-    },
-    "scripts": {
-        "storybook": "storybook dev -p 9001 -c .storybook",
-        "build-storybook": "storybook build",
-        "build": "vite build",
-        "prettier": "prettier --write .",
-        "test": "jest",
-        "coverage": "jest --coverage",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix"
-    },
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
     }
 }
