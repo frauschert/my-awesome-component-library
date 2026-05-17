@@ -71,6 +71,7 @@ import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
 import useColorScheme from './useColorScheme'
 import useWebSocket from './useWebSocket'
+import useEventSource from './useEventSource'
 import usePromise from './usePromise'
 import useList from './useList'
 import useHotkeys, { useHotkeysMap } from './useHotkeys'
@@ -163,6 +164,7 @@ export {
     useIdle,
     useColorScheme,
     useWebSocket,
+    useEventSource,
     usePromise,
     useList,
     useHotkeys,
@@ -240,6 +242,12 @@ export type { NetworkState, NetworkInformation } from './useNetwork'
 export type { MouseState, UseMouseOptions } from './useMouse'
 export type { UseDraggableOptions, UseDraggableReturn } from './useDraggable'
 export type { UseWorkerOptions, UseWorkerReturn } from './useWorker'
+export type {
+    EventSourceMessageData,
+    EventSourceReadyState,
+    UseEventSourceOptions,
+    UseEventSourceReturn,
+} from './useEventSource'
 export type {
     MediaDeviceInfoData,
     MediaDeviceKind,
@@ -366,6 +374,7 @@ export default {
     useIdle,
     useColorScheme,
     useWebSocket,
+    useEventSource,
     usePromise,
     useList,
     useHotkeys,
