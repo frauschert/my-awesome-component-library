@@ -101,6 +101,7 @@ import useClipboard from './useClipboard'
 import useSwipe from './useSwipe'
 import usePinch from './usePinch'
 import usePageVisibility from './usePageVisibility'
+import useNotification from './useNotification'
 import useBattery from './useBattery'
 import useControllableState from './useControllableState'
 import useFocusTrap from './useFocusTrap'
@@ -198,6 +199,7 @@ export {
     useSwipe,
     usePinch,
     usePageVisibility,
+    useNotification,
     useBattery,
     useControllableState,
     useFocusTrap,
@@ -285,6 +287,11 @@ export type {
     UseSwipeReturn,
 } from './useSwipe'
 export type { PinchEvent, UsePinchOptions, UsePinchReturn } from './usePinch'
+export type {
+    NotificationPermissionState,
+    UseNotificationOptions,
+    UseNotificationReturn,
+} from './useNotification'
 export type {
     VisibilityState,
     UsePageVisibilityOptions,
@@ -408,6 +415,7 @@ export default {
     useSwipe,
     usePinch,
     usePageVisibility,
+    useNotification,
     useBattery,
     useControllableState,
     useFocusTrap,
