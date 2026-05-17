@@ -31,6 +31,7 @@ import useOnScreen from './useOnScreen'
 import useEventListener from './useEventListener'
 import useSize from './useSize'
 import useTimeout from './useTimeout'
+import useMediaDevices from './useMediaDevices'
 import useMediaQuery from './useMediaQuery'
 import useMediaRecorder from './useMediaRecorder'
 import useWhyDidYouUpdate from './useWhyDidYouUpdate'
@@ -125,6 +126,7 @@ export {
     useEventListener,
     useSize,
     useTimeout,
+    useMediaDevices,
     useMediaQuery,
     useMediaRecorder,
     useWhyDidYouUpdate,
@@ -232,6 +234,12 @@ export type { MouseState, UseMouseOptions } from './useMouse'
 export type { UseDraggableOptions, UseDraggableReturn } from './useDraggable'
 export type { UseWorkerOptions, UseWorkerReturn } from './useWorker'
 export type {
+    MediaDeviceInfoData,
+    MediaDeviceKind,
+    UseMediaDevicesOptions,
+    UseMediaDevicesReturn,
+} from './useMediaDevices'
+export type {
     Breakpoints,
     BreakpointName,
     UseBreakpointOptions,
@@ -315,6 +323,7 @@ export default {
     useEventListener,
     useSize,
     useTimeout,
+    useMediaDevices,
     useMediaQuery,
     useMediaRecorder,
     useWhyDidYouUpdate,
