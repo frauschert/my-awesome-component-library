@@ -28,6 +28,7 @@ import { useLocalStorage, useSessionStorage } from './useStorage'
 import useOnClickOutside from './useOnClickOutside'
 import useKeyPress from './useKeyPress'
 import useOnScreen from './useOnScreen'
+import useAnimationFrame from './useAnimationFrame'
 import useEventListener from './useEventListener'
 import useSize from './useSize'
 import useTimeout from './useTimeout'
@@ -123,6 +124,7 @@ export {
     useOnClickOutside,
     useKeyPress,
     useOnScreen,
+    useAnimationFrame,
     useEventListener,
     useSize,
     useTimeout,
@@ -212,6 +214,11 @@ export {
 export type { UseSetActions } from './useSet'
 export type { UseQueueActions, UseQueueReturn } from './useQueue'
 export type { UseStackActions, UseStackReturn } from './useStack'
+export type {
+    AnimationFrameCallback,
+    UseAnimationFrameOptions,
+    UseAnimationFrameReturn,
+} from './useAnimationFrame'
 export type { UseIndexedDBOptions, UseIndexedDBReturn } from './useIndexedDB'
 export type {
     ValidationRule,
@@ -320,6 +327,7 @@ export default {
     useOnClickOutside,
     useKeyPress,
     useOnScreen,
+    useAnimationFrame,
     useEventListener,
     useSize,
     useTimeout,
