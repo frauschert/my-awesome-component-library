@@ -117,6 +117,7 @@ import useBeforeUnload from './useBeforeUnload'
 import useRect from './useRect'
 import useScroll from './useScroll'
 import usePointerLock from './usePointerLock'
+import usePictureInPicture from './usePictureInPicture'
 import useSound from './useSound'
 import useSpeechRecognition from './useSpeechRecognition'
 import useSpeechSynthesis from './useSpeechSynthesis'
@@ -221,6 +222,7 @@ export {
     useRect,
     useScroll,
     usePointerLock,
+    usePictureInPicture,
     useSound,
     useSpeechRecognition,
     useSpeechSynthesis,
@@ -366,6 +368,11 @@ export type {
     UsePointerLockOptions,
     UsePointerLockReturn,
 } from './usePointerLock'
+export type {
+    PictureInPictureWindowData,
+    UsePictureInPictureOptions,
+    UsePictureInPictureReturn,
+} from './usePictureInPicture'
 export type { UseSoundOptions, UseSoundReturn } from './useSound'
 export type {
     SpeechRecognitionError,
@@ -478,6 +485,7 @@ export default {
     useRect,
     useScroll,
     usePointerLock,
+    usePictureInPicture,
     useSound,
     useSpeechRecognition,
     useSpeechSynthesis,
