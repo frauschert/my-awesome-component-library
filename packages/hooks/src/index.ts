@@ -70,6 +70,7 @@ import useSearchParam from './useSearchParam'
 import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
 import useIdleDetector from './useIdleDetector'
+import useStorageEvent from './useStorageEvent'
 import useColorScheme from './useColorScheme'
 import useWebSocket from './useWebSocket'
 import useEventSource from './useEventSource'
@@ -167,6 +168,7 @@ export {
     useFullscreen,
     useIdle,
     useIdleDetector,
+    useStorageEvent,
     useColorScheme,
     useWebSocket,
     useEventSource,
@@ -337,6 +339,11 @@ export type {
     UseIdleDetectorOptions,
     UseIdleDetectorReturn,
 } from './useIdleDetector'
+export type {
+    StorageEventData,
+    UseStorageEventOptions,
+    UseStorageEventReturn,
+} from './useStorageEvent'
 export type { UseBeforeUnloadOptions } from './useBeforeUnload'
 export type { Rect, UseRectOptions } from './useRect'
 export type { ScrollState, UseScrollOptions } from './useScroll'
@@ -407,6 +414,7 @@ export default {
     useFullscreen,
     useIdle,
     useIdleDetector,
+    useStorageEvent,
     useColorScheme,
     useWebSocket,
     useEventSource,
