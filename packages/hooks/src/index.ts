@@ -71,6 +71,7 @@ import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
 import useIdleDetector from './useIdleDetector'
 import useStorageEvent from './useStorageEvent'
+import useBroadcastChannel from './useBroadcastChannel'
 import useColorScheme from './useColorScheme'
 import useWebSocket from './useWebSocket'
 import useEventSource from './useEventSource'
@@ -169,6 +170,7 @@ export {
     useIdle,
     useIdleDetector,
     useStorageEvent,
+    useBroadcastChannel,
     useColorScheme,
     useWebSocket,
     useEventSource,
@@ -344,6 +346,11 @@ export type {
     UseStorageEventOptions,
     UseStorageEventReturn,
 } from './useStorageEvent'
+export type {
+    BroadcastChannelMessageData,
+    UseBroadcastChannelOptions,
+    UseBroadcastChannelReturn,
+} from './useBroadcastChannel'
 export type { UseBeforeUnloadOptions } from './useBeforeUnload'
 export type { Rect, UseRectOptions } from './useRect'
 export type { ScrollState, UseScrollOptions } from './useScroll'
@@ -415,6 +422,7 @@ export default {
     useIdle,
     useIdleDetector,
     useStorageEvent,
+    useBroadcastChannel,
     useColorScheme,
     useWebSocket,
     useEventSource,
