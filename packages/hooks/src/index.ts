@@ -33,6 +33,7 @@ import useEventListener from './useEventListener'
 import useSize from './useSize'
 import useTimeout from './useTimeout'
 import useMediaDevices from './useMediaDevices'
+import useDisplayMedia from './useDisplayMedia'
 import useMediaQuery from './useMediaQuery'
 import useMediaRecorder from './useMediaRecorder'
 import useWhyDidYouUpdate from './useWhyDidYouUpdate'
@@ -136,6 +137,7 @@ export {
     useSize,
     useTimeout,
     useMediaDevices,
+    useDisplayMedia,
     useMediaQuery,
     useMediaRecorder,
     useWhyDidYouUpdate,
@@ -280,6 +282,11 @@ export type {
     UseMediaDevicesReturn,
 } from './useMediaDevices'
 export type {
+    DisplayMediaConstraints,
+    UseDisplayMediaOptions,
+    UseDisplayMediaReturn,
+} from './useDisplayMedia'
+export type {
     Breakpoints,
     BreakpointName,
     UseBreakpointOptions,
@@ -388,6 +395,7 @@ export default {
     useSize,
     useTimeout,
     useMediaDevices,
+    useDisplayMedia,
     useMediaQuery,
     useMediaRecorder,
     useWhyDidYouUpdate,
