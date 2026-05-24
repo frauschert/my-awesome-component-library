@@ -96,6 +96,7 @@ import useDraggable from './useDraggable'
 import useWorker from './useWorker'
 import useBreakpoint from './useBreakpoint'
 import useDeviceOrientation from './useDeviceOrientation'
+import useScreenOrientation from './useScreenOrientation'
 import useVibrate from './useVibrate'
 import useGeolocation from './useGeolocation'
 import useClipboard from './useClipboard'
@@ -195,6 +196,7 @@ export {
     useWorker,
     useBreakpoint,
     useDeviceOrientation,
+    useScreenOrientation,
     useVibrate,
     useGeolocation,
     useClipboard,
@@ -252,6 +254,13 @@ export type {
     UseDeviceOrientationOptions,
     UseDeviceOrientationReturn,
 } from './useDeviceOrientation'
+export type {
+    ScreenOrientationData,
+    ScreenOrientationLockType,
+    ScreenOrientationType,
+    UseScreenOrientationOptions,
+    UseScreenOrientationReturn,
+} from './useScreenOrientation'
 export type {
     EventSourceMessageData,
     EventSourceReadyState,
@@ -418,6 +427,7 @@ export default {
     useWorker,
     useBreakpoint,
     useDeviceOrientation,
+    useScreenOrientation,
     useVibrate,
     useGeolocation,
     useClipboard,
