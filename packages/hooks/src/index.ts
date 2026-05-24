@@ -69,6 +69,7 @@ import useHash from './useHash'
 import useSearchParam from './useSearchParam'
 import useFullscreen from './useFullscreen'
 import useIdle from './useIdle'
+import useIdleDetector from './useIdleDetector'
 import useColorScheme from './useColorScheme'
 import useWebSocket from './useWebSocket'
 import useEventSource from './useEventSource'
@@ -165,6 +166,7 @@ export {
     useSearchParam,
     useFullscreen,
     useIdle,
+    useIdleDetector,
     useColorScheme,
     useWebSocket,
     useEventSource,
@@ -327,6 +329,14 @@ export type {
     UsePermissionOptions,
     UsePermissionReturn,
 } from './usePermission'
+export type {
+    IdleDetectorPermissionState,
+    IdleDetectorScreenState,
+    IdleDetectorState,
+    IdleDetectorUserState,
+    UseIdleDetectorOptions,
+    UseIdleDetectorReturn,
+} from './useIdleDetector'
 export type { UseBeforeUnloadOptions } from './useBeforeUnload'
 export type { Rect, UseRectOptions } from './useRect'
 export type { ScrollState, UseScrollOptions } from './useScroll'
@@ -396,6 +406,7 @@ export default {
     useSearchParam,
     useFullscreen,
     useIdle,
+    useIdleDetector,
     useColorScheme,
     useWebSocket,
     useEventSource,
