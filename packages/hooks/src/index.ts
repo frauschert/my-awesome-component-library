@@ -107,6 +107,7 @@ import useClipboard from './useClipboard'
 import useSwipe from './useSwipe'
 import usePinch from './usePinch'
 import usePageVisibility from './usePageVisibility'
+import usePageLifecycle from './usePageLifecycle'
 import useNotification from './useNotification'
 import useBattery from './useBattery'
 import useControllableState from './useControllableState'
@@ -212,6 +213,7 @@ export {
     useSwipe,
     usePinch,
     usePageVisibility,
+    usePageLifecycle,
     useNotification,
     useBattery,
     useControllableState,
@@ -329,6 +331,13 @@ export type {
     UsePageVisibilityOptions,
     UsePageVisibilityReturn,
 } from './usePageVisibility'
+export type {
+    PageLifecycleEvent,
+    PageLifecycleSnapshot,
+    PageLifecycleState,
+    UsePageLifecycleOptions,
+    UsePageLifecycleReturn,
+} from './usePageLifecycle'
 export type { BatteryState, UseBatteryReturn } from './useBattery'
 export type {
     UseControllableStateOptions,
@@ -476,6 +485,7 @@ export default {
     useSwipe,
     usePinch,
     usePageVisibility,
+    usePageLifecycle,
     useNotification,
     useBattery,
     useControllableState,
