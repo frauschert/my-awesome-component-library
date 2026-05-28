@@ -84,6 +84,7 @@ import useMutationObserver from './useMutationObserver'
 import usePreferredLanguage from './usePreferredLanguage'
 import useWakeLock from './useWakeLock'
 import useShare from './useShare'
+import useEyeDropper from './useEyeDropper'
 import useMap from './useMap'
 import useSet from './useSet'
 import useQueue from './useQueue'
@@ -187,6 +188,7 @@ export {
     usePreferredLanguage,
     useWakeLock,
     useShare,
+    useEyeDropper,
     useMap,
     useSet,
     useQueue,
@@ -338,6 +340,11 @@ export type {
     UsePageLifecycleOptions,
     UsePageLifecycleReturn,
 } from './usePageLifecycle'
+export type {
+    EyeDropperResult,
+    UseEyeDropperOptions,
+    UseEyeDropperReturn,
+} from './useEyeDropper'
 export type { BatteryState, UseBatteryReturn } from './useBattery'
 export type {
     UseControllableStateOptions,
@@ -459,6 +466,7 @@ export default {
     usePreferredLanguage,
     useWakeLock,
     useShare,
+    useEyeDropper,
     useMap,
     useSet,
     useQueue,
